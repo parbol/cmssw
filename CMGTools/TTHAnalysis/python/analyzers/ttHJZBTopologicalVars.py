@@ -18,8 +18,6 @@ import ROOT
 
 import os
 
-def mtw(x1,x2):
-    return sqrt(2*x1.pt()*x2.pt()*(1-cos(x1.phi()-x2.phi())))
 
 class ttHJZBTopologicalVars( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName ):
@@ -36,71 +34,59 @@ class ttHJZBTopologicalVars( Analyzer ):
         count = self.counters.counter('pairs')
         count.register('all events')
 
-    def makeMinMT(self,event):
-
-        objectsb40jc = [ j for j in event.cleanJets if j.pt() > 40 and abs(j.eta())<2.5 and j.btagWP("CSVv2IVFM")]
-
-        if len(objectsb40jc)>0:
-            for bjet in objectsb40jc:
-                mtTemp = mtw(bjet, event.met)
-                event.minMTBMet = min(event.minMTBMet,mtTemp)
-
-    def makeMinMTGamma(self,event):
-
-        gamma_objectsb40jc = [ j for j in event.gamma_cleanJets if j.pt() > 40 and abs(j.eta())<2.5 and j.btagWP("CSVv2IVFM")]
-
-        if len(gamma_objectsb40jc)>0:
-            for bjet in gamma_objectsb40jc:
-                mtTemp = mtw(bjet, event.gamma_met)
-                event.gamma_minMTBMet = min(event.gamma_minMTBMet,mtTemp)
+    def makeMETRecoil(self, event):
+        event.METRecoil = event.MET + event.selectedLeptons[event.index1] + event.selectedLeptons[event.index2] 
 
 
+    def makeHadronicRecoil(self, event):
+        objectsjet40 = [ j for j in event.cleanJets if j.pt() > 40 and abs(j.eta())<2.5 ]
+        if len(objectsjet40)>0:
+            for jet in objectsjet40:
+                event.HadronicRecoil = event.HadronicRecoil + j.p()
+  	  
+    def makeJZB(self, event):
+        event.jzb = event.METRecoil.pt() - (event.selectedLeptons[event.index1] + event.selectedLeptons[event.index2]).pt()        
+        
+    def makeLeptonSelection(self, event):
+        theLeptons = [ j for j in event.selectedLeptons if j.pt() > 25 and abs(j.eta())<2.4 ]
+        if len(theLeptons) > 0:
+            for lepton in theLeptons:
+            #Need to define how we select the leptons
+            
+        event.pt1 = theLeptons[event.index1].pt() 
+        event.pt2 = theLeptons[event.index1].pt() 
+        event.eta1 = theLeptons[event.index1].eta() 
+        event.eta2 = theLeptons[event.index2].eta() 
+        event.phi1 = theLeptons[event.index1].phi() 
+        event.phi2 = theLeptons[event.index2].phi() 
 
 
     #Need to update here what I want
     def process(self, event):
         self.readCollections( event.input )
-
-        event.mt2_gen=-999
-        event.mt2bb=-999
-        event.mt2lept=-999        
-        event.mt2w=-999
-
-        event.mt2_had=-999
-        event.pseudoJet1_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.pseudoJet2_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.multPseudoJet1_had=0
-        event.multPseudoJet2_had=0
         
-        event.mt2=-999
-        event.pseudoJet1 = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.pseudoJet2 = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
 
-        event.gamma_mt2=-999
-        event.gamma_pseudoJet1  = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.gamma_pseudoJet2  = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
+        event.pt1 = 0
+        event.pt2 = 0
+        event.eta1 = 0
+        event.eta2 = 0
+        event.phi1 = 0
+        event.phi2 = 0
+        event.mll = 0
+        event.pt = 0
+        event.index1 = 0
+        event.index2 = 0
+        event.id1 = 0
+        event.id2 = 0
+        event.charge1 = 0
+        event.charge2 = 0
+        event.jzb = 0
+        event.HadronicRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
+        event.METRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
 
-        event.zll_mt2=-999
-
-        event.mt2ViaKt_had=-999
-        event.mt2ViaAKt_had=-999
-        event.pseudoViaKtJet1_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.pseudoViaKtJet2_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.pseudoViaAKtJet1_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-        event.pseudoViaAKtJet2_had = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
-
-        ###
-
-        self.makeMT2(event)
-
-        event.minMTBMet=999999
-        self.makeMinMT(event)
-
-        event.gamma_minMTBMet=999999
-        self.makeMinMTGamma(event)
-
-#        print 'variables computed: MT=',event.mtw,'MT2=',event.mt2,'MT2W=',event.mt2w
-#        print 'pseudoJet1 px=',event.pseudoJet1.px(),' py=',event.pseudoJet1.py(),' pz=',event.pseudoJet1.pz()
-#        print 'pseudoJet2 px=',event.pseudoJet2.px(),' py=',event.pseudoJet2.py(),' pz=',event.pseudoJet2.pz()   
+        self.makeLeptonSelection(event)
+        self.makeMETRecoil(event)
+        self.makeHadronicRecoil(event)
+        self.makeJZB(event)
 
         return True

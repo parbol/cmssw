@@ -94,24 +94,6 @@ susyJZBEdge_globalVariables = susyCore_globalVariables + [
 
 
 susyJZBEdge_globalObjects = susyCore_globalObjects.copy()
-susyJZBEdge_globalObjects.update({
-            # put more here
-            "pseudoJet1_had"       : NTupleObject("pseudoJet1_had",     fourVectorType, help="full pseudoJet1 for hemishphere"),
-            "pseudoJet2_had"       : NTupleObject("pseudoJet2_had",     fourVectorType, help="full pseudoJet2 for hemishphere"),
-            #
-            "pseudoJet1"       : NTupleObject("pseudoJet1",     fourVectorType, help="pseudoJet1 for hemishphere, including leptons"),
-            "pseudoJet2"       : NTupleObject("pseudoJet2",     fourVectorType, help="pseudoJet2 for hemishphere, including leptons"),
-            #
-            "pseudoViaKtJet1_had"       : NTupleObject("pseudoViaKtJet1_had",     fourVectorType, help="full pseudoJet1 for hemishphere via KT"),
-            "pseudoViaKtJet2_had"       : NTupleObject("pseudoViaKtJet2_had",     fourVectorType, help="full pseudoJet2 for hemishphere via KT"),
-            #
-            "gamma_met" : NTupleObject("gamma_met", fourVectorType, help="PF E_{T}^{miss}, plus photon, after type 1 corrections"), 
-            "gamma_metNoPU" : NTupleObject("gamma_metNoPU", fourVectorType, help="PF noPU E_{T}^{miss}, plus photon"),
-            #
-            "gamma_pseudoJet1"       : NTupleObject("gamma_pseudoJet1",     fourVectorType, help="pseudoJet1 for hemishphere, with photon addition"),
-            "gamma_pseudoJet2"       : NTupleObject("gamma_pseudoJet2",     fourVectorType, help="pseudoJet2 for hemishphere, with photon addition"),
-            ###
-})
 
 susyJZBEdge_collections = susyCore_collections.copy()
 susyJZBEdge_collections.update({
@@ -122,7 +104,6 @@ susyJZBEdge_collections.update({
         "cleanJetsAll"       : NTupleCollection("jet",     jetTypeSusy, 100, help="all jets (w/ x-cleaning, w/ ID applied w/o PUID applied pt>10 |eta|<5.2) , sorted by pt", filter=lambda l : l.pt()>10  ),
         "fatJets"         : NTupleCollection("fatJet", fatJetType, 15, help="Cental jets after full selection and cleaning, sorted by pt"),
         "selectedPhotons"    : NTupleCollection("gamma", photonTypeSusy, 50, help="photons with pt>20 and loose cut based ID"),
-        "selectedIsoTrack"    : NTupleCollection("isoTrack", isoTrackType, 50, help="isoTrack, sorted by pt"),
         "genParticles" : NTupleCollection("genPart", genParticleWithMotherId, 300, help="all pruned genparticles"),
 })
         

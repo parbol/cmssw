@@ -8,6 +8,10 @@ from CMGTools.TTHAnalysis.analyzers.susyCore_modules_cff import *
 cfg.Analyzer.nosubdir = True 
 
 
+
+
+###################################################################################
+## Redefinition of the objects should come here
 ##------------------------------------------
 ## Redefine what I need
 ##------------------------------------------
@@ -73,7 +77,6 @@ genAna.allGenTaus = True
 ##------------------------------------------ 
 ##  JZB specific VARIABLES: jzb, pt1, pt2, phi1, phi2, eta1, eta2, mll, index1, index2
 ##------------------------------------------ 
-
 from CMGTools.TTHAnalysis.analyzers.ttHJZBTopologicalVars import ttHJZBTopologicalVars
 
 ttHJZBTopologicalVars = cfg.Analyzer(
@@ -85,43 +88,34 @@ ttHJZBTopologicalVars = cfg.Analyzer(
 ##------------------------------------------
 ##  PRODUCER
 ##------------------------------------------
-
-from CMGTools.TTHAnalysis.samples.triggers_13TeV_PHYS14 import triggers_HT900, triggers_MET170, triggers_HTMET, triggers_MT2_mumu, triggers_MT2_ee, triggers_MT2_mue, triggers_1mu, triggers_photon155,triggers_1mu_isolow
+###Notice that at this point we are only using the double lepton triggers. We might need the HT for trigger efficiency calculation
+from CMGTools.TTHAnalysis.samples.triggers_13TeV_PHYS14 import triggers_mumu_iso, triggers_ee 
 
 
 triggerFlagsAna.triggerBits = {
-            'HT900' : triggers_HT900,
-            'MET170' : triggers_MET170,
-            'ht350met120' : triggers_HTMET,
-            'SingleMu' : triggers_1mu_isolow,
-            'DoubleMu' : triggers_MT2_mumu,
-            'DoubleEl' : triggers_MT2_ee,
-            'MuEG'     : triggers_MT2_mue,
-            'htXprescale' : triggers_HTMET,
-            'Photons'  : triggers_photon155
+            'DoubleMu' : triggers_mumu_iso,
+            'DoubleEl' : triggers_ee,
+            'MuEG'     : triggers_mue,
 }
 
 #-------- SEQUENCE
 
-from CMGTools.TTHAnalysis.analyzers.treeProducerSusyFullHad import *
+from CMGTools.TTHAnalysis.analyzers.treeProducerSusyJZBEdge import * 
 
 treeProducer = cfg.Analyzer(
-     AutoFillTreeProducer, name='treeProducerSusyFullHad',
+     AutoFillTreeProducer, name='treeProducerSusyJZBEdge',
 ##     AutoFillTreeProducer, name='treeProducerSusyCore',
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      PDFWeights = PDFWeights,
-     globalVariables = susyFullHad_globalVariables,
-     globalObjects = susyFullHad_globalObjects,
-     collections = susyFullHad_collections,
+     globalVariables = susyJZBEdge_globalVariables,
+     globalObjects = susyJZBEdge_globalObjects,
+     collections = susyJZBEdge_collections,
      defaultFloatType = 'F',
 )
 
-susyCoreSequence.insert(susyCoreSequence.index(skimAnalyzer),
-                        susyCounter)
-
-#susyCoreSequence.insert(susyCoreSequence.index(ttHLepSkim),
-#                        ttHZskim)
+#Do we need this?
+susyCoreSequence.insert(susyCoreSequence.index(skimAnalyzer), susyCounter)
 
 sequence = cfg.Sequence(
     susyCoreSequence+[
@@ -133,6 +127,7 @@ sequence = cfg.Sequence(
 #treeProducer.isCompressed = 0
 
 
+#Not get yet here...
 #-------- HOW TO RUN
 test = 0
 if test==0:
