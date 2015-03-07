@@ -35,31 +35,54 @@ class ttHJZBTopologicalVars( Analyzer ):
         count.register('all events')
 
     def makeMETRecoil(self, event):
-        event.METRecoil = event.MET + event.selectedLeptons[event.index1] + event.selectedLeptons[event.index2] 
+        
+        if len(event.selectedLeptons) > 1:
+            event.METRecoil = event.met.p4() + event.selectedLeptons[event.index1].p4() + event.selectedLeptons[event.index2].p4() 
 
 
     def makeHadronicRecoil(self, event):
         objectsjet40 = [ j for j in event.cleanJets if j.pt() > 40 and abs(j.eta())<2.5 ]
         if len(objectsjet40)>0:
             for jet in objectsjet40:
-                event.HadronicRecoil = event.HadronicRecoil + j.p()
+                event.HadronicRecoil = event.HadronicRecoil + jet.p4()
   	  
     def makeJZB(self, event):
-        event.jzb = event.METRecoil.pt() - (event.selectedLeptons[event.index1] + event.selectedLeptons[event.index2]).pt()        
+        
+        if len(event.selectedLeptons) > 1:
+           event.jzb = event.METRecoil.pt() - (event.selectedLeptons[event.index1].p4() + event.selectedLeptons[event.index2].p4()).pt()        
         
     def makeLeptonSelection(self, event):
         theLeptons = [ j for j in event.selectedLeptons if j.pt() > 25 and abs(j.eta())<2.4 ]
-        if len(theLeptons) > 0:
-            for lepton in theLeptons:
-            #Need to define how we select the leptons
-            
-        event.pt1 = theLeptons[event.index1].pt() 
-        event.pt2 = theLeptons[event.index1].pt() 
-        event.eta1 = theLeptons[event.index1].eta() 
-        event.eta2 = theLeptons[event.index2].eta() 
-        event.phi1 = theLeptons[event.index1].phi() 
-        event.phi2 = theLeptons[event.index2].phi() 
-
+        if len(theLeptons) > 1:
+            unsortedLeptons = theLeptons
+            theLeptons.sort(key=lambda x: x.pt(), reverse=True)
+            index1 = 0
+            index2 = 0
+            for lep in unsortedLeptons:
+                if(theLeptons[0] == lep):
+                    event.index1 = index1
+                    break
+                index1 = index1 + 1
+            for lep in unsortedLeptons:
+                if(theLeptons[1] == lep):
+                    event.index2 = index2
+                    break
+                index2 = index2 + 2
+    
+            event.pt1 = theLeptons[0].pt() 
+            event.pt2 = theLeptons[1].pt() 
+            event.eta1 = theLeptons[0].eta() 
+            event.eta2 = theLeptons[1].eta() 
+            event.phi1 = theLeptons[0].phi() 
+            event.phi2 = theLeptons[1].phi() 
+            event.ch1 = theLeptons[0].charge() 
+            event.ch2 = theLeptons[1].charge() 
+            event.id1 = theLeptons[0].pdgId()
+            event.id2 = theLeptons[1].pdgId()
+            event.index1 = index1
+            event.index2 = index2
+            event.mll = (theLeptons[0].p4() + theLeptons[1].p4()).M()
+            event.pt = (theLeptons[0].p4() + theLeptons[1].p4()).pt()
 
     #Need to update here what I want
     def process(self, event):
@@ -78,8 +101,8 @@ class ttHJZBTopologicalVars( Analyzer ):
         event.index2 = 0
         event.id1 = 0
         event.id2 = 0
-        event.charge1 = 0
-        event.charge2 = 0
+        event.ch1 = 0
+        event.ch2 = 0
         event.jzb = 0
         event.HadronicRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
         event.METRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )

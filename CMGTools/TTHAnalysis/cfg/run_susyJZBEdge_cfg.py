@@ -89,7 +89,7 @@ ttHJZBTopologicalVars = cfg.Analyzer(
 ##  PRODUCER
 ##------------------------------------------
 ###Notice that at this point we are only using the double lepton triggers. We might need the HT for trigger efficiency calculation
-from CMGTools.TTHAnalysis.samples.triggers_13TeV_PHYS14 import triggers_mumu_iso, triggers_ee 
+from CMGTools.TTHAnalysis.samples.triggers_13TeV_PHYS14 import triggers_mumu_iso, triggers_ee, triggers_mue 
 
 
 triggerFlagsAna.triggerBits = {
@@ -129,7 +129,7 @@ sequence = cfg.Sequence(
 
 #Not get yet here...
 #-------- HOW TO RUN
-test = 0
+test = 3
 if test==0:
     # ------------------------------------------------------------------------------------------- #
     # --- all this lines taken from CMGTools.TTHAnalysis.samples.samples_13TeV_PHYS14 
@@ -171,15 +171,24 @@ elif test==2:
         comp.splitFactor = 251
         comp.files = comp.files[:]
         #comp.files = comp.files[:1]
+elif test==3:
+    comp = cfg.MCComponent(   
+           files = ['file:////scratch/pablom/miniAOD_GJets_forPablo.root'],
+           name="SingleSample", isMC=True,isEmbed=False)
+    selectedComponents = [comp]
+
 
 from PhysicsTools.HeppyCore.framework.services.tfile import TFileService 
 output_service = cfg.Service(
       TFileService,
       'outputfile',
       name="outputfile",
-      fname='mt2.root',
+      fname='jzb.root',
       option='recreate'
     )
+
+
+
 
 # the following is declared in case this cfg is used in input to the heppy.py script                                                                                                                   
 from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
