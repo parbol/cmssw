@@ -11,7 +11,7 @@ susyJZBEdge_globalVariables = susyCore_globalVariables + [
     ##-------------------------------------------------------
     NTupleVariable("pt1", lambda ev : ev.pt1, help="Momentum of leading lepton"),
     NTupleVariable("pt2", lambda ev : ev.pt2, help="Momentum of trailing lepton"),
-    NTupleVariable("eta", lambda ev : ev.eta1, help="Eta of leading lepton"),
+    NTupleVariable("eta1", lambda ev : ev.eta1, help="Eta of leading lepton"),
     NTupleVariable("eta2", lambda ev : ev.eta2, help="Eta of trailing lepton"),
     NTupleVariable("phi1", lambda ev : ev.phi1, help="Phi of leading lepton"),
     NTupleVariable("phi2", lambda ev : ev.phi2, help="Phi of trailing lepton"),

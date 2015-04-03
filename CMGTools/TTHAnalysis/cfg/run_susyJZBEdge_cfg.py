@@ -173,7 +173,7 @@ elif test==2:
         #comp.files = comp.files[:1]
 elif test==3:
     comp = cfg.MCComponent(   
-           files = ['file:////scratch/pablom/miniAOD_GJets_forPablo.root'],
+           files = ['file://///scratch/pablom/00C90EFC-3074-E411-A845-002590DB9262.root'],
            name="SingleSample", isMC=True,isEmbed=False)
     selectedComponents = [comp]
 

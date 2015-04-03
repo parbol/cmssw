@@ -67,7 +67,7 @@ class ttHJZBTopologicalVars( Analyzer ):
                 if(theLeptons[1] == lep):
                     event.index2 = index2
                     break
-                index2 = index2 + 2
+                index2 = index2 + 1
     
             event.pt1 = theLeptons[0].pt() 
             event.pt2 = theLeptons[1].pt() 
@@ -83,6 +83,9 @@ class ttHJZBTopologicalVars( Analyzer ):
             event.index2 = index2
             event.mll = (theLeptons[0].p4() + theLeptons[1].p4()).M()
             event.pt = (theLeptons[0].p4() + theLeptons[1].p4()).pt()
+            self.makeMETRecoil(event)
+            self.makeHadronicRecoil(event)
+            self.makeJZB(event)
 
     #Need to update here what I want
     def process(self, event):
@@ -108,8 +111,5 @@ class ttHJZBTopologicalVars( Analyzer ):
         event.METRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
 
         self.makeLeptonSelection(event)
-        self.makeMETRecoil(event)
-        self.makeHadronicRecoil(event)
-        self.makeJZB(event)
 
         return True
