@@ -23,7 +23,7 @@ vertexAna.keepFailingEvents = True # keep events with no good vertices
 lepAna.loose_muon_dxy = 0.5
 lepAna.loose_muon_dz  = 1.0
 lepAna.loose_muon_relIso  = 0.15
-lepAna.loose_electron_id  = "POG_Cuts_ID_2012_Veto"
+lepAna.loose_electron_id  = "POG_Cuts_ID_2012_Loose"
 lepAna.loose_electron_pt  = 5
 lepAna.loose_electron_eta    = 2.4
 lepAna.loose_electron_dxy    = 0.04
@@ -31,10 +31,15 @@ lepAna.loose_electron_dz     = 0.2
 lepAna.loose_electron_relIso = 0.15
 lepAna.loose_electron_lostHits = 999 # no cut
 lepAna.inclusive_electron_lostHits = 999 # no cut
-lepAna.mu_isoCorr = "deltaBeta"
-lepAna.ele_isoCorr = "deltaBeta"
+lepAna.mu_isoCorr = "rhoArea"
+lepAna.ele_isoCorr = "rhoArea"
 lepAna.ele_tightId = "Cuts_2012"
 lepAna.notCleaningElectrons = True
+
+
+
+
+
 
 # JET (for event variables do apply the jetID and not PUID yet)
 jetAna.relaxJetId = False
@@ -129,7 +134,7 @@ sequence = cfg.Sequence(
 
 #Not get yet here...
 #-------- HOW TO RUN
-test = 3
+test = 2 
 if test==0:
     # ------------------------------------------------------------------------------------------- #
     # --- all this lines taken from CMGTools.TTHAnalysis.samples.samples_13TeV_PHYS14 
@@ -165,7 +170,8 @@ elif test==1:
     comp.splitFactor = 10
 elif test==2:
     from CMGTools.TTHAnalysis.samples.samples_13TeV_PHYS14 import *
-    selectedComponents = [ SingleMu, DoubleElectron, TTHToWW_PUS14, DYJetsToLL_M50_PU20bx25, TTJets_PUS14 ]
+    #selectedComponents = [ SingleMu, DoubleElectron, TTHToWW_PUS14, DYJetsToLL_M50_PU20bx25, TTJets_PUS14 ]
+    selectedComponents = [ DYJetsToLL_M50, TTJets ]
     # test all components (1 thread per component).
     for comp in selectedComponents:
         comp.splitFactor = 251
@@ -173,7 +179,7 @@ elif test==2:
         #comp.files = comp.files[:1]
 elif test==3:
     comp = cfg.MCComponent(   
-           files = ['file:////scratch/pablom/miniAOD_GJets_forPablo.root'],
+           files = ['file:////tmp/pablom/ttbar.root'],
            name="SingleSample", isMC=True,isEmbed=False)
     selectedComponents = [comp]
 
