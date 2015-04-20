@@ -179,15 +179,7 @@ elif test==2:
         #comp.files = comp.files[:1]
 elif test==3:
     comp = cfg.MCComponent(   
-<<<<<<< HEAD
-<<<<<<< HEAD
            files = ['file:////tmp/pablom/ttbar.root'],
-=======
-           files = ['file://///scratch/pablom/00C90EFC-3074-E411-A845-002590DB9262.root'],
->>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
-=======
-           files = ['file://///scratch/pablom/00C90EFC-3074-E411-A845-002590DB9262.root'],
->>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
            name="SingleSample", isMC=True,isEmbed=False)
     selectedComponents = [comp]
 
