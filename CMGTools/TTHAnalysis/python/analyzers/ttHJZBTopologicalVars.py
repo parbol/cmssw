@@ -51,6 +51,7 @@ class ttHJZBTopologicalVars( Analyzer ):
         if len(event.selectedLeptons) > 1:
            event.jzb = event.METRecoil.pt() - (event.selectedLeptons[0].p4() + event.selectedLeptons[1].p4()).pt()        
         
+<<<<<<< HEAD
     def makeZVars(self, event):
 
         if len(event.selectedLeptons) > 1:
@@ -69,6 +70,45 @@ class ttHJZBTopologicalVars( Analyzer ):
             event.genl1l2_phi = (event.genleps[0].p4() + event.genleps[1].p4()).phi() 
             event.genl1l2_DR = deltaR(event.genleps[0].eta(), event.genleps[0].phi(), event.genleps[1].eta(), event.genleps[1].phi())  
 
+=======
+    def makeLeptonSelection(self, event):
+        theLeptons = [ j for j in event.selectedLeptons if j.pt() > 25 and abs(j.eta())<2.4 ]
+        if len(theLeptons) > 1:
+            unsortedLeptons = theLeptons
+            theLeptons.sort(key=lambda x: x.pt(), reverse=True)
+            index1 = 0
+            index2 = 0
+            for lep in unsortedLeptons:
+                if(theLeptons[0] == lep):
+                    event.index1 = index1
+                    break
+                index1 = index1 + 1
+            for lep in unsortedLeptons:
+                if(theLeptons[1] == lep):
+                    event.index2 = index2
+                    break
+                index2 = index2 + 1
+    
+            event.pt1 = theLeptons[0].pt() 
+            event.pt2 = theLeptons[1].pt() 
+            event.eta1 = theLeptons[0].eta() 
+            event.eta2 = theLeptons[1].eta() 
+            event.phi1 = theLeptons[0].phi() 
+            event.phi2 = theLeptons[1].phi() 
+            event.ch1 = theLeptons[0].charge() 
+            event.ch2 = theLeptons[1].charge() 
+            event.id1 = theLeptons[0].pdgId()
+            event.id2 = theLeptons[1].pdgId()
+            event.index1 = index1
+            event.index2 = index2
+            event.mll = (theLeptons[0].p4() + theLeptons[1].p4()).M()
+            event.pt = (theLeptons[0].p4() + theLeptons[1].p4()).pt()
+            self.makeMETRecoil(event)
+            self.makeHadronicRecoil(event)
+            self.makeJZB(event)
+
+    #Need to update here what I want
+>>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
     def process(self, event):
         self.readCollections( event.input )
         
@@ -88,10 +128,14 @@ class ttHJZBTopologicalVars( Analyzer ):
         event.HadronicRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
         event.METRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
 
+<<<<<<< HEAD
         self.makeZVars(event)
         self.makeZGenVars(event)
         self.makeMETRecoil(event)
         self.makeHadronicRecoil(event)
         self.makeJZB(event)
+=======
+        self.makeLeptonSelection(event)
+>>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
 
         return True
