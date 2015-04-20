@@ -129,11 +129,15 @@ class ttHJZBTopologicalVars( Analyzer ):
         event.METRecoil = ROOT.reco.Particle.LorentzVector( 0, 0, 0, 0 )
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.makeZVars(event)
         self.makeZGenVars(event)
         self.makeMETRecoil(event)
         self.makeHadronicRecoil(event)
         self.makeJZB(event)
+=======
+        self.makeLeptonSelection(event)
+>>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
 =======
         self.makeLeptonSelection(event)
 >>>>>>> 59aa17e6ec242563888e9e0332f5b35dd794fa13
