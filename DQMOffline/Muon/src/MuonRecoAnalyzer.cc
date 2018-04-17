@@ -458,7 +458,7 @@ void MuonRecoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 	   if (&(*beamSpot)==NULL) {
 	     refPoint = beamSpot->position();
 	   } else {
-	     cout << "ERROR: No beam sport found!" << endl;
+	     edm::LogInfo("MuonRecoAnalyzer") << "ERROR: No beam sport found!" << endl;
 	   }
          }
       }
