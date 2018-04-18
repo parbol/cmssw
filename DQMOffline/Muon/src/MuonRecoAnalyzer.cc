@@ -455,7 +455,7 @@ void MuonRecoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& 
          if (pvIndex > -1) {
 	   refPoint = vertex->at(pvIndex).position();
          } else {
-	   if (&(*beamSpot)==NULL) {
+	   if(beamSpot.isValid()) {
 	     refPoint = beamSpot->position();
 	   } else {
 	     edm::LogInfo("MuonRecoAnalyzer") << "ERROR: No beam sport found!" << endl;
