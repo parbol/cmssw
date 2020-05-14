@@ -11,6 +11,7 @@
 
 #include "DataFormats/DetId/interface/DetId.h"
 #include "TrackingTools/DetLayers/interface/DetLayerGeometry.h"
+#include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
 #include <vector>
 #include <map>
 
@@ -50,7 +51,9 @@ public:
   /// return the DetLayer which correspond to a certain DetId
   const DetLayer* idToLayer(const DetId& detId) const override;
 
-private:
+  /// Added to allow building the MTDDetLayer from external plugins
+  void buildLayers(const MTDGeometry& geo);
+
   /// Add ETL layers
   /// etllayers.first=forward (+Z), etllayers.second=backward (-Z)
   /// both vectors are ASSUMED to be sorted inside-out
@@ -62,6 +65,8 @@ private:
   DetId makeDetLayerId(const DetLayer* detLayer) const;
 
   void sortLayers();
+
+  private:
 
   std::vector<const DetLayer*> etlLayers_fw;
   std::vector<const DetLayer*> etlLayers_bk;

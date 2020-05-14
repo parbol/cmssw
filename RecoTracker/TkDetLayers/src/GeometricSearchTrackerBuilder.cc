@@ -15,6 +15,10 @@
 #include "Geometry/CommonDetUnit/interface/GeomDet.h"
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
 
+#include "RecoMTD/DetLayers/plugins/BTLDetLayerGeometryBuilder.h"
+#include "RecoMTD/DetLayers/plugins/ETLDetLayerGeometryBuilder.h"
+
+
 #include "DataFormats/Common/interface/Trie.h"
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
@@ -200,3 +204,51 @@ GeometricSearchTracker* GeometricSearchTrackerBuilder::build(const GeometricDet*
                                     thePosTECLayers,
                                     tTopo);
 }
+
+
+
+GeometricSearchTracker* GeometricSearchTrackerBuilder::build(const GeometricDet* theGeometricTracker,
+                                                             const TrackerGeometry* theGeomDetGeometry,
+                                                             const TrackerTopology* tTopo,
+                                                             const MTDGeometry *mtd) {
+
+ 
+  //Tracker part
+  GeometricSearchTracker *theSearchTrack = this->build(theGeometricTracker, theGeomDetGeometry, tTopo);
+
+  theSearchTrack->addDetLayerGeometry();
+  theSearchTrack->mtdDetLayerGeometry->buildLayers(*mtd);
+  theSearchTrack->mtdDetLayerGeometry->sortLayers();
+
+  std::vector<const BarrelDetLayer *> barrel;
+  for(auto &&e : theSearchTrack->mtdDetLayerGeometry->allBarrelLayers()) {
+      auto p = dynamic_cast<const BarrelDetLayer *>(e);
+      if(p) {
+          barrel.push_back(p);
+      }         
+  }
+  std::vector<const ForwardDetLayer *> backward;
+  for(auto &&e : theSearchTrack->mtdDetLayerGeometry->allBackwardLayers()) {
+      auto p = dynamic_cast<const ForwardDetLayer *>(e);
+      if(p) {
+          backward.push_back(p);
+      }
+  }
+
+  std::vector<const ForwardDetLayer *> forward;
+  for(auto &&e : theSearchTrack->mtdDetLayerGeometry->allForwardLayers()) {
+      auto p = dynamic_cast<const ForwardDetLayer *>(e);
+      if(p) {
+          forward.push_back(p);
+      }
+  }
+
+  //Include the MTD layers in the TrackerSearchGeometry
+  theSearchTrack->addMTDLayers(barrel, backward, forward);
+
+
+  return theSearchTrack;
+
+}
+
+

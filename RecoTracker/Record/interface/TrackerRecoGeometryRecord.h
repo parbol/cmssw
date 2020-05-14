@@ -5,11 +5,13 @@
 #include "FWCore/Framework/interface/DependentRecordImplementation.h"
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
+#include "Geometry/Records/interface/MTDGeometryRecord.h"
+#include "Geometry/Records/interface/MTDDigiGeometryRecord.h"
 
 #include "boost/mpl/vector.hpp"
 
 class TrackerRecoGeometryRecord : public edm::eventsetup::DependentRecordImplementation<
                                       TrackerRecoGeometryRecord,
-                                      boost::mpl::vector<TrackerTopologyRcd, TrackerDigiGeometryRecord> > {};
+                                      boost::mpl::vector<TrackerTopologyRcd, TrackerDigiGeometryRecord, MTDGeometryRecord, MTDDigiGeometryRecord> > {};
 
 #endif

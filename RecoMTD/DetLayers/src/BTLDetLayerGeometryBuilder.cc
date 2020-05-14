@@ -1,9 +1,9 @@
-#include "BTLDetLayerGeometryBuilder.h"
 
 #include <DataFormats/ForwardDetId/interface/BTLDetId.h>
 #include <Geometry/CommonDetUnit/interface/GeomDet.h>
 #include <RecoMTD/DetLayers/interface/MTDTrayBarrelLayer.h>
 #include <RecoMTD/DetLayers/interface/MTDDetTray.h>
+#include "RecoMTD/DetLayers/interface/BTLDetLayerGeometryBuilder.h"
 
 #include <Utilities/General/interface/precomputed_value_sort.h>
 #include <Geometry/CommonDetUnit/interface/DetSorting.h>

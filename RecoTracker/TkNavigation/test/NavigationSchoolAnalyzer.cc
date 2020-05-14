@@ -41,6 +41,10 @@
 #include "TrackingTools/DetLayers/interface/NavigationSchool.h"
 #include "RecoTracker/Record/interface/NavigationSchoolRecord.h"
 
+#include <DataFormats/ForwardDetId/interface/BTLDetId.h>
+#include <DataFormats/ForwardDetId/interface/ETLDetId.h>
+
+
 #include "TrackingTools/DetLayers/interface/DetLayer.h"
 // #include "TrackingTools/DetLayers/interface/NavigationSetter.h"
 
@@ -77,6 +81,15 @@ void NavigationSchoolAnalyzer::print(std::ostream& os, const DetLayer* dl) {
   if (GeomDetEnumerators::isTracker(dl->subDetector())) {
     LorW = tTopo->layer(tag->geographicalId());
     side = tTopo->side(tag->geographicalId());
+  } else if(dl->subDetector() == GeomDetEnumerators::TimingEndcap) {
+    ETLDetId id(dl->basicComponents().front()->geographicalId().rawId());
+    LorW = 0;
+    side = id.mtdSide();
+    if(side == 1) {
+        side = 0;
+    } else {
+        side = 1;
+    }
   } else {
     switch (dl->subDetector()) {
       case GeomDetEnumerators::DT:

@@ -5,6 +5,8 @@
  */
 
 #include <RecoMTD/DetLayers/interface/MTDDetLayerGeometry.h>
+#include <RecoMTD/DetLayers/interface/ETLDetLayerGeometryBuilder.h>
+#include <RecoMTD/DetLayers/interface/BTLDetLayerGeometryBuilder.h>
 
 #include <FWCore/Utilities/interface/Exception.h>
 #include <TrackingTools/DetLayers/interface/DetLayer.h>
@@ -23,15 +25,31 @@ MTDDetLayerGeometry::MTDDetLayerGeometry() {}
 
 MTDDetLayerGeometry::~MTDDetLayerGeometry() {}
 
+
+void MTDDetLayerGeometry::buildLayers(const MTDGeometry& geo) {
+
+    addBTLLayers(BTLDetLayerGeometryBuilder::buildLayers(geo));
+    addETLLayers(ETLDetLayerGeometryBuilder::buildLayers(geo));
+
+}
+
+
+
 void MTDDetLayerGeometry::addETLLayers(const pair<vector<DetLayer*>, vector<DetLayer*> >& etllayers) {
-  for (auto const it : etllayers.first) {
+
+
+  //Need to change this in order to ensure that the forward layers contain positive Z and backward layers negative
+  //Need to discuss with Paolo about this
+  //for (auto const it : etllayers.first) {
+  for (auto const it : etllayers.second) {
     etlLayers_fw.push_back(it);
     allForward.push_back(it);
 
     detLayersMap[makeDetLayerId(it)] = it;
   }
 
-  for (auto const it : etllayers.second) {
+  //for (auto const it : etllayers.second) {
+  for (auto const it : etllayers.first) {
     etlLayers_bk.push_back(it);
     allBackward.push_back(it);
 
