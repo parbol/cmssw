@@ -16,8 +16,8 @@
 #include "Geometry/Records/interface/MTDDigiGeometryRecord.h"
 #include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
 
-#include "ETLDetLayerGeometryBuilder.h"
-#include "BTLDetLayerGeometryBuilder.h"
+#include "RecoMTD/DetLayers/interface/ETLDetLayerGeometryBuilder.h"
+#include "RecoMTD/DetLayers/interface/BTLDetLayerGeometryBuilder.h"
 #include "RecoMTD/DetLayers/interface/MTDDetLayerGeometry.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -48,6 +48,10 @@ MTDDetLayerGeometryESProducer::MTDDetLayerGeometryESProducer(const edm::Paramete
 std::unique_ptr<MTDDetLayerGeometry> MTDDetLayerGeometryESProducer::produce(const MTDRecoGeometryRecord& record) {
   auto mtdDetLayerGeometry = std::make_unique<MTDDetLayerGeometry>();
 
+  auto mtd = record.getHandle(geomToken_);
+  mtdDetLayerGeometry->buildLayers(*mtd);
+
+  /*
   if (auto mtd = record.getHandle(geomToken_)) {
     // Build BTL layers
     mtdDetLayerGeometry->addBTLLayers(BTLDetLayerGeometryBuilder::buildLayers(*mtd));
@@ -57,7 +61,7 @@ std::unique_ptr<MTDDetLayerGeometry> MTDDetLayerGeometryESProducer::produce(cons
     const std::string metname = "MTD|RecoMTD|RecoMTDDetLayers|MTDDetLayerGeometryESProducer";
     LogInfo(metname) << "No MTD geometry is available.";
   }
-
+  */
   // Sort layers properly
   mtdDetLayerGeometry->sortLayers();
 

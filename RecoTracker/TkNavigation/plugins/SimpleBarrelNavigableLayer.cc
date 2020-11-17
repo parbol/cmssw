@@ -44,12 +44,14 @@ SimpleBarrelNavigableLayer::SimpleBarrelNavigableLayer(const BarrelDetLayer* det
   for (ConstFDLI fl = outerRightFL.begin(); fl != outerRightFL.end(); fl++)
     thePosOuterLayers.push_back(*fl);
 
+  std::cout << "Good" << std::endl;
   // sort the outer layers
   sort(theNegOuterLayers.begin(), theNegOuterLayers.end(), TkLayerLess());
   sort(thePosOuterLayers.begin(), thePosOuterLayers.end(), TkLayerLess());
   sort(theOuterBarrelLayers.begin(), theOuterBarrelLayers.end(), TkLayerLess());
   sort(theOuterLeftForwardLayers.begin(), theOuterLeftForwardLayers.end(), TkLayerLess());
   sort(theOuterRightForwardLayers.begin(), theOuterRightForwardLayers.end(), TkLayerLess());
+  std::cout << "Back goo" << std::endl;
 }
 
 vector<const DetLayer*> SimpleBarrelNavigableLayer::nextLayers(NavigationDirection dir) const {

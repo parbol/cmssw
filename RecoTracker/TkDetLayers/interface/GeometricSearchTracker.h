@@ -4,6 +4,7 @@
 #include "TrackingTools/DetLayers/interface/BarrelDetLayer.h"
 #include "TrackingTools/DetLayers/interface/ForwardDetLayer.h"
 #include "TrackingTools/DetLayers/interface/DetLayerGeometry.h"
+#include "RecoMTD/DetLayers/interface/MTDDetLayerGeometry.h"
 
 class TrackerTopology;
 
@@ -26,6 +27,14 @@ public:
 
   ~GeometricSearchTracker() override __attribute__((cold));
 
+
+  void addDetLayerGeometry();
+  
+  void addMTDLayers(const std::vector<BarrelDetLayer const*>& btl,
+                    const std::vector<ForwardDetLayer const*>& negEtl,
+                    const std::vector<ForwardDetLayer const*>& posEtl);
+
+
   std::vector<DetLayer const*> const& allLayers() const { return theAllLayers; }
 
   std::vector<BarrelDetLayer const*> const& barrelLayers() const { return theBarrelLayers; }
@@ -45,6 +54,11 @@ public:
   std::vector<ForwardDetLayer const*> const& posPixelForwardLayers() const { return thePosPixelForwardLayers; }
   std::vector<ForwardDetLayer const*> const& posTidLayers() const { return thePosTidLayers; }
   std::vector<ForwardDetLayer const*> const& posTecLayers() const { return thePosTecLayers; }
+  
+  std::vector<BarrelDetLayer const*> const& BTLLayers() const { return theBTLLayers; }
+  std::vector<ForwardDetLayer const*> const& ETLLayers() const { return theETLLayers; }
+  std::vector<ForwardDetLayer const*> const& negETLLayers() const { return theNegETLLayers; }
+  std::vector<ForwardDetLayer const*> const& posETLLayers() const { return thePosETLLayers; }
 
   /// Give the DetId of a module, returns the pointer to the corresponding DetLayer
   const DetLayer* idToLayer(const DetId& detId) const override;
@@ -52,7 +66,11 @@ public:
   /// obsolete method. Use idToLayer() instead.
   const DetLayer* detLayer(const DetId& id) const { return idToLayer(id); };
 
+  MTDDetLayerGeometry *mtdDetLayerGeometry;
+
+
 private:
+
   std::vector<DetLayer const*> theAllLayers;
   std::vector<BarrelDetLayer const*> theBarrelLayers;
   std::vector<ForwardDetLayer const*> theForwardLayers;
@@ -70,7 +88,14 @@ private:
   std::vector<ForwardDetLayer const*> thePosTidLayers;
   std::vector<ForwardDetLayer const*> thePosTecLayers;
 
+  //MTD stuff
+  std::vector<BarrelDetLayer const*> theBTLLayers;
+  std::vector<ForwardDetLayer const*> theETLLayers;
+  std::vector<ForwardDetLayer const*> theNegETLLayers;
+  std::vector<ForwardDetLayer const*> thePosETLLayers;
+
   const TrackerTopology* theTrkTopo;
+
 };
 
 #endif

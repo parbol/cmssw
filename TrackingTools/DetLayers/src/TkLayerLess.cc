@@ -9,6 +9,20 @@ bool TkLayerLess::insideOutLess(const DetLayer* a, const DetLayer* b) const {
   const BarrelDetLayer* bla = dynamic_cast<const BarrelDetLayer*>(a);
   const BarrelDetLayer* blb = dynamic_cast<const BarrelDetLayer*>(b);
 
+  if(a == nullptr) {
+      std::cout << "Print caca" << std::endl;
+      throw cms::Exception("TkLayerLess", "Arguments are not Barrel or Forward DetLayers");
+  }
+
+  if (a->subDetector() == GeomDetEnumerators::TimingEndcap) {
+    //ETLDetId id(detLayer->basicComponents().front()->geographicalId().rawId());
+    std::cout << "Endcap layer" << std::endl;
+  } else if (a->subDetector() == GeomDetEnumerators::TimingBarrel) {
+    //BTLDetId id(detLayer->basicComponents().front()->geographicalId().rawId());
+    std::cout << "Barrel layer" << std::endl;
+  }  
+
+
   if (bla != nullptr && blb != nullptr) {  // barrel with barrel
     return bla->specificSurface().radius() < blb->specificSurface().radius();
   }

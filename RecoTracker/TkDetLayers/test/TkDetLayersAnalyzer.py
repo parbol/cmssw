@@ -6,8 +6,17 @@ process.maxEvents = cms.untracked.PSet(  input = cms.untracked.int32(1) )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
+############################Added by Pablo######################################
+process.load("Configuration.Geometry.GeometryExtended2026D49Reco_cff")
+#process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load("Geometry.MTDNumberingBuilder.mtdNumberingGeometry_cfi")
+process.load("Geometry.MTDNumberingBuilder.mtdTopology_cfi")
+process.load("Geometry.MTDGeometryBuilder.mtdGeometry_cfi")
+process.load("Geometry.MTDGeometryBuilder.mtdParameters_cfi")
+process.mtdGeometry.applyAlignment = cms.bool(False)
+process.load("MagneticField.Engine.volumeBasedMagneticField_160812_cfi")
+process.load("RecoMTD.DetLayers.mtdDetLayerGeometry_cfi")
 
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 

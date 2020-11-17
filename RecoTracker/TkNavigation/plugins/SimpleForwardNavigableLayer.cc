@@ -34,10 +34,14 @@ SimpleForwardNavigableLayer::SimpleForwardNavigableLayer(const ForwardDetLayer* 
   for (ConstFDLI fl = outerFL.begin(); fl != outerFL.end(); fl++)
     theOuterLayers.push_back(*fl);
 
+  std::cout << "Good endcap" << std::endl;
   // sort the outer layers
   sort(theOuterLayers.begin(), theOuterLayers.end(), TkLayerLess());
+  std::cout << "Good endcap back 1" << std::endl;
   sort(theOuterForwardLayers.begin(), theOuterForwardLayers.end(), TkLayerLess());
+  std::cout << "Good endcap back 2 " << std::endl;
   sort(theOuterBarrelLayers.begin(), theOuterBarrelLayers.end(), TkLayerLess());
+  std::cout << "Good endcap back 3" << std::endl;
 }
 
 vector<const DetLayer*> SimpleForwardNavigableLayer::nextLayers(NavigationDirection dir) const {

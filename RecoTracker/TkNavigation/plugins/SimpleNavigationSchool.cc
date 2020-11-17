@@ -42,11 +42,18 @@ void SimpleNavigationSchool::init() {
   theLeftLayers = FDLC(theForwardLayers.begin(), middle);
   theRightLayers = FDLC(middle, theForwardLayers.end());
 
+  for(auto i : theLeftLayers) {
+      std::cout << "Printing layer: " << i->subDetector() << " " << i->basicComponents().front()->geographicalId().rawId() << std::endl;
+  }
+
   SymmetricLayerFinder symFinder(theForwardLayers);
 
+  
   // only work on positive Z side; negative by mirror symmetry later
   linkBarrelLayers(symFinder);
+  std::cout << "Bien here chachi" << std::endl;
   linkForwardLayers(symFinder);
+  std::cout << "Bien here" << std::endl;
   establishInverseRelations();
 }
 
@@ -138,9 +145,15 @@ void SimpleNavigationSchool::linkForwardLayers(SymmetricLayerFinder& symFinder) 
   // handle right side first, groups are only on the right
   vector<FDLC> groups = splitForwardLayers();
 
-  LogDebug("TkNavigation") << "SimpleNavigationSchool, Forward groups size = " << groups.size();
+  std::cout << "Estoy en el linkForwardLayers dichoso" << std::endl;
+
+  //LogDebug("TkNavigation") << "SimpleNavigationSchool, Forward groups size = " << groups.size();
+  //for (vector<FDLC>::iterator g = groups.begin(); g != groups.end(); g++) {
+  //  LogDebug("TkNavigation") << "group " << g - groups.begin() << " has " << g->size() << " layers ";
+  //}
+  edm::LogInfo("TkNavigation") << "SimpleNavigationSchool, Forward groups size = " << groups.size();
   for (vector<FDLC>::iterator g = groups.begin(); g != groups.end(); g++) {
-    LogDebug("TkNavigation") << "group " << g - groups.begin() << " has " << g->size() << " layers ";
+    edm::LogInfo("TkNavigation") << "group " << g - groups.begin() << " has " << g->size() << " layers ";
   }
 
   for (vector<FDLC>::iterator group = groups.begin(); group != groups.end(); group++) {
@@ -260,6 +273,11 @@ vector<SimpleNavigationSchool::FDLC> SimpleNavigationSchool::splitForwardLayers(
   FDLC myRightLayers(theRightLayers);
   FDLI begin = myRightLayers.begin();
   FDLI end = myRightLayers.end();
+  std::cout << "splitForwardLayers" << std::endl;
+
+  for(auto i : myRightLayers) {
+      std::cout << i->subDetector() << " r: " << i->specificSurface().innerRadius() << " " << i->position().z() << std::endl;
+  } 
 
   // sort according to inner radius, but keeping the ordering in z!
   std::stable_sort(begin, end, [](const ForwardDetLayer* a, const ForwardDetLayer* b) {
