@@ -75,12 +75,15 @@ public:
   // Transform LocalPoint to Measurement. Call pixel().
   MeasurementPoint measurementPosition(const LocalPoint& lp) const override {
     std::pair<float, float> p = pixel(lp);
+    //std::tuple<float, float, bool> p = pixel(lp);
     return MeasurementPoint(p.first, p.second);
+    //return MeasurementPoint(std::get<0>(p), std::get<1>(p));
   }
 
   // PixelTopology interface.
   // Transform LocalPoint in cm to measurement in pitch units.
   std::pair<float, float> pixel(const LocalPoint& p) const override;
+  std::tuple<float, float, bool> pixelFrame(const LocalPoint& p) const;
 
   // Errors
   // Error in local (cm) from the masurement errors
@@ -93,7 +96,9 @@ public:
   //
   int channel(const LocalPoint& lp) const override {
     std::pair<float, float> p = pixel(lp);
+    //std::tuple<float, float, bool> p = pixel(lp);
     return MTDChannelIdentifier::pixelToChannel(int(p.first), int(p.second));
+    //return MTDChannelIdentifier::pixelToChannel(int(std::get<0>(p)), int(std::get<1>(p)));
   }
 
   //----
@@ -101,8 +106,11 @@ public:
   // don't need a transform for errors, same units
   LocalPoint moduleToPixelLocalPoint(const LocalPoint& mlp) const {
     std::pair<float, float> p = pixel(mlp);
+    //std::tuple<float, float, bool> p = pixel(mlp);
     return LocalPoint(mlp.x() - (m_xoffset + (int(p.first) + 0.5f) * m_pitchx),
                       mlp.y() - (m_yoffset + (int(p.second) + 0.5f) * m_pitchy),
+    //return LocalPoint(mlp.x() - (m_xoffset + (int(std::get<0>(p)) + 0.5f) * m_pitchx),
+    //                  mlp.y() - (m_yoffset + (int(std::get<1>(p)) + 0.5f) * m_pitchy),
                       mlp.z());
   }
   LocalPoint pixelToModuleLocalPoint(const LocalPoint& plp, int row, int col) const {

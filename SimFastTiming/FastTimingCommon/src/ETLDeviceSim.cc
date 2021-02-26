@@ -6,7 +6,8 @@
 #include "DataFormats/ForwardDetId/interface/ETLDetId.h"
 
 #include "Geometry/CommonDetUnit/interface/GeomDetType.h"
-#include "Geometry/CommonTopologies/interface/PixelTopology.h"
+#include "Geometry/MTDGeometryBuilder/interface/ProxyMTDTopology.h"
+#include "Geometry/MTDGeometryBuilder/interface/RectangularMTDTopology.h"
 
 ETLDeviceSim::ETLDeviceSim(const edm::ParameterSet& pset)
     : geom_(nullptr),
@@ -49,7 +50,8 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
       throw cms::Exception("ETLDeviceSim") << "GeographicalID: " << std::hex << geoId.rawId() << " (" << detId.rawId()
                                            << ") is invalid!" << std::dec << std::endl;
     }
-    const PixelTopology& topo = static_cast<const PixelTopology&>(thedet->topology());
+    const ProxyMTDTopology& topoproxy = static_cast<const ProxyMTDTopology&>(thedet->topology());
+    const RectangularMTDTopology& topo = static_cast<const RectangularMTDTopology&>(topoproxy.specificTopology());
 
     const float toa = std::get<2>(hitRefs[i]) + tofDelay_;
     const PSimHit& hit = hits->at(hitidx);
@@ -59,8 +61,11 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     const auto& pentry = hit.entryPoint();
     // ETL is already in module-local coordinates so just scale to cm from mm
     Local3DPoint simscaled(convertMmToCm(pentry.x()), convertMmToCm(pentry.y()), convertMmToCm(pentry.z()));
-    const auto& thepixel = topo.pixel(simscaled);
-    const uint8_t row(thepixel.first), col(thepixel.second);
+    const std::tuple<float, float, bool>& thepixel = topo.pixelFrame(simscaled);
+    //const uint8_t row(thepixel.first), col(thepixel.second);
+    if(std::get<2>(thepixel) == false) continue;
+
+    uint8_t row(std::get<0>(thepixel)), col(std::get<1>(thepixel));
 
     auto simHitIt =
         simHitAccumulator->emplace(mtd_digitizer::MTDCellId(id, row, col), mtd_digitizer::MTDCellInfo()).first;

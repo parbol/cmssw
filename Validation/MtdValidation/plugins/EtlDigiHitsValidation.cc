@@ -56,6 +56,7 @@ private:
   MonitorElement* meHitCharge_[4];
   MonitorElement* meHitTime_[4];
 
+  MonitorElement* ModOccupancy;
   MonitorElement* meOccupancy_[4];
 
   MonitorElement* meHitX_[4];
@@ -157,6 +158,8 @@ void EtlDigiHitsValidation::analyze(const edm::Event& iEvent, const edm::EventSe
     meHitCharge_[idet]->Fill(sample.data());
     meHitTime_[idet]->Fill(sample.toa());
     meOccupancy_[idet]->Fill(global_point.x(), global_point.y(), weight);
+
+    ModOccupancy->Fill(local_point.x(), local_point.y());
 
     meHitX_[idet]->Fill(global_point.x());
     meHitY_[idet]->Fill(global_point.y());
@@ -272,6 +275,15 @@ void EtlDigiHitsValidation::bookHistograms(DQMStore::IBooker& ibook,
                                  135,
                                  -135.,
                                  135.);
+
+  ModOccupancy = ibook.book2D("ModOccupancy",
+                                 "Module occupancy;X_{DIGI} [cm];Y_{DIGI} [cm]",
+                                 1000,
+                                 -5.,
+                                 5.,
+                                 500,
+                                 -2.5,
+                                 2.5);
 
   meHitX_[0] = ibook.book1D(
       "EtlHitXZnegD1", "ETL DIGI hits X (-Z, Single(topo1D)/First(topo2D) disk);X_{DIGI} [cm]", 100, -130., 130.);
