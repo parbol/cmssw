@@ -5,6 +5,9 @@
  */
 
 #include <RecoMTD/DetLayers/interface/MTDDetLayerGeometry.h>
+#include <RecoMTD/DetLayers/interface/ETLDetLayerGeometryBuilder.h>
+#include <RecoMTD/DetLayers/interface/BTLDetLayerGeometryBuilder.h>
+
 
 #include <FWCore/Utilities/interface/Exception.h>
 #include <TrackingTools/DetLayers/interface/DetLayer.h>
@@ -16,8 +19,12 @@
 
 #include <algorithm>
 
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+
+
 using namespace std;
 using namespace geomsort;
+using namespace edm;
 
 MTDDetLayerGeometry::MTDDetLayerGeometry() {}
 
@@ -47,6 +54,23 @@ void MTDDetLayerGeometry::addBTLLayers(const vector<DetLayer*>& dtlayers) {
     detLayersMap[makeDetLayerId(it)] = it;
   }
 }
+
+void MTDDetLayerGeometry::buildLayers(const MTDGeometry *geo, const MTDTopology *mtopo) {
+
+  if (geo) {
+    // Build BTL layers
+    this->addBTLLayers(BTLDetLayerGeometryBuilder::buildLayers(*geo));
+    // Build ETL layers, depends on the scenario
+    if (mtopo) {
+        this->addETLLayers(ETLDetLayerGeometryBuilder::buildLayers(*geo, mtopo->getMTDTopologyMode()));
+    } else {
+        LogWarning("MTDDetLayers") << "No MTD topology  is available.";
+    }
+  } else {
+    LogWarning("MTDDetLayers") << "No MTD geometry is available.";
+  }
+} 
+
 
 DetId MTDDetLayerGeometry::makeDetLayerId(const DetLayer* detLayer) const {
   if (detLayer->subDetector() == GeomDetEnumerators::TimingEndcap) {

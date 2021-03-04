@@ -11,6 +11,10 @@
 
 #include "DataFormats/DetId/interface/DetId.h"
 #include "TrackingTools/DetLayers/interface/DetLayerGeometry.h"
+#include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
+#include "Geometry/MTDNumberingBuilder/interface/MTDTopology.h"
+
+
 #include <vector>
 #include <map>
 
@@ -50,18 +54,22 @@ public:
   /// return the DetLayer which correspond to a certain DetId
   const DetLayer* idToLayer(const DetId& detId) const override;
 
-private:
-  /// Add ETL layers
-  /// etllayers.first=forward (+Z), etllayers.second=backward (-Z)
-  /// both vectors are ASSUMED to be sorted inside-out
+  // Added to allow building the MTDDetLayer from external plugins
+  void buildLayers(const MTDGeometry *geo, const MTDTopology *mtopo);
+  //
+  // Add ETL layers
+  // etllayers.first=forward (+Z), etllayers.second=backward (-Z)
+  // both vectors are ASSUMED to be sorted inside-out
   void addETLLayers(const std::pair<std::vector<DetLayer*>, std::vector<DetLayer*> >& etllayers);
 
   //. Add BTL layers; dtlayers is ASSUMED to be sorted inside-out
   void addBTLLayers(const std::vector<DetLayer*>& btllayers);
-
+  
   DetId makeDetLayerId(const DetLayer* detLayer) const;
 
   void sortLayers();
+
+private:
 
   std::vector<const DetLayer*> etlLayers_fw;
   std::vector<const DetLayer*> etlLayers_bk;
