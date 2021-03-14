@@ -34,6 +34,7 @@ SimpleForwardNavigableLayer::SimpleForwardNavigableLayer(const ForwardDetLayer* 
   for (ConstFDLI fl = outerFL.begin(); fl != outerFL.end(); fl++)
     theOuterLayers.push_back(*fl);
 
+
   // sort the outer layers
   sort(theOuterLayers.begin(), theOuterLayers.end(), TkLayerLess());
   sort(theOuterForwardLayers.begin(), theOuterForwardLayers.end(), TkLayerLess());

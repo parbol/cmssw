@@ -80,7 +80,7 @@ void NavigationSchoolAnalyzer::print(std::ostream& os, const DetLayer* dl) {
     side = tTopo->side(tag->geographicalId());
   } else if(dl->subDetector() == GeomDetEnumerators::TimingEndcap) {
     ETLDetId id(dl->basicComponents().front()->geographicalId().rawId());
-    LorW = 0;
+    LorW = id.nDisc();
     side = id.mtdSide();
     if(side == 1) {
         side = 0;
@@ -233,7 +233,7 @@ void printOldStyle(std::ostream& os, const NavigationSchool& nav) {
 
 // the analyzer itself
 NavigationSchoolAnalyzer::NavigationSchoolAnalyzer(const edm::ParameterSet& iConfig)
-    : theNavigationSchoolName(iConfig.getParameter<std::string>("navigationSchoolName")) {}
+    : theNavigationSchoolName(iConfig.getParameter<std::string>("navigationSchoolName")){} 
 
 NavigationSchoolAnalyzer::~NavigationSchoolAnalyzer() {}
 
@@ -241,6 +241,8 @@ NavigationSchoolAnalyzer::~NavigationSchoolAnalyzer() {}
 #include <fstream>
 
 void NavigationSchoolAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
+
+
   edm::ESHandle<TrackerTopology> tTopoHandle;
   iSetup.get<TrackerTopologyRcd>().get(tTopoHandle);
   tTopo = tTopoHandle.product();
@@ -285,7 +287,6 @@ void NavigationSchoolAnalyzer::beginRun(edm::Run const& run, const edm::EventSet
   edm::ESHandle<TrackerTopology> tTopoHandle;
   iSetup.get<TrackerTopologyRcd>().get(tTopoHandle);
   tTopo = tTopoHandle.product();
-
   //get the navigation school
   edm::ESHandle<NavigationSchool> nav;
   iSetup.get<NavigationSchoolRecord>().get(theNavigationSchoolName, nav);

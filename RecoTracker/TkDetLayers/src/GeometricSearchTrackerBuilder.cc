@@ -239,6 +239,7 @@ GeometricSearchTracker* GeometricSearchTrackerBuilder::build(const GeometricDet*
       auto p = dynamic_cast<const ForwardDetLayer *>(e);
       if(p) {
           backward.push_back(p);
+          std::cout << "Backward layer: " << p->position().z() << std::endl;
       }
   }
   
@@ -247,6 +248,7 @@ GeometricSearchTracker* GeometricSearchTrackerBuilder::build(const GeometricDet*
       auto p = dynamic_cast<const ForwardDetLayer *>(e);
       if(p) {
           forward.push_back(p);
+          std::cout << "Forward layer: " << p->position().z() << std::endl;
       }
   }
   

@@ -6,6 +6,7 @@ bool TkLayerLess::insideOutLess(const DetLayer* a, const DetLayer* b) const {
   if (a == b)
     return false;
 
+
   const BarrelDetLayer* bla = dynamic_cast<const BarrelDetLayer*>(a);
   const BarrelDetLayer* blb = dynamic_cast<const BarrelDetLayer*>(b);
 

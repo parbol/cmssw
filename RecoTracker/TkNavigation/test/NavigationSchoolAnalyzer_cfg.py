@@ -7,7 +7,8 @@ process = cms.Process("NavigationSchoolAnalyze")
 # process.load("Configuration.StandardSequences.Geometry_cff")
 #process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 #process.load('Configuration.Geometry.GeometryExtended2023D1Reco_cff')
-process.load('Configuration.Geometry.GeometryExtended2026D49Reco_cff')
+#process.load('Configuration.Geometry.GeometryExtended2026D49Reco_cff')
+process.load('Configuration.Geometry.GeometryExtended2026D74Reco_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
@@ -15,11 +16,13 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 # process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("RecoTracker.TkNavigation.NavigationSchoolESProducer_cff")
 
-#process.MessageLogger = cms.Service("MessageLogger",
-#    destinations = cms.untracked.vstring('detailedInfo')
-#)
+process.MessageLogger = cms.Service("MessageLogger",
+    destinations = cms.untracked.vstring('detailedInfo')
+)
 
-#process.Tracer = cms.Service("Tracer",
+
+#process.Tracer = cms.Service("Tracer")
+
 #    indentation = cms.untracked.string('$$')
 #)
 

@@ -10,6 +10,7 @@
 using namespace std;
 
 SymmetricLayerFinder::SymmetricLayerFinder(const FDLC& flc) {
+
   ConstFDLI middle =
       find_if(flc.begin(), flc.end(), [](const GeometricSearchDet* a) { return a->position().z() >= 0.0; });
 
@@ -50,9 +51,12 @@ const ForwardDetLayer* SymmetricLayerFinder::mirrorPartner(const ForwardDetLayer
 }
 
 SymmetricLayerFinder::FDLC SymmetricLayerFinder::mirror(const FDLC& input) {
+
   FDLC result;
   for (ConstFDLI i = input.begin(); i != input.end(); i++) {
     result.push_back(mirror(*i));
   }
+  
+
   return result;
 }

@@ -23,6 +23,7 @@
 using namespace std;
 
 void SimpleNavigationSchool::init() {
+
   theAllDetLayersInSystem = &theTracker->allLayers();
   theAllNavigableLayer.resize(theTracker->allLayers().size(), nullptr);
 
@@ -41,6 +42,8 @@ void SimpleNavigationSchool::init() {
   });
   theLeftLayers = FDLC(theForwardLayers.begin(), middle);
   theRightLayers = FDLC(middle, theForwardLayers.end());
+
+
 
   SymmetricLayerFinder symFinder(theForwardLayers);
 
@@ -81,18 +84,22 @@ void SimpleNavigationSchool::linkBarrelLayers(SymmetricLayerFinder& symFinder) {
     BDLC reachableBL;
     FDLC leftFL;
     FDLC rightFL;
+    std::cout << "----------------------Linking barrel layer: --------------------" << i->subDetector() << " " << i->position().z() << std::endl;
 
     // always add next barrel layer first
-    if (i + 1 != theBarrelLayers.end())
+    if (i + 1 != theBarrelLayers.end()) {
+      std::cout << "Adding barrel layer: " << i->subDetector() << " " << i->position().z() << std::endl;
       reachableBL.push_back(*(i + 1));
-
+    }
     // Add closest reachable forward layer (except for last BarrelLayer)
     if (i != theBarrelLayers.end() - 1) {
+      std::cout << "Adding forward layer: " << i->subDetector() << " " << i->position().z() << std::endl;
       linkNextForwardLayer(*i, rightFL);
     }
 
     // Add next BarrelLayer with length larger than the current BL
     if (i + 2 < theBarrelLayers.end()) {
+      std::cout << "Adding Large Barrel layer: " << i->subDetector() << " " << i->position().z() << std::endl;
       linkNextLargerLayer(i, theBarrelLayers.end(), reachableBL);
     }
 
@@ -142,12 +149,12 @@ void SimpleNavigationSchool::linkForwardLayers(SymmetricLayerFinder& symFinder) 
   for (vector<FDLC>::iterator g = groups.begin(); g != groups.end(); g++) {
     LogDebug("TkNavigation") << "group " << g - groups.begin() << " has " << g->size() << " layers ";
   }
-
   for (vector<FDLC>::iterator group = groups.begin(); group != groups.end(); group++) {
     for (FDLI i = group->begin(); i != group->end(); i++) {
       BDLC reachableBL;
       FDLC reachableFL;
 
+      
       // Always connect to next barrel layer first, if exists
       linkNextBarrelLayer(*i, reachableBL);
 
@@ -162,6 +169,7 @@ void SimpleNavigationSchool::linkForwardLayers(SymmetricLayerFinder& symFinder) 
 
       // or connect within the group if outer radius increases
       linkWithinGroup(i, *group, reachableFL);
+
 
       theForwardNLC.push_back(new SimpleForwardNavigableLayer(*i, reachableBL, reachableFL, theField, 5.));
       theForwardNLC.push_back(new SimpleForwardNavigableLayer(

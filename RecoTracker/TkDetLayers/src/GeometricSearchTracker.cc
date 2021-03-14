@@ -164,6 +164,43 @@ void GeometricSearchTracker::addMTDLayers(const std::vector<BarrelDetLayer const
   theAllLayers.assign(theBarrelLayers.begin(), theBarrelLayers.end());
   theAllLayers.insert(theAllLayers.end(), theForwardLayers.begin(), theForwardLayers.end());
 
+  std::cout << "--------Barrel---------" << std::endl;
+  for(auto a : theBarrelLayers) {
+      std::cout << a->subDetector() << " " << a->position().z() << std::endl;
+  }
+
+  std::cout << "--------Forward---------" << std::endl;
+  for(auto a : theForwardLayers) {
+      std::cout << a->subDetector() << " " << a->position().z() << std::endl;
+  }
+
+  std::cout << "--------All---------" << std::endl;
+  for(auto a : theAllLayers) {
+      std::cout << a->subDetector() << " " << a->position().z() << std::endl;
+  }
+
+
+  edm::LogInfo("MTDDetLayers") << "------ GeometricSearchTracker+MTD constructed with: ------"
+                              << "\n"
+                              << "n pxlBarLayers: " << this->pixelBarrelLayers().size() << "\n"
+                              << "n tibLayers:    " << this->tibLayers().size() << "\n"
+                              << "n tobLayers:    " << this->tobLayers().size() << "\n"
+                              << "n negPxlFwdLayers: " << this->negPixelForwardLayers().size() << "\n"
+                              << "n posPxlFwdLayers: " << this->posPixelForwardLayers().size() << "\n"
+                              << "n negTidLayers: " << this->negTidLayers().size() << "\n"
+                              << "n posTidLayers: " << this->posTidLayers().size() << "\n"
+                              << "n negTecLayers: " << this->negTecLayers().size() << "\n"
+                              << "n posTecLayers: " << this->posTecLayers().size() << "\n"
+
+                              << "n barreLayers:  " << this->barrelLayers().size() << "\n"
+                              << "n negforwardLayers: " << this->negForwardLayers().size() << "\n"
+                              << "n posForwardLayers: " << this->posForwardLayers().size() << "\n"
+                              << "n MTDbarrelLayers: " << this->theBTLLayers.size() << "\n"
+                              << "n MTDnegLayers: " << this->theNegETLLayers.size() << "\n"
+                              << "n MTDposLayers: " << this->thePosETLLayers.size() << "\n"
+                              << "\nn Total :     " << theAllLayers.size() << std::endl;
+
+
 }
 
 
