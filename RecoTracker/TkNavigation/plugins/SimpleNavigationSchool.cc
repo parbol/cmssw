@@ -83,22 +83,18 @@ void SimpleNavigationSchool::linkBarrelLayers(SymmetricLayerFinder& symFinder) {
     FDLC rightFL;
 
 
-    std::cout << "----------------------Linking barrel layer: --------------------" << (*i)->subDetector() << " " << (*i)->position().z() << std::endl;
     //always add next barrel layer first
     if (i + 1 != theBarrelLayers.end())	{
-      std::cout << "Adding barrel layer: " << (*i)->subDetector() << " " << (*i)->position().z() << std::endl;
       reachableBL.push_back(*(i + 1));		   
     }
 
     // Add closest reachable forward layer (except for last BarrelLayer)
     if (i != theBarrelLayers.end() - 1) {
-      std::cout << "Adding forward layer: " << (*i)->subDetector() << " " << (*i)->position().z() << std::endl;
       linkNextForwardLayer(*i, rightFL);		   
     }
 
     // Add next BarrelLayer with length larger than the current BL
     if (i + 2 < theBarrelLayers.end()) {
-      std::cout << "Adding Large Barrel layer: " << (*i)->subDetector() << " " << (*i)->position().z() << std::endl;
       linkNextLargerLayer(i, theBarrelLayers.end(), reachableBL);	
     }		  
 

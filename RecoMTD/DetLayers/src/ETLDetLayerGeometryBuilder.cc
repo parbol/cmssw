@@ -66,7 +66,7 @@ pair<vector<DetLayer*>, vector<DetLayer*> > ETLDetLayerGeometryBuilder::buildLay
       }
     }
   }
-  pair<vector<DetLayer*>, vector<DetLayer*> > res_pair(result[0], result[1]);
+  pair<vector<DetLayer*>, vector<DetLayer*> > res_pair(result[1], result[0]);
   return res_pair;
 }
 

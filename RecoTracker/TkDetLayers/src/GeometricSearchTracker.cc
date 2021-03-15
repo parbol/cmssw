@@ -162,6 +162,11 @@ void GeometricSearchTracker::addMTDLayers(const std::vector<BarrelDetLayer const
   theForwardLayers.insert(theForwardLayers.end(), thePosForwardLayers.begin(), thePosForwardLayers.end());
   theAllLayers.assign(theBarrelLayers.begin(), theBarrelLayers.end());
   theAllLayers.insert(theAllLayers.end(), theForwardLayers.begin(), theForwardLayers.end());
+  
+  // number the layers
+  int sq = 0;
+  for (auto l : theAllLayers)
+    const_cast<DetLayer&>(*l).setSeqNum(sq++);
 
   edm::LogInfo("MTDDetLayers") << "------ GeometricSearchTracker+MTD constructed with: ------"
                                << "\n"
