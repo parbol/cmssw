@@ -28,7 +28,8 @@ ETLElectronicsSim::ETLElectronicsSim(const edm::ParameterSet& pset, edm::Consume
       referenceChargeColl_(pset.getParameter<double>("referenceChargeColl")),
       noiseLevel_(pset.getParameter<double>("noiseLevel")),
       sigmaDistorsion_(pset.getParameter<double>("sigmaDistorsion")),
-      sigmaTDC_(pset.getParameter<double>("sigmaTDC")){}
+      sigmaTDC_(pset.getParameter<double>("sigmaTDC")),
+      formulaLandauNoise_(pset.getParameter<std::string>("formulaLandauNoise")){}
 
 
 void ETLElectronicsSim::getEventSetup(const edm::EventSetup& evs) { geom_ = &evs.getData(geomToken_); }
@@ -36,14 +37,16 @@ void ETLElectronicsSim::getEventSetup(const edm::EventSetup& evs) { geom_ = &evs
 void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
                             ETLDigiCollection& output,
                             CLHEP::HepRandomEngine* hre) const {
-  MTDSimHitData chargeColl, toa1, toa2;
+  MTDSimHitData chargeColl, MPVcharge, toa1, toa2;
 
   std::vector<double> emptyV;
   std::vector<double> radius(1);
   std::vector<double> fluence(1);
+  std::vector<double> chOverMPV(1);
 
   for (MTDSimHitDataAccumulator::const_iterator it = input.begin(); it != input.end(); it++) {
     chargeColl.fill(0.f);
+    MPVcharge.fill(0.f);
     toa1.fill(0.f);
     toa2.fill(0.f);
 
@@ -74,7 +77,7 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
         continue;
 
       chargeColl[i + ibucket] += (it->second).hit_info[0][i];
-
+      MPVcharge[i + ibucket] += (it->second).hit_info[2][i];
       //Calculate the jitter
       float SignalToNoise = etlPulseShape_.maximum() * (chargeColl[i + ibucket] / referenceChargeColl_) / noiseLevel_;
       float sigmaJitter1 = etlPulseShape_.timeOfMax() / SignalToNoise;
@@ -83,9 +86,12 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
       float sigmaDistorsion = sigmaDistorsion_;
       //Calculate the TDC
       float sigmaTDC = sigmaTDC_;
+      //Calculate landau noise
+      chOverMPV[0] = chargeColl[i + ibucket] / MPVcharge[i + ibucket];
+      float sigmaLN = formulaLandauNoise_.evaluate(chOverMPV, emptyV);
+      float sigmaToA = sqrt(sigmaJitter1*sigmaJitter1 + sigmaDistorsion * sigmaDistorsion + sigmaTDC * sigmaTDC + sigmaLN * sigmaLN); 
+      float sigmaToC = sqrt(sigmaJitter2*sigmaJitter2 + sigmaDistorsion * sigmaDistorsion + sigmaTDC * sigmaTDC + sigmaLN * sigmaLN); 
 
-      float sigmaToA = sqrt(sigmaJitter1*sigmaJitter1 + sigmaDistorsion * sigmaDistorsion + sigmaTDC * sigmaTDC); 
-      float sigmaToC = sqrt(sigmaJitter2*sigmaJitter2 + sigmaDistorsion * sigmaDistorsion + sigmaTDC * sigmaTDC); 
 
       float smearing1 = 0.0;
       float smearing2 = 0.0;
@@ -96,6 +102,8 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
       
       finalToA += smearing1;
       finalToC += smearing2;
+      
+      std::cout << "SigmaLN: " << sigmaLN << std::endl;
    
       std::array<float, 3> times =
           etlPulseShape_.timeAtThr(chargeColl[i + ibucket] / referenceChargeColl_, iThreshold_MIP_, iThreshold_MIP_);
@@ -106,8 +114,10 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
       }
       finalToA += times[0];
       finalToC += times[2];
+      //We don't allow the downcrossing taking place before the upcrossing
+      if(finalToC < finalToA) continue;
 
-      //std::cout << "Landau: " << originalToA << " " << originalToC << " " << finalToA << " " << finalToC << " " << smearing1 << " " << smearing2 << " " << sigmaJitter1 << " " << sigmaJitter2 << std::endl;
+      std::cout << "Landau: " << originalToA << " " << originalToC << " " << finalToA << " " << finalToC << " " << smearing1 << " " << smearing2 << " " << sigmaJitter1 << " " << sigmaJitter2 << " " << times[0] << " " << times[2] << std::endl;
 
       if (toa1[i + ibucket] == 0. || (finalToA - ibucket * bxTime_) < toa1[i + ibucket])
         toa1[i + ibucket] = finalToA - ibucket * bxTime_;
@@ -117,8 +127,7 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
 
     // run the shaper to create a new data frame
     ETLDataFrame rawDataFrame(it->first.detid_);
-    //runTrivialShaper(rawDataFrame, chargeColl, toa1, toa2, it->first.row_, it->first.column_);
-    runTrivialShaper(rawDataFrame, chargeColl, toa1, it->first.row_, it->first.column_);
+    runTrivialShaper(rawDataFrame, chargeColl, toa1, toa2, it->first.row_, it->first.column_);
     updateOutput(output, rawDataFrame);
   }
 }
@@ -126,7 +135,7 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
 void ETLElectronicsSim::runTrivialShaper(ETLDataFrame& dataFrame,
                                          const mtd::MTDSimHitData& chargeColl,
                                          const mtd::MTDSimHitData& toa1,
-                                         //const mtd::MTDSimHitData& toa2,
+                                         const mtd::MTDSimHitData& toa2,
                                          const uint8_t row,
                                          const uint8_t col) const {
   bool debug = debug_;
@@ -143,11 +152,14 @@ void ETLElectronicsSim::runTrivialShaper(ETLDataFrame& dataFrame,
     //brute force saturation, maybe could to better with an exponential like saturation
     const uint32_t adc = std::min((uint32_t)std::floor(chargeColl[it] / adcLSB_MIP_), adcBitSaturation_);
     const uint32_t tdc_time1 = std::min((uint32_t)std::floor(toa1[it] / toaLSB_ns_), tdcBitSaturation_);
-    //const uint32_t tdc_time2 = std::min((uint32_t)std::floor(toa2[it] / toaLSB_ns_), tdcBitSaturation_);
+    const uint32_t tdc_time2 = std::min((uint32_t)std::floor(toa2[it] / toaLSB_ns_), tdcBitSaturation_);
     ETLSample newSample;
-    //newSample.set(chargeColl[it] > adcThreshold_MIP_, false, tdc_time1, tdc_time2, adc, row, col);
-    newSample.set(chargeColl[it] > adcThreshold_MIP_, false, tdc_time1, adc, row, col);
+    newSample.set(chargeColl[it] > adcThreshold_MIP_, false, tdc_time1, tdc_time2, adc, row, col);
     dataFrame.setSample(it, newSample);
+    if (chargeColl[it] > adcThreshold_MIP_) {
+      std::cout << "tdc_time1 = " << tdc_time1 << ", tdc_time2 = " << tdc_time2 << std::endl;
+      newSample.print();
+    }
 
     if (debug)
       edm::LogVerbatim("ETLElectronicsSim") << adc << " (" << chargeColl[it] << "/" << adcLSB_MIP_ << ") ";

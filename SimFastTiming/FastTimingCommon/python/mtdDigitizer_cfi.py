@@ -69,6 +69,11 @@ _endcap_MTDDigitizer = cms.PSet(
         applyDegradation = cms.bool(False),
         tofDelay          = cms.double(1),
         meVPerMIP         = cms.double(0.085), # from HGCal
+        MPVMuon             = cms.string("1.21561e-05 + 8.89462e-07 / (x * x)"),
+        MPVPion             = cms.string("1.24531e-05 + 7.16578e-07 / (x * x)"),
+        MPVKaon             = cms.string("1.20998e-05 + 2.47192e-06 / (x * x * x)"),
+        MPVElectron         = cms.string("1.30030e-05 + 1.55166e-07 / (x * x)"),
+        MPVProton           = cms.string("1.13666e-05 + 1.20093e-05 / (x * x)"),
         ),
     ElectronicsSimulation = cms.PSet(
         bxTime               = cms.double(25),
@@ -87,7 +92,8 @@ _endcap_MTDDigitizer = cms.PSet(
         referenceChargeColl = cms.double(1.0),
         noiseLevel          = cms.double(0.3554),
         sigmaDistorsion     = cms.double(0.0),
-        sigmaTDC            = cms.double(0.010)
+        sigmaTDC            = cms.double(0.010),
+        formulaLandauNoise  = cms.string("TMath::Max(0.020, 0.020 * (0.35 * (x - 1.0) + 1.0))")       
         )
 )
 

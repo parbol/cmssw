@@ -22,7 +22,12 @@ ETLDeviceSim::ETLDeviceSim(const edm::ParameterSet& pset, edm::ConsumesCollector
       lgadGainDegradation_(pset.getParameter<std::string>("LGADGainDegradation")),
       applyDegradation_(pset.getParameter<bool>("applyDegradation")),
       bxTime_(pset.getParameter<double>("bxTime")),
-      tofDelay_(pset.getParameter<double>("tofDelay")) {}
+      tofDelay_(pset.getParameter<double>("tofDelay")),
+      MPVMuon_(pset.getParameter<std::string>("MPVMuon")),
+      MPVPion_(pset.getParameter<std::string>("MPVPion")),
+      MPVKaon_(pset.getParameter<std::string>("MPVKaon")),
+      MPVElectron_(pset.getParameter<std::string>("MPVElectron")),
+      MPVProton_(pset.getParameter<std::string>("MPVProton")) {}
 
 void ETLDeviceSim::getEventSetup(const edm::EventSetup& evs) { geom_ = &evs.getData(geomToken_); }
 
@@ -38,6 +43,7 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
   std::vector<double> fluence(1);
   std::vector<double> gain(1);
   std::vector<double> param(2);
+  std::vector<double> momentum(1);
 
   const int nchits = hitRefs.size();
   for (int i = 0; i < nchits; ++i) {
@@ -67,6 +73,24 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     const float toa = std::get<2>(hitRefs[i]) + tofDelay_;
     const PSimHit& hit = hits->at(hitidx);
     float charge = convertGeVToMeV(hit.energyLoss()) * MIPPerMeV_;
+    momentum[0] = hit.pabs();
+    // particle type
+    int particleType = abs(hit.particleType());
+    float MPV_ = 0;
+    if(particleType == 11) {
+        MPV_ = MPVElectron_.evaluate(momentum, emptyV);
+    } else if(particleType == 13) {
+        MPV_ = MPVMuon_.evaluate(momentum, emptyV);
+    } else if(particleType == 211) {
+        MPV_ = MPVPion_.evaluate(momentum, emptyV);
+    } else if(particleType == 321) {
+        MPV_ = MPVKaon_.evaluate(momentum, emptyV);
+    } else {
+        MPV_ = MPVProton_.evaluate(momentum, emptyV);
+    }
+    float MPV_charge = convertGeVToMeV(MPV_) * MIPPerMeV_;
+
+    //std::cout << "The charge is: " << charge << " and the MPV " << MPV_charge << " particle type " << particleType << " momentum " << momentum[0] << std::endl;
 
     //FIXME: remove this cout
     // std::cout << "E: " << hit.energyLoss() << " p: " << hit.pabs() << " ch: " << charge << " t: " << hit.particleType() << std::endl;
@@ -84,6 +108,7 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     //The following lines check whether the pixel point is actually out of the active area.
     if (topo.isInPixel(simscaled)) {
           charge *= gain[0];
+          MPV_charge *= gain[0]; 
     } else {
         if(applyDegradation_) {
             double dGapCenter = TMath::Max(TMath::Abs(simscaled.x()), TMath::Abs(simscaled.y()));
@@ -91,6 +116,7 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
             param[1] = dGapCenter;
             gain[0] = lgadGainDegradation_.evaluate(param, emptyV);
             charge *= gain[0];
+            MPV_charge *= gain[0]; 
         }
     }
     const auto& thepixel = topo.pixel(simscaled);
@@ -114,5 +140,6 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     if ((simHitIt->second).hit_info[1][itime] == 0. || tof < (simHitIt->second).hit_info[1][itime]) {
       (simHitIt->second).hit_info[1][itime] = tof;
     }
+    (simHitIt->second).hit_info[2][itime] += MPV_charge;
   }
 }
