@@ -50,8 +50,9 @@ private:
   const reco::FormulaEvaluator MPVKaon_;
   const reco::FormulaEvaluator MPVElectron_;
   const reco::FormulaEvaluator MPVProton_;
-
-
+  const uint32_t numberOfSpuriousHits_;
+  const float maxChargeSharing_;
+  const float maxChargeNoise_;
 };
 
 #endif

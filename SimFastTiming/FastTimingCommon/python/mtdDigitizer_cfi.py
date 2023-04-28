@@ -74,6 +74,9 @@ _endcap_MTDDigitizer = cms.PSet(
         MPVKaon             = cms.string("1.20998e-05 + 2.47192e-06 / (x * x * x)"),
         MPVElectron         = cms.string("1.30030e-05 + 1.55166e-07 / (x * x)"),
         MPVProton           = cms.string("1.13666e-05 + 1.20093e-05 / (x * x)"),
+        numberOfSpuriousHits = cms.uint32(100),
+        maxChargeSharing = cms.double(0.2),
+        maxChargeNoise = cms.double(2)
         ),
     ElectronicsSimulation = cms.PSet(
         bxTime               = cms.double(25),
