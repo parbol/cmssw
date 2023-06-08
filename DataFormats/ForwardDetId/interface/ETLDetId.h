@@ -23,10 +23,10 @@ private:
 public:
   static constexpr uint32_t kETLmoduleOffset = 5;
   static constexpr uint32_t kETLmoduleMask = 0x7FF;
-  static constexpr uint32_t kETLmodTypeOffset = 3;
-  static constexpr uint32_t kETLmodTypeMask = 0x3;
-  static constexpr uint32_t kETLsensorOffset = 1;
+  static constexpr uint32_t kETLsensorOffset = 3;
   static constexpr uint32_t kETLsensorMask = 0x3;
+  static constexpr uint32_t kETLmodTypeOffset = 1;
+  static constexpr uint32_t kETLmodTypeMask = 0x3;
 
   static constexpr int kETLv1maxRing = 11;
   static constexpr int kETLv1maxModule = 176;
@@ -85,12 +85,12 @@ public:
   }
 
   /** Construct and fill only the det and sub-det fields. */
-  ETLDetId(uint32_t zside, uint32_t ring, uint32_t module, uint32_t modtyp, uint32_t sensor)
+  ETLDetId(uint32_t zside, uint32_t ring, uint32_t module, uint32_t sensor, uint32_t modtyp)
       : MTDDetId(DetId::Forward, ForwardSubdetector::FastTime) {
     id_ |= (MTDType::ETL & kMTDsubdMask) << kMTDsubdOffset | (zside & kZsideMask) << kZsideOffset |
            (ring & kRodRingMask) << kRodRingOffset | (module & kETLmoduleMask) << kETLmoduleOffset |
-           (modtyp & kETLmodTypeMask) << kETLmodTypeOffset |
-           (sensor & kETLsensorMask) << kETLsensorOffset;
+           (sensor & kETLsensorMask) << kETLsensorOffset |
+           (modtyp & kETLmodTypeMask) << kETLmodTypeOffset;
     id_ |= kETLformatV2;
   }
 
@@ -100,12 +100,12 @@ public:
     return (sector + discside * kSoff + 2 * kSoff * disc);
   }
 
-  ETLDetId(uint32_t zside, uint32_t disc, uint32_t discside, uint32_t sector, uint32_t module, uint32_t modtyp, uint32_t sensor)
+  ETLDetId(uint32_t zside, uint32_t disc, uint32_t discside, uint32_t sector, uint32_t module, uint32_t sensor, uint32_t modtyp)
       : MTDDetId(DetId::Forward, ForwardSubdetector::FastTime) {
     id_ |= (MTDType::ETL & kMTDsubdMask) << kMTDsubdOffset | (zside & kZsideMask) << kZsideOffset |
            (encodeSector(disc, discside, sector) & kRodRingMask) << kRodRingOffset |
-           (module & kETLmoduleMask) << kETLmoduleOffset | (modtyp & kETLmodTypeMask) << kETLmodTypeOffset |
-           (sensor & kETLsensorMask) << kETLsensorOffset;
+           (module & kETLmoduleMask) << kETLmoduleOffset | (sensor & kETLsensorMask) << kETLsensorOffset |
+           (modtyp & kETLmodTypeMask) << kETLmodTypeOffset;
     id_ |= kETLformatV2;
   }
 
@@ -114,12 +114,12 @@ public:
   /** Returns ETL module number. */
   inline int module() const { return (id_ >> kETLmoduleOffset) & kETLmoduleMask; }
 
-  /** Returns ETL module type number. */
-  inline int modType() const { return (id_ >> kETLmodTypeOffset) & kETLmodTypeMask; }
-
   /** Returns ETL module sensor number. */
   inline int sensor() const { return (id_ >> kETLsensorOffset) & kETLsensorMask; }
   
+  /** Returns ETL module type number. */
+  inline int modType() const { return (id_ >> kETLmodTypeOffset) & kETLmodTypeMask; }
+
   ETLDetId geographicalId() const { return id_; }
 
   // --------- Methods for the TDR ETL model only -----------

@@ -211,7 +211,6 @@ namespace mtd_digitizer {
       const auto& the_hit = hits->at(i);
 
       DetId id = the_hit.detUnitId();
-      std::cout << "MTDDigitizer " << " i/p " << the_hit.detUnitId() << " o/p " << id.rawId() << std::endl;
       if (verbosity_ > 0) {
         edm::LogInfo("MTDDigitizer") << " i/p " << std::hex << the_hit.detUnitId() << std::dec << " o/p " << id.rawId()
                                      << std::endl;

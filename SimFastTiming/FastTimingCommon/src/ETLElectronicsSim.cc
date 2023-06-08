@@ -103,8 +103,6 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
       finalToA += smearing1;
       finalToC += smearing2;
       
-      std::cout << "SigmaLN: " << sigmaLN << std::endl;
-   
       std::array<float, 3> times =
           etlPulseShape_.timeAtThr(chargeColl[i + ibucket] / referenceChargeColl_, iThreshold_MIP_, iThreshold_MIP_);
 
@@ -117,7 +115,6 @@ void ETLElectronicsSim::run(const mtd::MTDSimHitDataAccumulator& input,
       //We don't allow the downcrossing taking place before the upcrossing
       if(finalToC < finalToA) continue;
 
-      std::cout << "Landau: " << originalToA << " " << originalToC << " " << finalToA << " " << finalToC << " " << smearing1 << " " << smearing2 << " " << sigmaJitter1 << " " << sigmaJitter2 << " " << times[0] << " " << times[2] << std::endl;
 
       if (toa1[i + ibucket] == 0. || (finalToA - ibucket * bxTime_) < toa1[i + ibucket])
         toa1[i + ibucket] = finalToA - ibucket * bxTime_;
@@ -156,10 +153,9 @@ void ETLElectronicsSim::runTrivialShaper(ETLDataFrame& dataFrame,
     ETLSample newSample;
     newSample.set(chargeColl[it] > adcThreshold_MIP_, false, tdc_time1, tdc_time2, adc, row, col);
     dataFrame.setSample(it, newSample);
-    if (chargeColl[it] > adcThreshold_MIP_) {
-      std::cout << "tdc_time1 = " << tdc_time1 << ", tdc_time2 = " << tdc_time2 << std::endl;
-      newSample.print();
-    }
+    //if (chargeColl[it] > adcThreshold_MIP_) {
+    //  newSample.print();
+    //}
 
     if (debug)
       edm::LogVerbatim("ETLElectronicsSim") << adc << " (" << chargeColl[it] << "/" << adcLSB_MIP_ << ") ";

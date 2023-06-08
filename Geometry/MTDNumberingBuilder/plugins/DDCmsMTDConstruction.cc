@@ -165,16 +165,16 @@ std::unique_ptr<GeometricTimingDet> DDCmsMTDConstruction::construct(const DDComp
       } else {
         limit = num + 1;
       }
-    } else if ((thisNode == GeometricTimingDet::ETLModule) && limit == 0) {
+    } else if ((thisNode == GeometricTimingDet::ETLSensor) && limit == 0) {
       if (theCmsMTDConstruction.isETLtdr(fv)) {
         limit = num;
       } else {
         limit = num + 1;
       }
     }
-    //if (num != limit && limit > 0) {
-    //  continue;
-    //}
+    if (num != limit && limit > 0) {
+      continue;
+    }
     if (thisNode == GeometricTimingDet::BTLModule) {
 #ifdef EDM_ML_DEBUG
 //      edm::LogVerbatim("MTDNumbering") << "Registered in GeometricTimingDet as type " << thisNode;

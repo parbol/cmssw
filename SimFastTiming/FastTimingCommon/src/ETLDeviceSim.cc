@@ -61,8 +61,7 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
       continue;  // to be ignored at RECO level
 
     ETLDetId etlid(detId);
-    std::cout << ":Rublo: " << "id = " << id << " MTDDetId = " << detId.rawId() << " ETLSensor = " << etlid.sensor() << std::endl;
-    DetId geoId = ETLDetId(etlid.mtdSide(), etlid.mtdRR(), etlid.module(), etlid.modType(), etlid.sensor());
+    DetId geoId = ETLDetId(etlid.mtdSide(), etlid.mtdRR(), etlid.module(), etlid.sensor(), etlid.modType());
     const MTDGeomDet* thedet = geom_->idToDet(geoId);
     if (thedet == nullptr) {
       throw cms::Exception("ETLDeviceSim") << "GeographicalID: " << std::hex << geoId.rawId() << " (" << detId.rawId()
@@ -91,11 +90,6 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     }
     float MPV_charge = convertGeVToMeV(MPV_) * MIPPerMeV_;
 
-    //std::cout << "The charge is: " << charge << " and the MPV " << MPV_charge << " particle type " << particleType << " momentum " << momentum[0] << std::endl;
-
-    //FIXME: remove this cout
-    // std::cout << "E: " << hit.energyLoss() << " p: " << hit.pabs() << " ch: " << charge << " t: " << hit.particleType() << std::endl;
-
     // calculate the simhit row and column
     const auto& pentry = hit.entryPoint();
     // ETL is already in module-local coordinates so just scale to cm from mm
@@ -122,7 +116,6 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     }
     const auto& thepixel = topo.pixel(simscaled);
     const uint8_t row(thepixel.first), col(thepixel.second);
-    std::cout << ":Rublo: " << "Raw Id = " << detId.rawId() << " Pos = ( " << simscaled.x() << " " << simscaled.y() << " " << simscaled.z() << " )" << std::endl;
     auto simHitIt =
         simHitAccumulator->emplace(mtd_digitizer::MTDCellId(id, row, col), mtd_digitizer::MTDCellInfo()).first;
 
@@ -135,7 +128,6 @@ void ETLDeviceSim::getHitsResponse(const std::vector<std::tuple<int, uint32_t, f
     if (itime >= (int)simHitIt->second.hit_info[0].size())
       continue;
     (simHitIt->second).hit_info[0][itime] += charge;
-    //std::cout << "Time: " << (simHitIt->second).hit_info[0][itime] << " " << charge << " " << MIPPerMeV_ << " " << convertGeVToMeV(hit.energyLoss()) * MIPPerMeV_ << " " << gain[0] << std::endl;
     // Store the time of the first SimHit in the right DataFrame bucket
     const float tof = toa - (itime - 9) * bxTime_;
 

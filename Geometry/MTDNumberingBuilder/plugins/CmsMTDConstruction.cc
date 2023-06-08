@@ -193,7 +193,7 @@ void CmsMTDConstruction<DDFilteredView>::buildETLModule(DDFilteredView& fv, Geom
     const uint32_t side = det->translation().z() > 0 ? 1 : 0;
 
     // label geographic detid is front or back (even though it is one module per entry here)
-    det->setGeographicalID(ETLDetId(side, atoi(ringN.c_str()), module_number, 0, sensor_number));
+    det->setGeographicalID(ETLDetId(side, atoi(ringN.c_str()), module_number, sensor_number, 0));
   }
 
   mother->addComponent(det);
