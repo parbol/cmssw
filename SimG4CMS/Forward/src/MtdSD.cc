@@ -63,6 +63,7 @@ uint32_t MtdSD::setDetUnitId(const G4Step* aStep) {
 #ifdef EDM_ML_DEBUG
     edm::LogVerbatim("MtdSim") << "DetId = " << numberingScheme->getUnitID(theBaseNumber);
 #endif
+    std::cout << "MtdSD " << "DetId = " << numberingScheme->getUnitID(theBaseNumber) << std::endl;
     return numberingScheme->getUnitID(theBaseNumber);
   }
 }
