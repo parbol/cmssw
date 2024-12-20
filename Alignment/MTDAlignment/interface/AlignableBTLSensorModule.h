@@ -1,7 +1,7 @@
-#ifndef Alignment_MuonAlignment_AlignableBTLCrystal_H
-#define Alignment_MuonAlignment_AlignableBTLCrystal_H
+#ifndef Alignment_MuonAlignment_AlignableBTLSensorModule_H
+#define Alignment_MuonAlignment_AlignableBTLSensorModule_H
 
-/** \class AlignableBTLCrystal
+/** \class AlignableBTLSensorModule
  *  The alignable BTL Crystal.
  *
  *  $Date: Wed Mar 26 22:20:38 CET 2008 $
@@ -21,12 +21,12 @@
 
 /// A muon DT SuperLayer ( an AlignableDet )
 
-class AlignableBTLCrystal : public AlignableDet {
+class AlignableBTLSensorModule : public AlignableDet {
 public:
-  friend std::ostream &operator<<(std::ostream &, const AlignableBTLCrystal &);
+  friend std::ostream &operator<<(std::ostream &, const AlignableBTLSensorModule &);
 
   /// Constructor
-  AlignableBTLCrystal(const GeomDet *geomDet);
+  AlignableBTLSensorModule(const GeomDet *geomDet);
 };
 
 #endif  // ALIGNABLE_BTL_CRYSTAL_H
