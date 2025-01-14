@@ -1,8 +1,8 @@
 /** \file
  *
- *  $Date: 2008/04/25 21:23:15 $
- *  $Revision: 1.21 $
- *  \author Andre Sznajder - UERJ(Brazil)
+ *  $Date: 2024/12/19 21:23:15 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA(Spain)
  */
 
 // Framework
@@ -10,14 +10,17 @@
 
 #include "Alignment/MTDAlignment/interface/AlignableMTD.h"
 #include "Geometry/MTDGeometrBuilder/interface/MTDGeometry.h"
+#include "DataFormats/ForwardDetId/interface/MTDDetId.h"
+#include "DataFormats/ForwardDetId/interface/BTLDetId.h"
 #include "CondFormats/Alignment/interface/Alignments.h"
 #include "CondFormats/Alignment/interface/AlignmentErrorsExtended.h"
 #include "Geometry/CommonDetUnit/interface/GeomDet.h"
-// Muon  components
+// MTD  components
 #include "Alignment/MTDAlignment/interface/AlignableBTL.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLTray.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
+#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
 #include "Alignment/MTDAlignment/interface/AlignableETL.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLHalfDisk.h"
 
@@ -27,10 +30,10 @@
 AlignableMTD::AlignableMTD(const MTDGeometry* mtdGeometry)
     : AlignableComposite(0, align::AlignableMTD),  // cannot yet set id, use 0
       alignableObjectId_(nullptr, mtdGeometry) {
-  // Build the muon barrel
+  // Build the btl
   buildBTLBarrel(mtdGeometry);
 
-  // Build the muon end caps
+  // Build the etl
   buildETLEndcap(mtdGeometry);
 
   // Set links to mothers recursively
@@ -66,31 +69,27 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
   LogDebug("Position") << "Constructing AlignableBTLBarrel";
 
   // Temporary container for chambers in a given station and stations in a given wheel
+  std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModule;
   std::vector<AlignableBTLModule*> tmpBTLModulesInRU;
   std::vector<AlignableBTLRU*> tmpBTLRUsInTrays;
 
-  /////////This needs actual geometry of BTL 
 
-
-  // Loop over trays ( 0, 1)
-  for (int itray = 0; itray < 1; itray++) {
-    // Loop over RU ( 0..2 )
-    for (int iru = 0; iru < 2; iru++) {
-      // Loop over Modules
-      int iModule{0};
-      
-      for (const auto& det : pDT->BTLModules()) {
-        // Get the chamber ID
-        MTDModuleId moduleId = det->id();
-        // Get wheel,station and sector of the chamber
-        int tray = moduleId.tray();
-        int ru = moduleId.ru();
-        // Select the module in a given tray in a given ru
-        if (itray == tray && iru == ru) {
-          if (update) {
-            // Update the alignable BTL module
-            theBTLBarrel.back()->tray(itray).ru(iru).module(iModule).update(det);
-          } else {
+  // Loop over sides ( 0, 1 )
+  for (int iside = 0; iside < 1; iside++) {
+      // Loop over trays ( 0, 35 )
+      for (int itray = 0; itray < 35; itray++) {
+          // Loop over RU types ( 0, 2 )
+          for (int irutype = 0; irutype < 2; irutype++) {
+              // Loop over RU ( 0, 1 )
+              for (int iru = 0; iru < 2; iru++) {
+                  // Loop over Modules ( 0, 23 )
+                  int iModule{0};
+                  for (int module = 0; iru < 23; iru++) {
+			BTLDetId(iside, itray, iru, module, irtype, 1);
+                        if (update) {
+                            // Update the alignable BTL module
+                            theBTLBarrel.back()->tray(itray).ru(iru).module(iModule).update(det);
+          		} else {
             // Create the alignable BTL module
             AlignableBTLModule* tmpBTLModule = new AlignableBTLModule(det);
             // Store the BTL modules in a given BTL tray and RU

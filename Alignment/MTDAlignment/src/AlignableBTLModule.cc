@@ -6,7 +6,7 @@
  */
 
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
-#include "Alignment/MTDAlignment/interface/AlignableCrystal.h"
+#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
 
 AlignableBTLModule::AlignableBTLModule(const GeomDet* geomDet) : AlignableDet(geomDet, false) {
   // even though we overload alignableObjectId(), it's dangerous to
@@ -16,7 +16,7 @@ AlignableBTLModule::AlignableBTLModule(const GeomDet* geomDet) : AlignableDet(ge
   //////// Probably we don't need this in the BTL, the crystals are unitDets
   const std::vector<const GeomDet*>& geomDets = geomDet->components();
   for (std::vector<const GeomDet*>::const_iterator idet = geomDets.begin(); idet != geomDets.end(); ++idet) {
-    addComponent(new AlignableCrystal(*idet));
+    addComponent(new AlignableBTLSensorModule(*idet));
   }
 
   // DO NOT let the chamber position become an average of the layers
