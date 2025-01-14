@@ -26,7 +26,7 @@ class GeomDet;
 
 class AlignableBTLTray : public AlignableComposite {
 public:
-  AlignableBTLTray(const std::vector<AlignableBTLRU*>& dtStations);
+  AlignableBTLTray(const std::vector<AlignableBTLRU*>& btlRUs);
 
   // gets the global position as the average over all positions of the layers
   PositionType computePosition();
@@ -35,7 +35,7 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableBTLRU& station(int i);
+  AlignableBTLRU& ru(int i);
 
   /// Printout muon DT wheel information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableBTLTray&);

@@ -2,11 +2,11 @@
 #define Alignment_MuonAlignment_AlignableBTLRU_H
 
 /** \class AlignableBTLRU
- *  The alignable muon DT station.
+ *  The alignable BTL RU.
  *
- *  $Date: 2008/04/15 16:05:53 $
- *  $Revision: 1.10 $
- *  \author Andre Sznajder - UERJ(Brazil)
+ *  $Date: 2024/12/15 16:05:53 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
 #include "Alignment/CommonAlignment/interface/Utilities.h"
@@ -19,14 +19,14 @@
 
 class GeomDet;
 
-/// Concrete class for muon DT Station alignable.
+/// Concrete class for BTL RU alignable.
 ///
 /// Misalignment can be de-/reactivated (forwarded to components).
 ///
 
 class AlignableBTLRU : public AlignableComposite {
 public:
-  AlignableBTLRU(const std::vector<AlignableBTLModule*>& dtChambers);
+  AlignableBTLRU(const std::vector<AlignableBTLModule*>& btlModules);
 
   // gets the global position as the average over all positions of the layers
   PositionType computePosition();
@@ -35,12 +35,12 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableBTLModule& chamber(int i);
+  AlignableBTLModule& module(int i);
 
-  /// Printout muon DT Station information (not recursive)
+  /// Printout BTL RU information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableBTLRU&);
 
-  /// Recursive printout of the muon DT Station structure
+  /// Recursive printout of the BTL RU structure
   void dump(void) const override;
 
 private:

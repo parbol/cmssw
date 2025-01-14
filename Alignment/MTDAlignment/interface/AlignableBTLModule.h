@@ -4,8 +4,8 @@
 /** \class AlignableBTLModule
  *  The alignable BTL module.
  *
- *  $Date: 2008/02/14 09:39:20 $
- *  $Revision: 1.12 $
+ *  $Date: 2024/12/14 09:39:20 $
+ *  $Revision: 1.0 $
  *  \author Pablo Martínez Ruiz del Arbol - IFCA
  */
 

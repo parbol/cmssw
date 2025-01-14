@@ -9,23 +9,23 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 /// The constructor simply copies the vector of stations and computes the surface from them
-AlignableBTLTray::AlignableBTLTray(const std::vector<AlignableBTLRU*>& dtStations)
-    : AlignableComposite(dtStations[0]->id(), align::AlignableBTLTray) {
-  theBTLRUs.insert(theBTLRUs.end(), dtStations.begin(), dtStations.end());
+AlignableBTLTray::AlignableBTLTray(const std::vector<AlignableBTLRU*>& btlRUs)
+    : AlignableComposite(btlRUs[0]->id(), align::AlignableBTLTray) {
+  theBTLRUs.insert(theBTLRUs.end(), btlRUs.begin(), btlRUs.end());
 
   // maintain also list of components
-  for (const auto& station : dtStations) {
-    const auto mother = station->mother();
-    this->addComponent(station);  // components will be deleted by dtor of AlignableComposite
-    station->setMother(mother);   // restore previous behaviour where mother is not set
+  for (const auto& ru : btlRUs) {
+    const auto mother = ru->mother();
+    this->addComponent(ru);  // components will be deleted by dtor of AlignableComposite
+    ru->setMother(mother);   // restore previous behaviour where mother is not set
   }
 
   setSurface(computeSurface());
   compConstraintType_ = Alignable::CompConstraintType::POSITION_Z;
 }
 
-/// Return Alignable DT Station at given index
-AlignableBTLRU& AlignableBTLTray::station(int i) {
+/// Return Alignable RU at given index
+AlignableBTLRU& AlignableBTLTray::ru(int i) {
   if (i >= size())
     throw cms::Exception("LogicError") << "Station index (" << i << ") out of range";
 
@@ -41,14 +41,19 @@ AlignableSurface AlignableBTLTray::computeSurface() {
 /// Compute average z position from all components (x and y forced to 0)
 AlignableBTLTray::PositionType AlignableBTLTray::computePosition() {
   float zz = 0.;
-
+  float xx = 0.;
+  float yy = 0.;
   for (std::vector<AlignableBTLRU*>::iterator ilayer = theBTLRUs.begin(); ilayer != theBTLRUs.end();
-       ilayer++)
+       ilayer++) {
+    xx += (*ilayer)->globalPosition().x();
+    yy += (*ilayer)->globalPosition().y();
     zz += (*ilayer)->globalPosition().z();
-
+  }
+  xx /= static_cast<float>(theBTLRUs.size());
+  yy /= static_cast<float>(theBTLRUs.size());
   zz /= static_cast<float>(theBTLRUs.size());
 
-  return PositionType(0.0, 0.0, zz);
+  return PositionType(xx, yy, zz);
 }
 
 /// Just initialize to default given by default constructor of a RotationType
@@ -63,7 +68,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLTray& b) {
   return os;
 }
 
-/// Recursive printout of whole DT Wheel structure
+/// Recursive printout of whole Tray structure
 void AlignableBTLTray::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
   for (std::vector<AlignableBTLRU*>::const_iterator iStation = theBTLRUs.begin();

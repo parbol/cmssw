@@ -1,12 +1,11 @@
 /** \file
  *
- *  $Date: 2008/03/26 21:59:25 $
- *  $Revision: 1.10 $
- *  \author Pablo Martínez Ruiz del Árbol - IFCA
+ *  $Date: 2024/12/26 21:59:25 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martínez Ruiz de Arbol - IFCA
  */
 
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
-#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
 
 AlignableBTLModule::AlignableBTLModule(const GeomDet* geomDet) : AlignableDet(geomDet, false) {
   // even though we overload alignableObjectId(), it's dangerous to
@@ -14,10 +13,10 @@ AlignableBTLModule::AlignableBTLModule(const GeomDet* geomDet) : AlignableDet(ge
   theStructureType = align::AlignableBTLModule;
 
   //////// Probably we don't need this in the BTL, the crystals are unitDets
-  const std::vector<const GeomDet*>& geomDets = geomDet->components();
-  for (std::vector<const GeomDet*>::const_iterator idet = geomDets.begin(); idet != geomDets.end(); ++idet) {
-    addComponent(new AlignableBTLSensorModule(*idet));
-  }
+  //const std::vector<const GeomDet*>& geomDets = geomDet->components();
+  //for (std::vector<const GeomDet*>::const_iterator idet = geomDets.begin(); idet != geomDets.end(); ++idet) {
+  //  addComponent(new AlignableBTLSensorModule(*idet));
+  //}
 
   // DO NOT let the chamber position become an average of the layers
   this->theSurface = geomDet->surface();
@@ -36,7 +35,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLModule& r) {
   os << "    total displacement and rotation: " << r.displacement() << std::endl;
   os << r.rotation() << std::endl;
 
-  for (const auto& idet : theDets) {
+  /*for (const auto& idet : theDets) {
     //Do I need components for the BTL????
     const auto& comp = idet->components();
 
@@ -47,7 +46,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLModule& r) {
          << r.surface().toLocal(comp[i]->globalPosition()).phi() << " , "
          << r.surface().toLocal(comp[i]->globalPosition()).perp() << std::endl;
     }
-  }
+  }*/
 
   return os;
 }

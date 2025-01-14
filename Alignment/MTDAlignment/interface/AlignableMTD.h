@@ -2,11 +2,11 @@
 #define Alignment_MuonAlignment_AlignableMTD_H
 
 /** \class AlignableMTD
- *  The alignable muon.
+ *  The alignable MTD
  *
- *  $Date: 2008/04/25 21:23:15 $
- *  $Revision: 1.21 $
- *  \author Andre Sznajder - UERJ(Brazil)
+ *  $Date: 2024/12/15 21:23:15 $
+ *  $Revision: 1.00 $
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
 #include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
@@ -17,15 +17,16 @@
 
 class MTDGeometry;
 
-// Classes that will be used to construct the muon
+// Classes that will be used to construct the MTD
 class AlignableBTL;
 class AlignableBTLTray;
 class AlignableBTLRU;
 class AlignableBTLModule;
-class AlignableETL;
-class AlignableETLHalfDisk;
 
-/// Constructor of the full muon geometry.
+//class AlignableETL;
+//class AlignableETLHalfDisk;
+
+/// Constructor of the full MTD geometry.
 
 class AlignableMTD : public AlignableComposite {
 public:
@@ -49,7 +50,7 @@ public:
   align::Alignables BTLModules();
   align::Alignables BTLRUs();
   align::Alignables BTLTrays();
-  align::Alignables ETLHalfDisks();
+  //align::Alignables ETLHalfDisks();
 
   /// Get BTL alignments sorted by DetId
   Alignments* btlAlignments();
@@ -58,15 +59,13 @@ public:
   AlignmentErrorsExtended* btlAlignmentErrorsExtended();
 
   /// Get ETL alignments sorted by DetId
-  Alignments* etlAlignments();
+  //Alignments* etlAlignments();
 
   /// Get ETL alignment errors sorted by DetId
-  AlignmentErrorsExtended* etlAlignmentErrorsExtended();
+  //AlignmentErrorsExtended* etlAlignmentErrorsExtended();
 
   /// Return muon alignable object ID provider derived from the muon system geometry
   const AlignableObjectId& objectIdProvider() const { return alignableObjectId_; }
-
-  const bool doGEM() { return doGEM_; }
 
 private:
   /// Get the position (centered at 0 by default)
@@ -90,7 +89,7 @@ private:
   void buildBTLBarrel(const MTDGeometry*, bool update = false);
 
   /// Build muon end caps
-  void buildETLEndcap(const MTDGeometry*, bool update = false);
+  //void buildETLEndcap(const MTDGeometry*, bool update = false);
 
   /// Set mothers recursively
   void recursiveSetMothers(Alignable* alignable);
@@ -98,15 +97,14 @@ private:
   /// alignable object ID provider
   const AlignableObjectId alignableObjectId_;
 
-  bool doGEM_;
   /// Containers of separate components
   std::vector<AlignableBTLModule*> theBTLModules;
   std::vector<AlignableBTLRU*> theBTLRUs;
   std::vector<AlignableBTLTray*> theBTLTrays;
   std::vector<AlignableBTL*> theBTLBarrel;
-  std::vector<AlignableETLHalfDisk*> theETLHalfDisks;
-  std::vector<AlignableETLEndcap*> theETLEndcaps;
-  align::Alignables theMuonComponents;
+  //std::vector<AlignableETLHalfDisk*> theETLHalfDisks;
+  //std::vector<AlignableETLEndcap*> theETLEndcaps;
+  align::Alignables theMTDComponents;
 };
 
 #endif  //AlignableMTD_H

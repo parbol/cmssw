@@ -1,27 +1,27 @@
 /** \file
  *
- *  $Date: 2008/04/10 16:36:41 $
- *  $Revision: 1.7 $
- *  \author Andre Sznajder - UERJ(Brazil)
+ *  $Date: 2024/12/15 16:36:41 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
 #include <memory>
 
-#include "Alignment/MuonAlignment/interface/AlignableDTBarrel.h"
+#include "Alignment/MTDAlignment/interface/AlignableBTL.h"
 #include "CondFormats/Alignment/interface/Alignments.h"
 #include "CondFormats/Alignment/interface/AlignmentErrorsExtended.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-/// The constructor simply copies the vector of wheels and computes the surface from them
-AlignableDTBarrel::AlignableDTBarrel(const std::vector<AlignableDTWheel*>& dtWheels)
-    : AlignableComposite(dtWheels[0]->id(), align::AlignableDTBarrel) {
-  theDTWheels.insert(theDTWheels.end(), dtWheels.begin(), dtWheels.end());
+/// The constructor simply copies the vector of trays and computes the surface from them
+AlignableBTL::AlignableBTL(const std::vector<AlignableBTLTray*>& btlTrays)
+    : AlignableComposite(btlTrays[0]->id(), align::AlignableBTL) {
+  theBTLTrays.insert(theBTLTrays.end(), btlTrays.begin(), btlTrays.end());
 
   // maintain also list of components
-  for (const auto& wheel : dtWheels) {
-    const auto mother = wheel->mother();
-    this->addComponent(wheel);  // components will be deleted by dtor of AlignableComposite
-    wheel->setMother(mother);   // restore previous behaviour where mother is not set
+  for (const auto& tray : btlTrays) {
+    const auto mother = tray->mother();
+    this->addComponent(tray);  // components will be deleted by dtor of AlignableComposite
+    tray->setMother(mother);   // restore previous behaviour where mother is not set
   }
 
   setSurface(computeSurface());
@@ -29,37 +29,37 @@ AlignableDTBarrel::AlignableDTBarrel(const std::vector<AlignableDTWheel*>& dtWhe
 }
 
 /// Return AlignableBarrelLayer at given index
-AlignableDTWheel& AlignableDTBarrel::wheel(int i) {
+AlignableBTLTray& AlignableBTL::tray(int i) {
   if (i >= size())
-    throw cms::Exception("LogicError") << "Wheel index (" << i << ") out of range";
+    throw cms::Exception("LogicError") << "Tray index (" << i << ") out of range";
 
-  return *theDTWheels[i];
+  return *theBTLTrays[i];
 }
 
 /// Returns surface corresponding to current position
 /// and orientation, as given by average on all components
-AlignableSurface AlignableDTBarrel::computeSurface() {
+AlignableSurface AlignableBTL::computeSurface() {
   return AlignableSurface(computePosition(), computeOrientation());
 }
 
 /// Compute average z position from all components (x and y forced to 0)
-AlignableDTBarrel::PositionType AlignableDTBarrel::computePosition() {
+AlignableBTL::PositionType AlignableBTL::computePosition() {
   float zz = 0.;
 
-  for (std::vector<AlignableDTWheel*>::iterator ilayer = theDTWheels.begin(); ilayer != theDTWheels.end(); ilayer++)
-    zz += (*ilayer)->globalPosition().z();
+  for (std::vector<AlignableBTLTray*>::iterator itray = theBTLTrays.begin(); itray != theBTLTrays.end(); itray++)
+    zz += (*itray)->globalPosition().z();
 
-  zz /= static_cast<float>(theDTWheels.size());
+  zz /= static_cast<float>(theBTLTrays.size());
 
   return PositionType(0.0, 0.0, zz);
 }
 
 /// Just initialize to default given by default constructor of a RotationType
-AlignableDTBarrel::RotationType AlignableDTBarrel::computeOrientation() { return RotationType(); }
+AlignableBTL::RotationType AlignableBTL::computeOrientation() { return RotationType(); }
 
 /// Output Half Barrel information
-std::ostream& operator<<(std::ostream& os, const AlignableDTBarrel& b) {
-  os << "This DTBarrel contains " << b.theDTWheels.size() << " Barrel wheels" << std::endl;
+std::ostream& operator<<(std::ostream& os, const AlignableBTL& b) {
+  os << "This BTL contains " << b.theBTLTrays.size() << " BTL Trays" << std::endl;
   os << "(phi, r, z) =  (" << b.globalPosition().phi() << "," << b.globalPosition().perp() << ","
      << b.globalPosition().z();
   os << "),  orientation:" << std::endl << b.globalRotation() << std::endl;
@@ -67,15 +67,15 @@ std::ostream& operator<<(std::ostream& os, const AlignableDTBarrel& b) {
 }
 
 /// Recursive printout of whole Half Barrel structure
-void AlignableDTBarrel::dump(void) const {
+void AlignableBTL::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableDTWheel*>::const_iterator iWheel = theDTWheels.begin(); iWheel != theDTWheels.end();
-       iWheel++)
-    (*iWheel)->dump();
+  for (std::vector<AlignableBTLTray*>::const_iterator iTray = theBTLTrays.begin(); iTray != theBTLTrays.end();
+       iTray++)
+    (*iTray)->dump();
 }
 
 //__________________________________________________________________________________________________
-Alignments* AlignableDTBarrel::alignments(void) const {
+Alignments* AlignableBTL::alignments(void) const {
   Alignments* m_alignments = new Alignments();
 
   // Add components recursively
@@ -91,7 +91,7 @@ Alignments* AlignableDTBarrel::alignments(void) const {
 }
 
 //__________________________________________________________________________________________________
-AlignmentErrorsExtended* AlignableDTBarrel::alignmentErrors(void) const {
+AlignmentErrorsExtended* AlignableBTL::alignmentErrors(void) const {
   AlignmentErrorsExtended* m_alignmentErrors = new AlignmentErrorsExtended();
 
   // Add components recursively

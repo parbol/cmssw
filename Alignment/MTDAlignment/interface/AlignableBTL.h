@@ -1,46 +1,49 @@
-#ifndef Alignment_MuonAlignment_AlignableDTBarrel_H
-#define Alignment_MuonAlignment_AlignableDTBarrel_H
+#ifndef Alignment_MuonAlignment_AlignableBTL_H
+#define Alignment_MuonAlignment_AlignableBTL_H
 
-/** \class AlignableDTBarrel
- *  The alignable muon DT barrel.
+/** \class AlignableBTL
+ *  The alignable BTL 
  *
- *  $Date: 2008/04/15 16:05:53 $
- *  $Revision: 1.10 $
- *  \author Andre Sznajder - UERJ(Brazil)
+ *  $Date: 2024/12/15 16:05:53 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
 #include "Alignment/CommonAlignment/interface/Utilities.h"
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
 #include "Alignment/CommonAlignment/interface/AlignableSurface.h"
 
-#include "Alignment/MuonAlignment/interface/AlignableDTWheel.h"
+#include "Alignment/MuonAlignment/interface/AlignableBTLTray.h"
 
 #include <vector>
 
 class GeomDet;
 
-/// Concrete class for muon DT Barrel alignable.
+/// Concrete class for BTL alignable.
 ///
 /// Misalignment can be de-/reactivated (forwarded to components).
 ///
 
-class AlignableDTBarrel : public AlignableComposite {
+class AlignableBTL : public AlignableComposite {
 public:
-  AlignableDTBarrel(const std::vector<AlignableDTWheel*>& dtWheels);
+ 
+  AlignableBTL(const std::vector<AlignableBTLTray*>& btlTrays);
 
   // gets the global position as the average over all positions of the layers
   PositionType computePosition();
+  
   // get the global orientation
   RotationType computeOrientation();  //see explanation for "theOrientation"
+  
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableDTWheel& wheel(int i);
+  AlignableBTLTray& tray(int i);
 
-  /// Printout muon Barrel information (not recursive)
-  friend std::ostream& operator<<(std::ostream&, const AlignableDTBarrel&);
+  /// Printout btl information (not recursive)
+  friend std::ostream& operator<<(std::ostream&, const AlignableBTL&);
 
-  /// Recursive printout of the muon Barrel structure
+  /// Recursive printout of the btl structure
   void dump(void) const override;
 
   // Get alignments sorted by DetId
@@ -50,7 +53,7 @@ public:
   AlignmentErrorsExtended* alignmentErrors() const override;
 
 private:
-  std::vector<AlignableDTWheel*> theDTWheels;
+  std::vector<AlignableBTLTray*> theBTLTrays;
 };
 
 #endif

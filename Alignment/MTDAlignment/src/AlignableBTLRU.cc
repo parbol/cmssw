@@ -1,33 +1,33 @@
 /** \file
  *
- *  $Date: 2008/04/10 16:36:41 $
- *  $Revision: 1.5 $
+ *  $Date: 2024/12/10 16:36:41 $
+ *  $Revision: 1.0 $
  *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
 #include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-/// The constructor simply copies the vector of DT Chambers and computes the surface from them
+/// The constructor simply copies the vector of BTL RUs and computes the surface from them
 AlignableBTLRU::AlignableBTLRU(const std::vector<AlignableBTLModule*>& btlModules)
     : AlignableComposite(btlModules[0]->id(), align::AlignableBTLRU) {
   theBTLModules.insert(theBTLModules.end(), btlModules.begin(), btlModules.end());
 
   // maintain also list of components
-  for (const auto& module : btlModules) {
-    const auto mother = module->mother();
-    this->addComponent(module);  // components will be deleted by dtor of AlignableComposite
-    module->setMother(mother);   // restore previous behaviour where mother is not set
+  for (const auto& bmodule : btlModules) {
+    const auto mother = bmodule->mother();
+    this->addComponent(bmodule);  // components will be deleted by dtor of AlignableComposite
+    bmodule->setMother(mother);   // restore previous behaviour where mother is not set
   }
 
   setSurface(computeSurface());
   compConstraintType_ = Alignable::CompConstraintType::POSITION_Z;
 }
 
-/// Return Alignable DT Chamber at given index
+/// Return Alignable module at given index
 AlignableBTLModule& AlignableBTLRU::module(int i) {
   if (i >= size())
-    throw cms::Exception("LogicError") << "DT Chamber index (" << i << ") out of range";
+    throw cms::Exception("LogicError") << "Module index (" << i << ") out of range";
 
   return *theBTLModules[i];
 }
@@ -40,15 +40,21 @@ AlignableSurface AlignableBTLRU::computeSurface() {
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableBTLRU::PositionType AlignableBTLRU::computePosition() {
+  float xx = 0.;
+  float yy = 0.;
   float zz = 0.;
 
   for (std::vector<AlignableBTLModule*>::iterator imodule = theBTLModules.begin(); imodule != theBTLModules.end();
-       imodule++)
+       imodule++) {
+    xx += (*module)->globalPosition().z();
+    yy += (*module)->globalPosition().y();
     zz += (*module)->globalPosition().z();
-
+  }
+  xx /= static_cast<float>(theBTLModules.size());
+  yy /= static_cast<float>(theBTLModules.size());
   zz /= static_cast<float>(theBTLModules.size());
 
-  return PositionType(0.0, 0.0, zz);
+  return PositionType(xx, yy, zz);
 }
 
 /// Just initialize to default given by default constructor of a RotationType
