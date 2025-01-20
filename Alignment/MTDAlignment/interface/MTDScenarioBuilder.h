@@ -27,13 +27,6 @@ public:
   /// Apply misalignment scenario to the MTD
   void applyScenario(const edm::ParameterSet& scenario) override;
 
-  /*
-  /// This special method allows to move a DTsector by a same amount
-  void moveDTSectors(const edm::ParameterSet& scenario);
-
-  /// this special method allows to move a CSCsector by a same amount
-  void moveCSCSectors(const edm::ParameterSet& scenario);
-  */
   /// this special method allows to move the complete muon system by a same amount
   void moveMTD(const edm::ParameterSet& scenario);
 

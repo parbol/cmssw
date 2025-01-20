@@ -24,7 +24,7 @@
 
 // Alignment
 #include "Alignment/MTDAlignment/interface/AlignableMTD.h"
-#include "Geometry/MTDGeometry/interface/MTDGeometry.h"
+#include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
 #include "Alignment/MTDAlignment/interface/MTDScenarioBuilder.h"
 #include "Alignment/CommonAlignment/interface/Alignable.h"
 #include "Geometry/GeometryAligner/interface/GeometryAligner.h"
@@ -55,8 +55,8 @@ private:
   std::string theBTLAlignRecordName, theBTLErrorRecordName;
   std::string theETLAlignRecordName, theETLErrorRecordName;
 
-  edm::ESGetToken<BTLGeometry, MTDGeometryRecord> esTokenBTL_;
-  edm::ESGetToken<ETLGeometry, MTDGeometryRecord> esTokenETL_;
+  edm::ESGetToken<MTDGeometry, BTLGeometryRecord> esTokenBTL_;
+  edm::ESGetToken<MTDGeometry, ETLGeometryRecord> esTokenETL_;
 
   Alignments btl_Alignments;
   AlignmentErrorsExtended btl_AlignmentErrorsExtended;

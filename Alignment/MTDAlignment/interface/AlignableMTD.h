@@ -22,9 +22,8 @@ class AlignableBTL;
 class AlignableBTLTray;
 class AlignableBTLRU;
 class AlignableBTLModule;
-
-//class AlignableETL;
-//class AlignableETLHalfDisk;
+class AlignableETLEndcap;
+class AlignableETLModule;
 
 /// Constructor of the full MTD geometry.
 
@@ -50,7 +49,7 @@ public:
   align::Alignables BTLModules();
   align::Alignables BTLRUs();
   align::Alignables BTLTrays();
-  align::Alignables BTLTrays();
+  align::Alignables ETLEndcaps();
   align::Alignables ETLModules();
 
   /// Get BTL alignments sorted by DetId
@@ -104,7 +103,7 @@ private:
   std::vector<AlignableBTLTray*> theBTLTrays;
   std::vector<AlignableBTL*> theBTLBarrel;
   std::vector<AlignableETLEndcap*> theETLEndcap;
-  std::vector<AlignableETLEndcap*> theETLModules;
+  std::vector<AlignableETLModule*> theETLModules;
   align::Alignables theMTDComponents;
 };
 
