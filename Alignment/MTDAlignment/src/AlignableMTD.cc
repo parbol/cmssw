@@ -21,8 +21,8 @@
 #include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
-#include "Alignment/MTDAlignment/interface/AlignableETL.h"
-#include "Alignment/MTDAlignment/interface/AlignableETLHalfDisk.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLEndcap.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
 
 #include <iostream>
 
@@ -153,32 +153,22 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
 //******************************************************************************
 //Still to be defined
 //------------------------------------------------------------------------------
-/*
-void AlignableMTD::buildCSCEndcap(const CSCGeometry* pCSC, bool update) {
-  LogDebug("Position") << "Constructing AlignableCSCBarrel";
+void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
+  LogDebug("Position") << "Constructing AlignableETLEndcap";
 
   // Temporary container for stations in a given endcap
-  std::vector<AlignableCSCStation*> tmpCSCStationsInEndcap;
+  std::vector<AlignableETLModule*> tmpCSCSModules;
 
   // Loop over endcaps ( 1..2 )
   for (int iec = 1; iec < 3; iec++) {
     // Temporary container for rings in a given station
-    std::vector<AlignableCSCRing*> tmpCSCRingsInStation;
-
-    // Loop over stations ( 1..4 )
-    for (int ist = 1; ist < 5; ist++) {
-      // Temporary container for chambers in a given ring
-      std::vector<AlignableCSCChamber*> tmpCSCChambersInRing;
-
-      // Loop over rings ( 1..4 )
-      for (int iri = 1; iri < 5; iri++) {
-        // Loop over geom CSC Chambers
-        int iChamber{0};
-        const CSCGeometry::ChamberContainer& vc = pCSC->chambers();
-        for (const auto& det : vc) {
-          // Get the CSCDet ID
+    std::vector<AlignableETLModule*> tmpETLModulesInEndcap;
+    // Loop over modules ( 1..whatever number here)
+    for (int im = 1; im < 5; im++) {
+	   
+          // Get the ETL Det id
           CSCDetId cscId = det->id();
-
+          /*Update update update*/ 
           // Get chamber, station, ring, layer and endcap labels of the CSC chamber
           int ec = cscId.endcap();
           int st = cscId.station();
@@ -262,25 +252,8 @@ void AlignableMTD::buildCSCEndcap(const CSCGeometry* pCSC, bool update) {
 
   if (!update) {
     // Store the encaps in the muon components
-    theMuonComponents.insert(theMuonComponents.end(), theCSCEndcaps.begin(), theCSCEndcaps.end());
+    theMTDComponents.insert(theMTDComponents.end(), theCSCModules.begin(), theCSCModules.end());
   }
-}
-*/
-
-//--------------------------------------------------------------------------------------------------
-align::Alignables AlignableMTD::DTCrystals() {
-  align::Alignables result;
-
-  align::Alignables modules = BTLModules();
-  for (align::Alignables::const_iterator moduleIter = modules.begin(); moduleIter != modules.end(); ++moduleIter) {
-    align::Alignables crystals = (*moduleIter)->components();
-    for (align::Alignables::const_iterator crystalIter = crystals.begin(); crystalIter != crystals.end();
-         ++crystalIter) {
-      result.push_back(*crystalIter);
-    }
-  }
-
-  return result;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -372,8 +345,6 @@ AlignmentErrorsExtended* AlignableMTD::mtdAlignmentErrorsExtended(void) {
 }
 
 
-/*****************************************************************
- * To be defined                                                
 //__________________________________________________________________________________________________
 Alignments* AlignableMTD::etlAlignments(void) {
   // Retrieve muon endcaps alignments
@@ -386,6 +357,8 @@ Alignments* AlignableMTD::etlAlignments(void) {
 
   return tmpAlignments;
 }
+
+
 //__________________________________________________________________________________________________
 AlignmentErrorsExtended* AlignableMTD::etlAlignmentErrorsExtended(void) {
   // Retrieve muon endcaps alignment errors
@@ -402,4 +375,3 @@ AlignmentErrorsExtended* AlignableMTD::etlAlignmentErrorsExtended(void) {
 
   return tmpAlignmentErrorsExtended;
 }
-*/

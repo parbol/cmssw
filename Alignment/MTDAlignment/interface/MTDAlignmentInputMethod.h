@@ -1,11 +1,11 @@
-#ifndef Alignment_MuonAlignment_MuonAlignmentInputMethod_h
-#define Alignment_MuonAlignment_MuonAlignmentInputMethod_h
+#ifndef Alignment_MTDAlignment_MTDAlignmentInputMethod_h
+#define Alignment_MTDAlignment_MTDAlignmentInputMethod_h
 // -*- C++ -*-
 //
-// Package:     MuonAlignment
-// Class  :     MuonAlignmentInputMethod
+// Package:     MTDAlignment
+// Class  :     MTDAlignmentInputMethod
 //
-/**\class MuonAlignmentInputMethod MuonAlignmentInputMethod.h Alignment/MuonAlignment/interface/MuonAlignmentInputMethod.h
+/**\class MTDAlignmentInputMethod MTDAlignmentInputMethod.h Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h
 
  Description: <one line class summary>
 
@@ -13,11 +13,6 @@
     <usage>
 
 */
-//
-// Original Author:  Jim Pivarski
-//         Created:  Thu Mar  6 14:10:22 CST 2008
-// $Id: MuonAlignmentInputMethod.h,v 1.1 2008/03/15 20:26:46 pivarski Exp $
-//
 
 // system include files
 #include <memory>
@@ -25,20 +20,16 @@
 #include "FWCore/Framework/interface/EventSetup.h"
 
 // user include files
-#include "Alignment/MuonAlignment/interface/AlignableMuon.h"
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "Geometry/CSCGeometry/interface/CSCGeometry.h"
-#include "Geometry/GEMGeometry/interface/GEMGeometry.h"
+#include "Alignment/MTDAlignment/interface/AlignableMTD.h"
+#include "Geometry/MTDGeometry/interface/MTDGeometry.h"
 
 // forward declarations
 
-class MuonAlignmentInputMethod {
+class MTDAlignmentInputMethod {
 public:
-  MuonAlignmentInputMethod();
-  MuonAlignmentInputMethod(const DTGeometry* dtGeometry,
-                           const CSCGeometry* cscGeometry,
-                           const GEMGeometry* gemGeometry);
-  virtual ~MuonAlignmentInputMethod();
+  MTDAlignmentInputMethod();
+  MTDAlignmentInputMethod(const MTDGeometry* mtdGeometry);
+  virtual ~MTDAlignmentInputMethod();
 
   // ---------- const member functions ---------------------
 
@@ -46,17 +37,15 @@ public:
 
   // ---------- member functions ---------------------------
 
-  virtual AlignableMuon* newAlignableMuon() const;
+  virtual AlignableMTD* newAlignableMTD() const;
 
-  MuonAlignmentInputMethod(const MuonAlignmentInputMethod&) = delete;  // stop default
+  MTDAlignmentInputMethod(const MTDAlignmentInputMethod&) = delete;  // stop default
 
-  const MuonAlignmentInputMethod& operator=(const MuonAlignmentInputMethod&) = delete;  // stop default
+  const MTDAlignmentInputMethod& operator=(const MTDAlignmentInputMethod&) = delete;  // stop default
 
 private:
   // ---------- member data --------------------------------
-  const DTGeometry* dtGeometry_;
-  const CSCGeometry* cscGeometry_;
-  const GEMGeometry* gemGeometry_;
+  const MTDGeometry* mtdGeometry_;
 };
 
 #endif

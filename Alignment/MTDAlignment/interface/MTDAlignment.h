@@ -4,7 +4,7 @@
 /** \class MTDAlignment
  *  The MTDAlignment helper class for alignment jobs
  *
- *  $Date: 2011/06/07 19:28:47 $
+ *  $Date: 2024/12/07 19:28:47 $
  *  $Revision: 1.14 $
  *  \author Pablo martinez Ruiz del Arbol - UERJ(Brazil)
  */

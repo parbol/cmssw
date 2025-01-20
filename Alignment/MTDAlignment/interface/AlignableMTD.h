@@ -50,7 +50,8 @@ public:
   align::Alignables BTLModules();
   align::Alignables BTLRUs();
   align::Alignables BTLTrays();
-  //align::Alignables ETLHalfDisks();
+  align::Alignables BTLTrays();
+  align::Alignables ETLModules();
 
   /// Get BTL alignments sorted by DetId
   Alignments* btlAlignments();
@@ -59,12 +60,12 @@ public:
   AlignmentErrorsExtended* btlAlignmentErrorsExtended();
 
   /// Get ETL alignments sorted by DetId
-  //Alignments* etlAlignments();
+  Alignments* etlAlignments();
 
   /// Get ETL alignment errors sorted by DetId
-  //AlignmentErrorsExtended* etlAlignmentErrorsExtended();
+  AlignmentErrorsExtended* etlAlignmentErrorsExtended();
 
-  /// Return muon alignable object ID provider derived from the muon system geometry
+  /// Return MTD alignable object ID provider derived from the MTD system geometry
   const AlignableObjectId& objectIdProvider() const { return alignableObjectId_; }
 
 private:
@@ -89,7 +90,7 @@ private:
   void buildBTLBarrel(const MTDGeometry*, bool update = false);
 
   /// Build muon end caps
-  //void buildETLEndcap(const MTDGeometry*, bool update = false);
+  void buildETLEndcap(const MTDGeometry*, bool update = false);
 
   /// Set mothers recursively
   void recursiveSetMothers(Alignable* alignable);
@@ -102,8 +103,8 @@ private:
   std::vector<AlignableBTLRU*> theBTLRUs;
   std::vector<AlignableBTLTray*> theBTLTrays;
   std::vector<AlignableBTL*> theBTLBarrel;
-  //std::vector<AlignableETLHalfDisk*> theETLHalfDisks;
-  //std::vector<AlignableETLEndcap*> theETLEndcaps;
+  std::vector<AlignableETLEndcap*> theETLEndcap;
+  std::vector<AlignableETLEndcap*> theETLModules;
   align::Alignables theMTDComponents;
 };
 

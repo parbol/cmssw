@@ -1,14 +1,7 @@
 // -*- C++ -*-
 //
-// Package:     MuonAlignment
-// Class  :     MuonAlignmentInputMethod
-//
-// Implementation:
-//     <Notes on implementation>
-//
-// Original Author:  Jim Pivarski
-//         Created:  Thu Mar  6 14:25:07 CST 2008
-// $Id: MuonAlignmentInputMethod.cc,v 1.3 2009/01/19 11:07:37 flucke Exp $
+// Package:     MTDAlignment
+// Class  :     MTDAlignmentInputMethod
 //
 
 // system include files
@@ -16,8 +9,8 @@
 #include "FWCore/Framework/interface/ESTransientHandle.h"
 
 // user include files
-#include "Alignment/MuonAlignment/interface/MuonAlignmentInputMethod.h"
-#include "Geometry/Records/interface/MuonNumberingRecord.h"
+#include "Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h"
+#include "Geometry/Records/interface/MTDNumberingRecord.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
@@ -33,26 +26,26 @@
 //
 // constructors and destructor
 //
-MuonAlignmentInputMethod::MuonAlignmentInputMethod() {}
-MuonAlignmentInputMethod::MuonAlignmentInputMethod(const DTGeometry* dtGeometry,
+MTDAlignmentInputMethod::MTDAlignmentInputMethod() {}
+MTDAlignmentInputMethod::MTDAlignmentInputMethod(const DTGeometry* dtGeometry,
                                                    const CSCGeometry* cscGeometry,
                                                    const GEMGeometry* gemGeometry)
     : dtGeometry_(dtGeometry), cscGeometry_(cscGeometry), gemGeometry_(gemGeometry) {}
 
-// MuonAlignmentInputMethod::MuonAlignmentInputMethod(const MuonAlignmentInputMethod& rhs)
+// MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDAlignmentInputMethod& rhs)
 // {
 //    // do actual copying here;
 // }
 
-MuonAlignmentInputMethod::~MuonAlignmentInputMethod() {}
+MTDAlignmentInputMethod::~MTDAlignmentInputMethod() {}
 
 //
 // assignment operators
 //
-// const MuonAlignmentInputMethod& MuonAlignmentInputMethod::operator=(const MuonAlignmentInputMethod& rhs)
+// const MTDAlignmentInputMethod& MTDAlignmentInputMethod::operator=(const MTDAlignmentInputMethod& rhs)
 // {
 //   //An exception safe implementation is
-//   MuonAlignmentInputMethod temp(rhs);
+//   MTDAlignmentInputMethod temp(rhs);
 //   swap(rhs);
 //
 //   return *this;
@@ -62,7 +55,7 @@ MuonAlignmentInputMethod::~MuonAlignmentInputMethod() {}
 // member functions
 //
 
-AlignableMuon* MuonAlignmentInputMethod::newAlignableMuon() const {
+AlignableMuon* MTDAlignmentInputMethod::newAlignableMuon() const {
   return new AlignableMuon(&*dtGeometry_, &*cscGeometry_, &*gemGeometry_);
 }
 
