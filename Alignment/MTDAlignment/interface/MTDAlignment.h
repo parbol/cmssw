@@ -6,7 +6,7 @@
  *
  *  $Date: 2024/12/07 19:28:47 $
  *  $Revision: 1.14 $
- *  \author Pablo martinez Ruiz del Arbol - UERJ(Brazil)
+ *  \author Pablo martinez Ruiz del Arbol - IFCA
  */
 
 #include <map>
@@ -20,7 +20,7 @@
 
 class MTDAlignment {
 public:
-  MTDAlignment(const BTLGeometry* btlGeometry, const ETLGeometry* etlGeometry);
+  MTDAlignment(const MTDGeometry* mtdGeometry);
 
   MTDAlignment(const edm::EventSetup& iSetup, const MTDAlignmentInputMethod& input);
 
@@ -41,27 +41,18 @@ public:
   void recursiveStructureMap(const align::Alignables& alignables,
                              std::map<std::pair<align::StructureType, align::ID>, Alignable*>& theMap);
 
-  void copyAlignmentToSurvey(double shiftErr, double angleErr);
-  void fillGapsInSurvey(double shiftErr, double angleErr);
-  void copySurveyToAlignment();
-
   void writeXML(const edm::ParameterSet& iConfig,
-                const BTLGeometry* btlGeometryXML,
-                const ETLGeometry* etlGeometryXML);
+                const MTDGeometry* mtdGeometryXML);
 
-  void saveETLtoDB();
-  void saveBTLtoDB();
   void saveToDB();
 
 private:
   void init();
   void recursiveCopySurveyToAlignment(Alignable* alignable);
 
-  std::string theBTLAlignRecordName, theBTLErrorRecordName;
-  std::string theETLAlignRecordName, theETLErrorRecordName;
+  std::string theMTDAlignRecordName, theMTDErrorRecordName;
 
-  const BTLGeometry* btlGeometry_;
-  const ETLGeometry* etlGeometry_;
+  const MTDGeometry* mtdGeometry_;
 
   align::Scalars displacements;
 

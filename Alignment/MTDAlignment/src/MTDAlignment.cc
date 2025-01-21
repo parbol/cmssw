@@ -26,28 +26,25 @@
 //____________________________________________________________________________________
 //
 void MTDAlignment::init() {
-  theDTAlignRecordName = "BTLAlignmentRcd";
-  theDTErrorRecordName = "BTLAlignmentErrorExtendedRcd";
-  theCSCAlignRecordName = "ETLAlignmentRcd";
-  theCSCErrorRecordName = "ETLAlignmentErrorExtendedRcd";
+  theMTDAlignRecordName = "MTDAlignmentRcd";
+  theMTDErrorRecordName = "MTDAlignmentErrorExtendedRcd";
   theAlignableMuon = nullptr;
   theAlignableNavigator = nullptr;
 }
 
-MTDAlignment::MTDAlignment(const BTLGeometry* btlGeometry,
-                             const ETLGeometry* etlGeometry)
-    : btlGeometry_(btlGeometry), etlGeometry_(etlGeometry) {
+MTDAlignment::MTDAlignment(const MTDGeometry* mtdGeometry)
+    : mtdGeometry_(mtdGeometry) {
   init();
 
-  theAlignableMuon = new AlignableMuon(&*btlGeometry_, &*etlGeometry_);
-  theAlignableNavigator = new AlignableNavigator(theAlignableMuon);
+  theAlignableMTD = new AlignableMTD(&*mtdGeometry_);
+  theAlignableNavigator = new AlignableNavigator(theAlignableMTD);
 }
 
 MTDAlignment::MTDAlignment(const edm::EventSetup& iSetup, const MTDAlignmentInputMethod& input) {
   init();
 
-  theAlignableMuon = input.newAlignableMuon();
-  theAlignableNavigator = new AlignableNavigator(theAlignableMuon);
+  theAlignableMTD = input.newAlignableMTD();
+  theAlignableNavigator = new AlignableNavigator(theAlignableMTD);
 }
 
 //____________________________________________________________________________________
@@ -72,16 +69,17 @@ void MTDAlignment::moveAlignableLocalCoord(DetId& detid, align::Scalars& displac
 //____________________________________________________________________________________
 //
 void MTDAlignment::moveAlignableGlobalCoord(DetId& detid, align::Scalars& displacements, align::Scalars& rotations) {
-  // Displace and rotate DT an Alignable associated to a GeomDet or GeomDetUnit
+
+  // Displace and rotate Alignable associated to a GeomDet or GeomDetUnit
   Alignable* theAlignable = theAlignableNavigator->alignableFromDetId(detid);
 
   // Convert std::vector to GlobalVector
   align::GlobalVector gvector(displacements.at(0), displacements.at(1), displacements.at(2));
 
-  // global displacement of the chamber
+  // global displacement of the module
   theAlignable->move(gvector);
 
-  // local rotation of the chamber
+  // local rotation of the module
   theAlignable->rotateAroundGlobalX(rotations.at(0));  // Global X axis rotation
   theAlignable->rotateAroundGlobalY(rotations.at(1));  // Global Y axis rotation
   theAlignable->rotateAroundGlobalZ(rotations.at(2));  // Global Z axis rotation
@@ -125,45 +123,23 @@ void MTDAlignment::recursiveStructureMap(const align::Alignables& alignables,
 // Code needed to store alignments to DB
 
 void MTDAlignment::writeXML(const edm::ParameterSet& iConfig,
-                             const BTLGeometry* btlGeometryXML,
-                             const ETLGeometry* etlGeometryXML) {
-  MTDAlignmentOutputXML(iConfig, btlGeometryXML, etlGeometryXML).write(theAlignableMuon);
+                             const MTDGeometry* mtdGeometryXML) {
+  MTDAlignmentOutputXML(iConfig, mtdGeometryXML).write(theAlignableMTD);
 }
 
-void MTDAlignment::saveBTLtoDB(void) {
+void MTDAlignment::savetoDB(void) {
   // Call service
   edm::Service<cond::service::PoolDBOutputService> poolDbService;
   if (!poolDbService.isAvailable())  // Die if not available
     throw cms::Exception("NotAvailable") << "PoolDBOutputService not available";
 
   // Get alignments and errors
-  Alignments btl_Alignments = *(theAlignableMuon->btlAlignments());
-  AlignmentErrorsExtended btl_AlignmentErrorsExtended = *(theAlignableMuon->btlAlignmentErrorsExtended());
+  Alignments mtd_Alignments = *(theAlignableMTD->mtdAlignments());
+  AlignmentErrorsExtended mtd_AlignmentErrorsExtended = *(theAlignableMTD->etlAlignmentErrorsExtended());
 
   // Store DT alignments and errors
-  poolDbService->writeOneIOV<Alignments>(btl_Alignments, poolDbService->currentTime(), theBTLAlignRecordName);
+  poolDbService->writeOneIOV<Alignments>(mtd_Alignments, poolDbService->currentTime(), theMTDAlignRecordName);
   poolDbService->writeOneIOV<AlignmentErrorsExtended>(
-      btl_AlignmentErrorsExtended, poolDbService->currentTime(), theBTLErrorRecordName);
+      mtd_AlignmentErrorsExtended, poolDbService->currentTime(), theMTDErrorRecordName);
 }
 
-void MTDAlignment::saveETLtoDB(void) {
-  // Call service
-  edm::Service<cond::service::PoolDBOutputService> poolDbService;
-  if (!poolDbService.isAvailable())  // Die if not available
-    throw cms::Exception("NotAvailable") << "PoolDBOutputService not available";
-
-  // Get alignments and errors
-  Alignments etl_Alignments = *(theAlignableMuon->etlAlignments());
-  AlignmentErrorsExtended etl_AlignmentErrorsExtended = *(theAlignableMuon->etlAlignmentErrorsExtended());
-
-  // Store CSC alignments and errors
-  poolDbService->writeOneIOV<Alignments>(etl_Alignments, poolDbService->currentTime(), theETLAlignRecordName);
-  poolDbService->writeOneIOV<AlignmentErrorsExtended>(
-      etl_AlignmentErrorsExtended, poolDbService->currentTime(), theETLErrorRecordName);
-}
-
-
-void MTDAlignment::saveToDB(void) {
-  saveDTtoDB();
-  saveCSCtoDB();
-}

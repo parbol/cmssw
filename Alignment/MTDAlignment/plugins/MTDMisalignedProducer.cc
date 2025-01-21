@@ -52,28 +52,21 @@ private:
   const bool theSaveToDB;               /// whether or not writing to DB
   const edm::ParameterSet theScenario;  /// misalignment scenario
 
-  std::string theBTLAlignRecordName, theBTLErrorRecordName;
-  std::string theETLAlignRecordName, theETLErrorRecordName;
+  std::string theMTDAlignRecordName, theMTDErrorRecordName;
 
-  edm::ESGetToken<MTDGeometry, BTLGeometryRecord> esTokenBTL_;
-  edm::ESGetToken<MTDGeometry, ETLGeometryRecord> esTokenETL_;
+  edm::ESGetToken<MTDGeometry, MTDGeometryRecord> esTokenMTD_;
 
-  Alignments btl_Alignments;
-  AlignmentErrorsExtended btl_AlignmentErrorsExtended;
-  Alignments etl_Alignments;
-  AlignmentErrorsExtended etl_AlignmentErrorsExtended;
+  Alignments mtd_Alignments;
+  AlignmentErrorsExtended mtd_AlignmentErrorsExtended;
 };
 
 //__________________________________________________________________________________________________
 MTDMisalignedProducer::MTDMisalignedProducer(const edm::ParameterSet& p)
     : theSaveToDB(p.getUntrackedParameter<bool>("saveToDbase")),
       theScenario(p.getParameter<edm::ParameterSet>("scenario")),
-      theBTLAlignRecordName("BTLAlignmentRcd"),
-      theBTLErrorRecordName("BTLAlignmentErrorExtendedRcd"),
-      theETLAlignRecordName("ETLAlignmentRcd"),
-      theETLErrorRecordName("ETLAlignmentErrorExtendedRcd"),
-      esTokenBTL_(esConsumes(edm::ESInputTag("", "idealForMTDMisalignedProducer"))),
-      esTokenETL_(esConsumes(edm::ESInputTag("", "idealForMTDMisalignedProducer"))),
+      theMTDAlignRecordName("MTDAlignmentRcd"),
+      theMTDErrorRecordName("MTDAlignmentErrorExtendedRcd"),
+      esTokenMTD_(esConsumes(edm::ESInputTag("", "idealForMTDMisalignedProducer"))) {}
 
 //__________________________________________________________________________________________________
 MTDMisalignedProducer::~MTDMisalignedProducer() = default;
@@ -82,21 +75,18 @@ MTDMisalignedProducer::~MTDMisalignedProducer() = default;
 void MTDMisalignedProducer::analyze(const edm::Event& event, const edm::EventSetup& eventSetup) {
   edm::LogInfo("MisalignedMTD") << "Producer called";
   // Create the MTD geometry from ideal geometry
-  edm::ESHandle<BTLGeometry> theBTLGeometry = eventSetup.getHandle(esTokenBTL_);
-  edm::ESHandle<ETLGeometry> theETLGeometry = eventSetup.getHandle(esTokenETL_);
+  edm::ESHandle<MTDGeometry> theMTDGeometry = eventSetup.getHandle(esTokenMTD_);
 
   // Create the alignable hierarchy
-  AlignableMTD* theAlignableMTD = new AlignableMTD(&(*theBTLGeometry), &(*theETLGeometry));
+  AlignableMTD* theAlignableMTD = new AlignableMTD(&(*theMTDGeometry));
 
   // Create misalignment scenario
   MTDScenarioBuilder scenarioBuilder(theAlignableMTD);
   scenarioBuilder.applyScenario(theScenario);
 
   // Get alignments and errors
-  btl_Alignments = *(theAlignableMTD->btlAlignments());
-  btl_AlignmentErrorsExtended = *(theAlignableMTD->btlAlignmentErrorsExtended());
-  etl_Alignments = *(theAlignableMTD->etlAlignments());
-  etl_AlignmentErrorsExtended = *(theAlignableMTD->etlAlignmentErrorsExtended());
+  mtd_Alignments = *(theAlignableMTD->mtdAlignments());
+  mtd_AlignmentErrorsExtended = *(theAlignableMTD->mtdAlignmentErrorsExtended());
 
   if (theSaveToDB)
     this->saveToDB();
@@ -111,15 +101,11 @@ void MTDMisalignedProducer::saveToDB(void) {
   if (!poolDbService.isAvailable())  // Die if not available
     throw cms::Exception("NotAvailable") << "PoolDBOutputService not available";
 
-  // Store BTL alignments and errors
-  poolDbService->writeOneIOV<Alignments>(btl_Alignments, poolDbService->beginOfTime(), theBTLAlignRecordName);
+  // Store MTD alignments and errors
+  poolDbService->writeOneIOV<Alignments>(mtd_Alignments, poolDbService->beginOfTime(), theMTDAlignRecordName);
   poolDbService->writeOneIOV<AlignmentErrorsExtended>(
-      btl_AlignmentErrorsExtended, poolDbService->beginOfTime(), theBTLErrorRecordName);
+      mtd_AlignmentErrorsExtended, poolDbService->beginOfTime(), theMTDErrorRecordName);
 
-  // Store ETL alignments and errors
-  poolDbService->writeOneIOV<Alignments>(etl_Alignments, poolDbService->beginOfTime(), theETLAlignRecordName);
-  poolDbService->writeOneIOV<AlignmentErrorsExtended>(
-      etl_AlignmentErrorsExtended, poolDbService->beginOfTime(), theETLErrorRecordName);
 }
 //____________________________________________________________________________________________
 DEFINE_FWK_MODULE(MTDMisalignedProducer);
