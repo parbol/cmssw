@@ -9,9 +9,10 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "Alignment/MTDAlignment/interface/AlignableMTD.h"
-#include "Geometry/MTDGeometrBuilder/interface/MTDGeometry.h"
+#include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
 #include "DataFormats/ForwardDetId/interface/MTDDetId.h"
 #include "DataFormats/ForwardDetId/interface/BTLDetId.h"
+#include "DataFormats/ForwardDetId/interface/ETLDetId.h"
 #include "CondFormats/Alignment/interface/Alignments.h"
 #include "CondFormats/Alignment/interface/AlignmentErrorsExtended.h"
 #include "Geometry/CommonDetUnit/interface/GeomDet.h"
@@ -20,7 +21,6 @@
 #include "Alignment/MTDAlignment/interface/AlignableBTLTray.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
-#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLEndcap.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
 
@@ -47,7 +47,7 @@ AlignableMTD::AlignableMTD(const MTDGeometry* mtdGeometry)
 
 //--------------------------------------------------------------------------------------------------
 AlignableMTD::~AlignableMTD() {
-  for (align::Alignables::iterator iter = theMuonComponents.begin(); iter != theMuonComponents.end(); iter++) {
+  for (align::Alignables::iterator iter = theMTDComponents.begin(); iter != theMTDComponents.end(); iter++) {
     delete *iter;
   }
 }
@@ -65,7 +65,7 @@ void AlignableMTD::update(const MTDGeometry* mtdGeometry) {
 }
 
 //------------------------------------------------------------------------------
-void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
+void AlignableMTD::buildBTLBarrel(const MTDGeometry* pMTD, bool update) {
 
   LogDebug("Position") << "Constructing AlignableBTLBarrel";
 
@@ -73,8 +73,7 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
   std::vector<AlignableBTLModule*> tmpBTLModulesInRU;
   std::vector<AlignableBTLRU*> tmpBTLRUsInTrays;
   
-  //auto const btlcontainer = pDT->detsBTL();
-
+  
   // Loop over sides ( 0, 1 )
   for (int iside = 0; iside < 1; iside++) {
       // Loop over trays ( 0, 35 )
@@ -84,9 +83,10 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
               // Loop over RU ( 0, 1 )
               for (int iru = 0; iru < 1; iru++) {
                   //Loop over modules
+		  int iModule = 0;
 		  for (int imod = 0; imod < 23; imod++) {
 			BTLDetId detid(iside, itray, iru, imod, irutype, 1);
-			MTDGeomDet *det = pDT->idToDet(detid); 
+			const MTDGeomDet *det = pMTD->idToDet(detid); 
                         if (update) {
                             // Update the alignable BTL module
                             theBTLBarrel.back()->tray(itray).ru(iru).mod(iModule).update(det);
@@ -115,20 +115,21 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
       	  // End loop over RU
           if (!update) {
               // Store The BTL RUs
-              theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTray.begin(), tmpBTLRUsInTray.end());
+              theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTrays.begin(), tmpBTLRUsInTrays.end());
               // Create the alignable BTL Trays
-              AlignableBTLTray* tmpTray = new AlignableBTLTray(tmpBTLRUsInTray);
+              AlignableBTLTray* tmpTray = new AlignableBTLTray(tmpBTLRUsInTrays);
              // Store the BTL Trays
-             theBTLTrays.push_back(tmTray);
+             theBTLTrays.push_back(tmpTray);
+              //auto const btlcontainer = pDT->detsBTL();
 	     // Clear temporary vector of RUs in a tray
-             tmpBTLRUsInTray.clear();
+             tmpBTLRUsInTrays.clear();
           }
       }
   }
   //End loop on trays and sides
   if (!update) {
-    // Create the alignable Muon Barrel
-    AlignableBTLBarrel* tmpBTLBarrel = new AlignableBTLBarrel(theBTLTrays);
+    // Create the alignable BTL Barrel
+    AlignableBTL* tmpBTLBarrel = new AlignableBTL(theBTLTrays);
 
     // Store the barrel
     theBTLBarrel.push_back(tmpBTLBarrel);
@@ -144,7 +145,7 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
 //******************************************************************************
 //Still to be defined
 //------------------------------------------------------------------------------
-void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
+void AlignableMTD::buildETLEndcap(const MTDGeometry* pMTD, bool update) {
   
   LogDebug("Position") << "Constructing AlignableETLEndcap";
   // Temporary container for modules
@@ -159,9 +160,10 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
               //Loop over Sectors ( 0..1 )
 	      for(int isector = 0; isector < 2; isector++) {
                   //Loop over Modules (0..516)
+		  int iModule = 0;
 		  for(int imod = 0; imod < 517; imod++) {
-    		      ETLDetId detid(iec, idisk, iring, isector, imode);
-		      MTDGeomDet *det = pDT->idToDet(detid); 
+    		      ETLDetId detid(iec, idisk, iring, isector, imod);
+		      const MTDGeomDet *det = pMTD->idToDet(detid); 
                       if (update) {
                             // Update the alignable ETL module
                             theETLEndcap[iec]->mod(iModule).update(det);
@@ -169,7 +171,7 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
             		    // Create the alignable ETL module
                             AlignableETLModule* tmpETLModule = new AlignableETLModule(det);
                             // Store the ETL modules in a given ETL endcap
-                            tmpETLModulesInEndcap.push_back(tmpBELModule);
+                            tmpETLModulesInEndcap.push_back(tmpETLModule);
                       }
                       ++iModule;
                   }
@@ -179,7 +181,7 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
 
       if (!update) {
       
-	  AlignableETLEndcap tmpEndcap = new AlignableETLEndcap(theETLModules);    
+	  AlignableETLEndcap *tmpEndcap = new AlignableETLEndcap(theETLModules);    
           theETLModules.insert(theETLModules.end(), tmpETLModulesInEndcap.begin(), tmpETLModulesInEndcap.end());
           tmpETLModulesInEndcap.clear();
 	  theETLEndcap.push_back(tmpEndcap);
@@ -305,12 +307,12 @@ AlignmentErrorsExtended* AlignableMTD::mtdAlignmentErrorsExtended(void) {
   // Retrieve muon barrel alignments
   AlignmentErrorsExtended* btlBarrel = this->BTLBarrel().front()->alignmentErrors();
   AlignmentErrorsExtended* etlEndCap1 = this->ETLEndcaps().front()->alignmentErrors();
-  AlignmentErrorsExtended* etlEndCap2 = this->ETLEndcaps().back()->alignmentsErrors();
+  AlignmentErrorsExtended* etlEndCap2 = this->ETLEndcaps().back()->alignmentErrors();
   AlignmentErrorsExtended* tmpAlignments = new AlignmentErrorsExtended();
 
-  std::copy(btlBarrel->m_align.begin(), btlBarrel->m_align.end(), back_inserter(tmpAlignments->m_alignError));
-  std::copy(etlEndCap1->m_align.begin(), etlEndCap1->m_align.end(), back_inserter(tmpAlignments->m_alignError));
-  std::copy(etlEndCap2->m_align.begin(), etlEndCap2->m_align.end(), back_inserter(tmpAlignments->m_alignError));
+  std::copy(btlBarrel->m_alignError.begin(), btlBarrel->m_alignError.end(), back_inserter(tmpAlignments->m_alignError));
+  std::copy(etlEndCap1->m_alignError.begin(), etlEndCap1->m_alignError.end(), back_inserter(tmpAlignments->m_alignError));
+  std::copy(etlEndCap2->m_alignError.begin(), etlEndCap2->m_alignError.end(), back_inserter(tmpAlignments->m_alignError));
   return tmpAlignments;
 }
 

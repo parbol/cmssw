@@ -13,7 +13,7 @@
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
 #include "Alignment/CommonAlignment/interface/AlignableSurface.h"
 
-#include "Alignment/MuonAlignment/interface/AlignableETLModule.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
 
 #include <vector>
 
@@ -38,7 +38,7 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableETLEndcap& module(int i);
+  AlignableETLModule& mod(int i);
 
   /// Printout btl information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableETLEndcap&);

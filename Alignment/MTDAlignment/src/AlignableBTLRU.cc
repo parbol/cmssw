@@ -46,9 +46,9 @@ AlignableBTLRU::PositionType AlignableBTLRU::computePosition() {
 
   for (std::vector<AlignableBTLModule*>::iterator imodule = theBTLModules.begin(); imodule != theBTLModules.end();
        imodule++) {
-    xx += (*module)->globalPosition().z();
-    yy += (*module)->globalPosition().y();
-    zz += (*module)->globalPosition().z();
+    xx += (*imodule)->globalPosition().z();
+    yy += (*imodule)->globalPosition().y();
+    zz += (*imodule)->globalPosition().z();
   }
   xx /= static_cast<float>(theBTLModules.size());
   yy /= static_cast<float>(theBTLModules.size());
@@ -75,5 +75,5 @@ void AlignableBTLRU::dump(void) const {
   for (std::vector<AlignableBTLModule*>::const_iterator iModule = theBTLModules.begin();
        iModule != theBTLModules.end();
        iModule++)
-    edm::LogInfo("AlignableDump") << (**iChamber);
+    edm::LogInfo("AlignableDump") << (**iModule);
 }

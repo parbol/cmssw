@@ -91,6 +91,14 @@ namespace align {
 
     Detector,  // = 112 (what for?)
 
+    AlignableETLModule,
+    AlignableETLEndcap,
+    AlignableBTLModule,
+    AlignableBTLRU,
+    AlignableBTLTray,
+    AlignableBTL,
+    AlignableMTD,
+
     Extras = 1000,
     BeamSpot
   };

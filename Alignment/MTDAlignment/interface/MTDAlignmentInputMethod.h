@@ -21,7 +21,7 @@
 
 // user include files
 #include "Alignment/MTDAlignment/interface/AlignableMTD.h"
-#include "Geometry/MTDGeometry/interface/MTDGeometry.h"
+#include "Geometry/MTDGeometryBuilder/interface/MTDGeometry.h"
 
 // forward declarations
 

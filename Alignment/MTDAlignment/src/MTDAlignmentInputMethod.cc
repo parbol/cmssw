@@ -10,7 +10,7 @@
 
 // user include files
 #include "Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h"
-#include "Geometry/Records/interface/MTDNumberingRecord.h"
+//#include "Geometry/Records/interface/MTDNumberingRecord.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
@@ -27,10 +27,8 @@
 // constructors and destructor
 //
 MTDAlignmentInputMethod::MTDAlignmentInputMethod() {}
-MTDAlignmentInputMethod::MTDAlignmentInputMethod(const DTGeometry* dtGeometry,
-                                                   const CSCGeometry* cscGeometry,
-                                                   const GEMGeometry* gemGeometry)
-    : dtGeometry_(dtGeometry), cscGeometry_(cscGeometry), gemGeometry_(gemGeometry) {}
+MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDGeometry* mtdGeometry)
+    : mtdGeometry_(mtdGeometry) {}
 
 // MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDAlignmentInputMethod& rhs)
 // {
@@ -55,8 +53,8 @@ MTDAlignmentInputMethod::~MTDAlignmentInputMethod() {}
 // member functions
 //
 
-AlignableMuon* MTDAlignmentInputMethod::newAlignableMuon() const {
-  return new AlignableMuon(&*dtGeometry_, &*cscGeometry_, &*gemGeometry_);
+AlignableMTD* MTDAlignmentInputMethod::newAlignableMTD() const {
+  return new AlignableMTD(&*mtdGeometry_);
 }
 
 //

@@ -1,5 +1,5 @@
-#ifndef Alignment_MuonAlignment_AlignableMTD_H
-#define Alignment_MuonAlignment_AlignableMTD_H
+#ifndef Alignment_MTDAlignment_AlignableMTD_H
+#define Alignment_MTDAlignment_AlignableMTD_H
 
 /** \class AlignableMTD
  *  The alignable MTD

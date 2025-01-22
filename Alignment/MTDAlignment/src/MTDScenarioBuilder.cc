@@ -16,7 +16,7 @@
 
 // Alignment
 
-#include "Alignment/MuonAlignment/interface/MTDScenarioBuilder.h"
+#include "Alignment/MTDAlignment/interface/MTDScenarioBuilder.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "Alignment/CommonAlignment/interface/Alignable.h"
 

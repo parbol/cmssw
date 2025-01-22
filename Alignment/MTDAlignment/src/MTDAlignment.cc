@@ -16,7 +16,7 @@
 #include "Alignment/CommonAlignment/interface/SurveyDet.h"
 #include "Alignment/MTDAlignment/interface/MTDAlignment.h"
 
-#include "Alignment/MTDAlignment/interface/MTDAlignmentOutputXML.h"
+//#include "Alignment/MTDAlignment/interface/MTDAlignmentOutputXML.h"
 
 #include "Alignment/CommonAlignment/interface/Alignable.h"
 #include "Alignment/CommonAlignment/interface/SurveyDet.h"
@@ -28,7 +28,7 @@
 void MTDAlignment::init() {
   theMTDAlignRecordName = "MTDAlignmentRcd";
   theMTDErrorRecordName = "MTDAlignmentErrorExtendedRcd";
-  theAlignableMuon = nullptr;
+  theAlignableMTD = nullptr;
   theAlignableNavigator = nullptr;
 }
 
@@ -122,10 +122,11 @@ void MTDAlignment::recursiveStructureMap(const align::Alignables& alignables,
 //____________________________________________________________________________________
 // Code needed to store alignments to DB
 
-void MTDAlignment::writeXML(const edm::ParameterSet& iConfig,
+/*void MTDAlignment::writeXML(const edm::ParameterSet& iConfig,
                              const MTDGeometry* mtdGeometryXML) {
   MTDAlignmentOutputXML(iConfig, mtdGeometryXML).write(theAlignableMTD);
 }
+*/
 
 void MTDAlignment::savetoDB(void) {
   // Call service

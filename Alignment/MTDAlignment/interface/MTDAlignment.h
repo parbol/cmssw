@@ -41,10 +41,10 @@ public:
   void recursiveStructureMap(const align::Alignables& alignables,
                              std::map<std::pair<align::StructureType, align::ID>, Alignable*>& theMap);
 
-  void writeXML(const edm::ParameterSet& iConfig,
-                const MTDGeometry* mtdGeometryXML);
+  //void writeXML(const edm::ParameterSet& iConfig,
+  //              const MTDGeometry* mtdGeometryXML);
 
-  void saveToDB();
+  void savetoDB();
 
 private:
   void init();

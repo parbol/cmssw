@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "Alignment/MuonAlignment/interface/AlignableETLEndcap.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLEndcap.h"
 #include "CondFormats/Alignment/interface/Alignments.h"
 #include "CondFormats/Alignment/interface/AlignmentErrorsExtended.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -28,7 +28,7 @@ AlignableETLEndcap::AlignableETLEndcap(const std::vector<AlignableETLModule*>& e
 }
 
 /// Return AlignableETLEndcap station at given index
-AlignableETLModule& AlignableETLEndcap::module(int i) {
+AlignableETLModule& AlignableETLEndcap::mod(int i) {
   if (i >= size())
     throw cms::Exception("LogicError") << "Module index (" << i << ") out of range";
 
