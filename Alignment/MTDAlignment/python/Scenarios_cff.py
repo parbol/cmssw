@@ -9,7 +9,7 @@ import FWCore.ParameterSet.Config as cms
 # See corresponding .cff files for examples.
 # -----------------------------------------------------------------------
 # General settings common to all scenarios
-MuonMisalignmentScenarioSettings = cms.PSet(
+MTDMisalignmentScenarioSettings = cms.PSet(
     setRotations = cms.bool(True),
     setTranslations = cms.bool(True),
     seed = cms.int32(1234567),
@@ -18,6 +18,71 @@ MuonMisalignmentScenarioSettings = cms.PSet(
 )
 # -----------------------------------------------------------------------
 #  "Misalignment" scenario without misalignment...
-MuonNoMovementsScenario = cms.PSet(
-    MuonMisalignmentScenarioSettings
+MTDNoMovementsScenario = cms.PSet(
+    MTDMisalignmentScenarioSettings
+)
+
+
+# -----------------------------------------------------------------------
+#  "Misalignment" scenario for BTL Startup
+MTDBTLStartup = cms.PSet(
+    MuonMisalignmentScenarioSettings,
+    BTLBarrel = cms.PSet(
+        distribution = cms.string('gaussian'),
+        BTL = cms.PSet(
+            scale = cms.double(1.0),
+            scaleError = cms.double(1.0),
+            dZ = cms.double(0.0),
+            dX = cms.double(0.0),
+            dY = cms.double(0.0),
+            phiZ = cms.double(0.000),
+            phiY = cms.double(0.000),
+            phiX = cms.double(0.000)
+            BTLTrays = cms.PSet(
+                 dZ = cms.double(0.0),
+                 dX = cms.double(0.0),
+                 dY = cms.double(0.0),
+                 phiZ = cms.double(0.000),
+                 phiY = cms.double(0.000),
+                 phiX = cms.double(0.000)
+                 BTLRUs = cms.PSet(
+                     dZ = cms.double(0.0),
+                     dX = cms.double(0.0),
+                     dY = cms.double(0.0),
+                     phiZ = cms.double(0.000),
+                     phiY = cms.double(0.000),
+                     phiX = cms.double(0.000),
+                     BTLModules = cms.PSet(
+                         dZ = cms.double(0.0),
+                         dX = cms.double(0.0),
+                         dY = cms.double(0.0),
+                         phiZ = cms.double(0.000),
+                         phiY = cms.double(0.000),
+                         phiX = cms.double(0.000),
+                     )
+                 )
+             ),
+         )
+    ),
+    ETLEndcaps = cms.PSet(
+        distribution = cms.string('gaussian'),
+        ETLEndcap = cms.PSet(
+            scale = cms.double(1.0),
+            scaleError = cms.double(1.0),
+            dZ = cms.double(0.0),
+            dX = cms.double(0.0),
+            dY = cms.double(0.0),
+            phiZ = cms.double(0.000),
+            phiY = cms.double(0.000),
+            phiX = cms.double(0.000)
+            ETLModules = cms.PSet(
+                dZ = cms.double(0.0),
+                dX = cms.double(0.0),
+                dY = cms.double(0.0),
+                phiZ = cms.double(0.000),
+                phiY = cms.double(0.000),
+                phiX = cms.double(0.000)
+            ),
+        )
+    )
 )

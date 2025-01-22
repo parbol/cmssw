@@ -2,8 +2,8 @@
 #
 import FWCore.ParameterSet.Config as cms
 
-import Alignment.MuonAlignment.Scenarios_cff as _MuonScenarios
-MisalignedMuon = cms.EDAnalyzer("MuonMisalignedProducer",
+import Alignment.MTDAlignment.Scenarios_cff as _MTDScenarios
+MisalignedMTD = cms.EDAnalyzer("MTDMisalignedProducer",
                                 saveToDbase = cms.untracked.bool(False),
-                                scenario = _MuonScenarios.MuonNoMovementsScenario
+                                scenario = _MTDScenarios.MTDNoMovementsScenario
                                 )
