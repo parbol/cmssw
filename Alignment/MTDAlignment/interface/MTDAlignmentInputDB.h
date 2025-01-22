@@ -1,11 +1,11 @@
-#ifndef Alignment_MuonAlignment_MuonAlignmentInputDB_h
-#define Alignment_MuonAlignment_MuonAlignmentInputDB_h
+#ifndef Alignment_MTDAlignment_MTDAlignmentInputDB_h
+#define Alignment_MTDAlignment_MTDAlignmentInputDB_h
 // -*- C++ -*-
 //
-// Package:     MuonAlignment
-// Class  :     MuonAlignmentInputDB
+// Package:     MTDAlignment
+// Class  :     MTDAlignmentInputDB
 //
-/**\class MuonAlignmentInputDB MuonAlignmentInputDB.h Alignment/MuonAlignment/interface/MuonAlignmentInputDB.h
+/**\class MTDAlignmentInputDB MTDAlignmentInputDB.h Alignment/MTDAlignment/interface/MTDAlignmentInputDB.h
 
  Description: <one line class summary>
 
@@ -16,36 +16,26 @@
 //
 // Original Author:  Jim Pivarski
 //         Created:  Thu Mar  6 17:30:40 CST 2008
-// $Id: MuonAlignmentInputDB.h,v 1.1 2008/03/15 20:26:46 pivarski Exp $
+// $Id: MTDAlignmentInputDB.h,v 1.1 2008/03/15 20:26:46 pivarski Exp $
 //
 
 // system include files
 
 // user include files
-#include "Alignment/MuonAlignment/interface/MuonAlignmentInputMethod.h"
+#include "Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h"
 
 // forward declarations
 
-class MuonAlignmentInputDB : public MuonAlignmentInputMethod {
+class MTDAlignmentInputDB : public MTDAlignmentInputMethod {
 public:
-  MuonAlignmentInputDB(const DTGeometry* dtGeometry,
-                       const CSCGeometry* cscGeometry,
-                       const GEMGeometry* gemGeometry,
-                       const Alignments* dtAlignments,
-                       const Alignments* cscAlignments,
-                       const Alignments* gemAlignments,
+  MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
+                       const Alignments* mtdAlignments,
                        const Alignments* globalPositionRcd);
-  MuonAlignmentInputDB(const DTGeometry* dtGeometry,
-                       const CSCGeometry* cscGeometry,
-                       const GEMGeometry* gemGeometry,
-                       const Alignments* dtAlignments,
-                       const Alignments* cscAlignments,
-                       const Alignments* gemAlignments,
-                       const AlignmentErrorsExtended* dtAlignmentErrorsExtended,
-                       const AlignmentErrorsExtended* cscAlignmentErrorsExtended,
-                       const AlignmentErrorsExtended* gemAlignmentErrorsExtended,
+  MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
+                       const Alignments* mtdAlignments,
+                       const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
                        const Alignments* globalPositionRcd);
-  ~MuonAlignmentInputDB() override;
+  ~MTDAlignmentInputDB() override;
 
   // ---------- const member functions ---------------------
 
@@ -53,23 +43,17 @@ public:
 
   // ---------- member functions ---------------------------
 
-  AlignableMuon* newAlignableMuon() const override;
+  AlignableMTD* newAlignableMTD() const override;
 
-  MuonAlignmentInputDB(const MuonAlignmentInputDB&) = delete;  // stop default
+  MTDAlignmentInputDB(const MTDAlignmentInputDB&) = delete;  // stop default
 
-  const MuonAlignmentInputDB& operator=(const MuonAlignmentInputDB&) = delete;  // stop default
+  const MTDAlignmentInputDB& operator=(const MTDAlignmentInputDB&) = delete;  // stop default
 
 private:
   // ---------- member data --------------------------------
-  const DTGeometry* dtGeometry_;
-  const CSCGeometry* cscGeometry_;
-  const GEMGeometry* gemGeometry_;
-  const Alignments* dtAlignments_;
-  const Alignments* cscAlignments_;
-  const Alignments* gemAlignments_;
-  const AlignmentErrorsExtended* dtAlignmentErrorsExtended_;
-  const AlignmentErrorsExtended* cscAlignmentErrorsExtended_;
-  const AlignmentErrorsExtended* gemAlignmentErrorsExtended_;
+  const MTDGeometry* mtdGeometry_;
+  const Alignments* mtdAlignments_;
+  const AlignmentErrorsExtended* mtdAlignmentErrorsExtended_;
   const Alignments* globalPositionRcd_;
 
   const bool m_getAPEs;

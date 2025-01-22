@@ -335,6 +335,14 @@ AlignableObjectId::Geometry AlignableObjectId ::muonGeometry(const DTGeometry *,
   return Geometry::General;
 }
 
+
+AlignableObjectId::Geometry AlignableObjectId ::mtdGeometry(const MTDGeometry *) {
+  // MTD alignment structure types are identical for all kinds of geometries
+  return Geometry::PhaseII;
+}
+
+
+
 AlignableObjectId::Geometry AlignableObjectId ::commonGeometry(Geometry first, Geometry second) {
   if (first == Geometry::General)
     return second;

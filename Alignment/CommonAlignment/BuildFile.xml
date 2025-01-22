@@ -11,6 +11,5 @@
 <use name="Geometry/CommonDetUnit" source_only="1"/>
 <use name="Geometry/CommonTopologies"/>
 <use name="Geometry/TrackerGeometryBuilder"/>
-<use name="Geometry/MTDGeometryBuilder"/>
 <use name="TrackingTools/TransientTrackingRecHit"/>
 <use name="clhep"/>
