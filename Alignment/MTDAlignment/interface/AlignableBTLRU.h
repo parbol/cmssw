@@ -35,7 +35,7 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableBTLModule& module(int i);
+  AlignableBTLModule& mod(int i);
 
   /// Printout BTL RU information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableBTLRU&);

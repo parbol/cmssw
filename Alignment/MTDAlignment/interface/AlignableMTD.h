@@ -49,8 +49,15 @@ public:
   align::Alignables BTLModules();
   align::Alignables BTLRUs();
   align::Alignables BTLTrays();
+  align::Alignables BTLBarrel();
   align::Alignables ETLEndcaps();
   align::Alignables ETLModules();
+
+  /// Get MTD alignments sorted by DetId
+  Alignments* mtdAlignments();
+
+  /// Get MTD alignments errors sorted by DetId
+  AlignmentErrorsExtended* mtdAlignmentErrorsExtended();
 
   /// Get BTL alignments sorted by DetId
   Alignments* btlAlignments();

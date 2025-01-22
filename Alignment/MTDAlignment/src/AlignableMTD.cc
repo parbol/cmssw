@@ -58,7 +58,8 @@ void AlignableMTD::update(const MTDGeometry* mtdGeometry) {
   buildBTLBarrel(mtdGeometry, /* update = */ true);
 
   // update the muon end caps
-  buildETLEndcap(cscGeometry, /* update = */ true);
+  buildETLEndcap(mtdGeometry, /* update = */ true);
+  
   edm::LogInfo("Alignment") << "@SUB=AlignableMTD::update"
                             << "Updating alignable mtd objects DONE";
 }
@@ -68,74 +69,63 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
 
   LogDebug("Position") << "Constructing AlignableBTLBarrel";
 
-  // Temporary container for chambers in a given station and stations in a given wheel
-  std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModule;
+  // Temporary container for modules
   std::vector<AlignableBTLModule*> tmpBTLModulesInRU;
   std::vector<AlignableBTLRU*> tmpBTLRUsInTrays;
-
+  
+  //auto const btlcontainer = pDT->detsBTL();
 
   // Loop over sides ( 0, 1 )
   for (int iside = 0; iside < 1; iside++) {
       // Loop over trays ( 0, 35 )
       for (int itray = 0; itray < 35; itray++) {
           // Loop over RU types ( 0, 2 )
-          for (int irutype = 0; irutype < 2; irutype++) {
+	  for (int irutype = 0; irutype < 2; irutype++) {
               // Loop over RU ( 0, 1 )
-              for (int iru = 0; iru < 2; iru++) {
-                  // Loop over Modules ( 0, 23 )
-                  int iModule{0};
-                  for (int module = 0; iru < 23; iru++) {
-			BTLDetId(iside, itray, iru, module, irtype, 1);
+              for (int iru = 0; iru < 1; iru++) {
+                  //Loop over modules
+		  for (int imod = 0; imod < 23; imod++) {
+			BTLDetId detid(iside, itray, iru, imod, irutype, 1);
+			MTDGeomDet *det = pDT->idToDet(detid); 
                         if (update) {
                             // Update the alignable BTL module
-                            theBTLBarrel.back()->tray(itray).ru(iru).module(iModule).update(det);
+                            theBTLBarrel.back()->tray(itray).ru(iru).mod(iModule).update(det);
           		} else {
-            // Create the alignable BTL module
-            AlignableBTLModule* tmpBTLModule = new AlignableBTLModule(det);
-            // Store the BTL modules in a given BTL tray and RU
-            tmpBTLModulesInRU.push_back(tmpBTLModule);
+            		    // Create the alignable BTL module
+                            AlignableBTLModule* tmpBTLModule = new AlignableBTLModule(det);
+                            // Store the BTL modules in a given BTL tray and RU
+                            tmpBTLModulesInRU.push_back(tmpBTLModule);
+                        }
+                        ++iModule;
+		  } 
+	 	  // End Module selection 
+                  if (!update) {
+                      // Store the BTLmodules
+                      theBTLModules.insert(theBTLModules.end(), tmpBTLModulesInRU.begin(), tmpBTLModulesInRU.end());
+
+                      // Create the alignable BTL RU with Modules in a given tray and RU
+                      AlignableBTLRU* tmpBTLRU = new AlignableBTLRU(tmpBTLModulesInRU);
+                      // Store the BTL RU in a given Tray
+                      tmpBTLRUsInTrays.push_back(tmpBTLRU);
+                      // Clear the temporary vector of modules in a ru
+                      tmpBTLModulesInRU.clear();
+                  }
+ 	      }
+	  }
+      	  // End loop over RU
+          if (!update) {
+              // Store The BTL RUs
+              theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTray.begin(), tmpBTLRUsInTray.end());
+              // Create the alignable BTL Trays
+              AlignableBTLTray* tmpTray = new AlignableBTLTray(tmpBTLRUsInTray);
+             // Store the BTL Trays
+             theBTLTrays.push_back(tmTray);
+	     // Clear temporary vector of RUs in a tray
+             tmpBTLRUsInTray.clear();
           }
-
-          ++iModule;
-          // End Module selection
-        }
-
-        // End loop over modules
       }
-
-      if (!update) {
-        // Store the DT chambers
-        theBTLModules.insert(theBTLModules.end(), tmpBTLModulesInRU.begin(), tmpBTLModulesInRU.end());
-
-        // Create the alignable BTL RU with Modules in a given tray and RU
-        AlignableBTLRU* tmpBTLRU = new AlignableBTLRU(tmpBTLModulesInRU);
-
-        // Store the DT stations in a given wheel
-        tmpBTLRUsInTrays.push_back(tmpBTLRU);
-
-        // Clear the temporary vector of chambers in a station
-        tmpBTLModulesInRU.clear();
-      }
-      // End loop over stations
-    }
-
-    if (!update) {
-      // Store The BTL RUs
-      theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTray.begin(), tmpBTLRUsInTray.end());
-
-      // Create the alignable BTL Trays
-      AlignableBTLTray* tmpTray = new AlignableBTLTray(tmpBTLRUsInTray);
-
-      // Store the BTL Trays
-      theBTLTrays.push_back(tmTray);
-
-      // Clear temporary vector of stations in a wheel
-      tmpBTLRUsInTray.clear();
-    }
-
-    // End loop over Trays
   }
-
+  //End loop on trays and sides
   if (!update) {
     // Create the alignable Muon Barrel
     AlignableBTLBarrel* tmpBTLBarrel = new AlignableBTLBarrel(theBTLTrays);
@@ -146,6 +136,7 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
     // Store the barrel in the MTD
     theMTDComponents.push_back(tmpBTLBarrel);
   }
+
 }
 
 
@@ -154,107 +145,54 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pDT, bool update) {
 //Still to be defined
 //------------------------------------------------------------------------------
 void AlignableMTD::buildETLEndcap(const MTDGeometry* pETL, bool update) {
+  
   LogDebug("Position") << "Constructing AlignableETLEndcap";
+  // Temporary container for modules
+  std::vector<AlignableETLModule*> tmpETLModulesInEndcap;
 
-  // Temporary container for stations in a given endcap
-  std::vector<AlignableETLModule*> tmpCSCSModules;
-
-  // Loop over endcaps ( 1..2 )
-  for (int iec = 1; iec < 3; iec++) {
-    // Temporary container for rings in a given station
-    std::vector<AlignableETLModule*> tmpETLModulesInEndcap;
-    // Loop over modules ( 1..whatever number here)
-    for (int im = 1; im < 5; im++) {
-	   
-          // Get the ETL Det id
-          CSCDetId cscId = det->id();
-          /*Update update update*/ 
-          // Get chamber, station, ring, layer and endcap labels of the CSC chamber
-          int ec = cscId.endcap();
-          int st = cscId.station();
-          int ri = cscId.ring();
-          //int ch = cscId.chamber();
-
-          // Select the chambers in a given endcap, station, and ring
-          if (iec == ec && ist == st && iri == ri) {
-            if (update) {
-              // Update the alignable CSC chamber
-              theCSCEndcaps[iec - 1]->station(ist - 1).ring(iri - 1).chamber(iChamber).update(det);
-            } else {
-              AlignableCSCChamber* tmpCSCChamber = new AlignableCSCChamber(det);
-
-              // Store the alignable CSC chambers
-              tmpCSCChambersInRing.push_back(tmpCSCChamber);
-            }
-
-            ++iChamber;
-            // End If chamber selection
+  // Loop over endcaps ( 0..1 )
+  for (int iec = 0; iec < 2; iec++) {
+      // Loop over disks ( 0..1 )
+      for(int idisk = 0; idisk < 2; idisk++) { 
+          //Loop over Rings ( 0..13 )
+	  for(int iring = 0; iring < 14; iring++) {
+              //Loop over Sectors ( 0..1 )
+	      for(int isector = 0; isector < 2; isector++) {
+                  //Loop over Modules (0..516)
+		  for(int imod = 0; imod < 517; imod++) {
+    		      ETLDetId detid(iec, idisk, iring, isector, imode);
+		      MTDGeomDet *det = pDT->idToDet(detid); 
+                      if (update) {
+                            // Update the alignable ETL module
+                            theETLEndcap[iec]->mod(iModule).update(det);
+          	      } else {
+            		    // Create the alignable ETL module
+                            AlignableETLModule* tmpETLModule = new AlignableETLModule(det);
+                            // Store the ETL modules in a given ETL endcap
+                            tmpETLModulesInEndcap.push_back(tmpBELModule);
+                      }
+                      ++iModule;
+                  }
+	      }
           }
-
-          // End loop over geom CSC chambers
-        }
-
-        if (!update) {
-          // Not all stations have 4 rings: only add the rings that exist (have chambers associated with them)
-          if (!tmpCSCChambersInRing.empty()) {
-            // Store the alignable CSC chambers
-            theCSCChambers.insert(theCSCChambers.end(), tmpCSCChambersInRing.begin(), tmpCSCChambersInRing.end());
-
-            // Create the alignable CSC ring with chambers in a given ring
-            AlignableCSCRing* tmpCSCRing = new AlignableCSCRing(tmpCSCChambersInRing);
-
-            // Store the CSC rings in a given station
-            tmpCSCRingsInStation.push_back(tmpCSCRing);
-
-            // Clear the temporary vector of chambers in ring
-            tmpCSCChambersInRing.clear();
-
-            // End if this ring exists
-          }
-        }
-
-        // End loop over rings
       }
 
       if (!update) {
-        // Create the alignable CSC station with rings in a given station
-        AlignableCSCStation* tmpCSCStation = new AlignableCSCStation(tmpCSCRingsInStation);
-
-        // Store the alignable CSC rings
-        theCSCRings.insert(theCSCRings.end(), tmpCSCRingsInStation.begin(), tmpCSCRingsInStation.end());
-
-        // Store the CSC stations in a given endcap
-        tmpCSCStationsInEndcap.push_back(tmpCSCStation);
-
-        // Clear the temporary vector of rings in station
-        tmpCSCRingsInStation.clear();
+      
+	  AlignableETLEndcap tmpEndcap = new AlignableETLEndcap(theETLModules);    
+          theETLModules.insert(theETLModules.end(), tmpETLModulesInEndcap.begin(), tmpETLModulesInEndcap.end());
+          tmpETLModulesInEndcap.clear();
+	  theETLEndcap.push_back(tmpEndcap);
       }
-
-      // End loop over stations
-    }
-
-    if (!update) {
-      // Create the alignable CSC endcap
-      AlignableCSCEndcap* tmpEndcap = new AlignableCSCEndcap(tmpCSCStationsInEndcap);
-
-      // Store the alignable CSC stations
-      theCSCStations.insert(theCSCStations.end(), tmpCSCStationsInEndcap.begin(), tmpCSCStationsInEndcap.end());
-
-      // Store the alignable CSC endcaps
-      theCSCEndcaps.push_back(tmpEndcap);
-
-      // Clear the temporary vector of stations in endcap
-      tmpCSCStationsInEndcap.clear();
-    }
-
-    // End loop over endcaps
   }
 
   if (!update) {
     // Store the encaps in the muon components
-    theMTDComponents.insert(theMTDComponents.end(), theCSCModules.begin(), theCSCModules.end());
+    theMTDComponents.insert(theMTDComponents.end(), theETLEndcap.begin(), theETLEndcap.end());
   }
 }
+
+
 
 //--------------------------------------------------------------------------------------------------
 align::Alignables AlignableMTD::BTLModules() {
@@ -286,6 +224,22 @@ align::Alignables AlignableMTD::BTLBarrel() {
 }
 
 
+//--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLEndcaps() {
+  align::Alignables result;
+  copy(theETLEndcap.begin(), theETLEndcap.end(), back_inserter(result));
+  return result;
+}
+
+
+//--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLModules() {
+  align::Alignables result;
+  copy(theETLModules.begin(), theETLModules.end(), back_inserter(result));
+  return result;
+}
+
+
 //__________________________________________________________________________________________________
 void AlignableMTD::recursiveSetMothers(Alignable* alignable) {
   for (const auto& iter : alignable->components()) {
@@ -293,6 +247,7 @@ void AlignableMTD::recursiveSetMothers(Alignable* alignable) {
     recursiveSetMothers(iter);
   }
 }
+
 
 //__________________________________________________________________________________________________
 Alignments* AlignableMTD::alignments(void) const {
@@ -329,17 +284,48 @@ AlignmentErrorsExtended* AlignableMTD::alignmentErrors(void) const {
 
   return m_alignmentErrors;
 }
+
+
 //__________________________________________________________________________________________________
 Alignments* AlignableMTD::mtdAlignments(void) {
   // Retrieve muon barrel alignments
-  Alignments* tmpAlignments = this->MTDBarrel().front()->alignments();
+  Alignments* btlBarrel = this->BTLBarrel().front()->alignments();
+  Alignments* etlEndCap1 = this->ETLEndcaps().front()->alignments();
+  Alignments* etlEndCap2 = this->ETLEndcaps().back()->alignments();
+  Alignments* tmpAlignments = new Alignments();
+
+  std::copy(btlBarrel->m_align.begin(), btlBarrel->m_align.end(), back_inserter(tmpAlignments->m_align));
+  std::copy(etlEndCap1->m_align.begin(), etlEndCap1->m_align.end(), back_inserter(tmpAlignments->m_align));
+  std::copy(etlEndCap2->m_align.begin(), etlEndCap2->m_align.end(), back_inserter(tmpAlignments->m_align));
+  return tmpAlignments;
+}
+
+//__________________________________________________________________________________________________
+AlignmentErrorsExtended* AlignableMTD::mtdAlignmentErrorsExtended(void) {
+  // Retrieve muon barrel alignments
+  AlignmentErrorsExtended* btlBarrel = this->BTLBarrel().front()->alignmentErrors();
+  AlignmentErrorsExtended* etlEndCap1 = this->ETLEndcaps().front()->alignmentErrors();
+  AlignmentErrorsExtended* etlEndCap2 = this->ETLEndcaps().back()->alignmentsErrors();
+  AlignmentErrorsExtended* tmpAlignments = new AlignmentErrorsExtended();
+
+  std::copy(btlBarrel->m_align.begin(), btlBarrel->m_align.end(), back_inserter(tmpAlignments->m_alignError));
+  std::copy(etlEndCap1->m_align.begin(), etlEndCap1->m_align.end(), back_inserter(tmpAlignments->m_alignError));
+  std::copy(etlEndCap2->m_align.begin(), etlEndCap2->m_align.end(), back_inserter(tmpAlignments->m_alignError));
+  return tmpAlignments;
+}
+
+//__________________________________________________________________________________________________
+Alignments* AlignableMTD::btlAlignments(void) {
+  // Retrieve muon barrel alignments
+  Alignments* tmpAlignments = this->BTLBarrel().front()->alignments();
 
   return tmpAlignments;
 }
+
 //__________________________________________________________________________________________________
-AlignmentErrorsExtended* AlignableMTD::mtdAlignmentErrorsExtended(void) {
+AlignmentErrorsExtended* AlignableMTD::btlAlignmentErrorsExtended(void) {
   // Retrieve muon barrel alignment errors
-  AlignmentErrorsExtended* tmpAlignmentErrorsExtended = this->MTDBarrel().front()->alignmentErrors();
+  AlignmentErrorsExtended* tmpAlignmentErrorsExtended = this->BTLBarrel().front()->alignmentErrors();
 
   return tmpAlignmentErrorsExtended;
 }

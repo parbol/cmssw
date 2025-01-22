@@ -13,7 +13,7 @@
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
 #include "Alignment/CommonAlignment/interface/AlignableSurface.h"
 
-#include "Alignment/MuonAlignment/interface/AlignableBTLRU.h"
+#include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 
 #include <vector>
 

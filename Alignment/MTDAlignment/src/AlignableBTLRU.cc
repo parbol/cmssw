@@ -25,7 +25,7 @@ AlignableBTLRU::AlignableBTLRU(const std::vector<AlignableBTLModule*>& btlModule
 }
 
 /// Return Alignable module at given index
-AlignableBTLModule& AlignableBTLRU::module(int i) {
+AlignableBTLModule& AlignableBTLRU::mod(int i) {
   if (i >= size())
     throw cms::Exception("LogicError") << "Module index (" << i << ") out of range";
 
