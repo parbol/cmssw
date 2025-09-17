@@ -3,7 +3,6 @@
 // Package:     MTDAlignment
 // Class  :     MTDAlignmentInputDB
 //
-//
 
 // system include files
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -15,6 +14,7 @@
 #include "Geometry/GeometryAligner/interface/GeometryAligner.h"
 #include "CondFormats/Alignment/interface/DetectorGlobalPosition.h"
 #include "Geometry/Records/interface/MTDGeometryRecord.h"
+#include "Geometry/GEMGeometry/interface/GEMGeometry.h"
 //
 // constants, enums and typedefs
 //
@@ -33,6 +33,7 @@ MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
       mtdAlignments_(mtdAlignments),
       globalPositionRcd_(globalPositionRcd),
       m_getAPEs(false) {}
+
 MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
                                            const Alignments* mtdAlignments,
                                            const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
@@ -43,28 +44,9 @@ MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
       globalPositionRcd_(globalPositionRcd),
       m_getAPEs(true) {}
 
-// MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDAlignmentInputDB& rhs)
-// {
-//    // do actual copying here;
-// }
 
 MTDAlignmentInputDB::~MTDAlignmentInputDB() {}
 
-//
-// assignment operators
-//
-// const MTDAlignmentInputDB& MTDAlignmentInputDB::operator=(const MTDAlignmentInputDB& rhs)
-// {
-//   //An exception safe implementation is
-//   MTDAlignmentInputDB temp(rhs);
-//   swap(rhs);
-//
-//   return *this;
-// }
-
-//
-// member functions
-//
 
 AlignableMTD* MTDAlignmentInputDB::newAlignableMTD() const {
   if (m_getAPEs) {
@@ -73,7 +55,6 @@ AlignableMTD* MTDAlignmentInputDB::newAlignableMTD() const {
                                         mtdAlignments_,
                                         mtdAlignmentErrorsExtended_,
                                         align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
-
   } else {
     AlignmentErrorsExtended mtdAlignmentErrorsExtended2;
 
@@ -91,6 +72,7 @@ AlignableMTD* MTDAlignmentInputDB::newAlignableMTD() const {
                                         &mtdAlignmentErrorsExtended2,
                                         align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
   }
+
   return new AlignableMTD(mtdGeometry_);
 }
 

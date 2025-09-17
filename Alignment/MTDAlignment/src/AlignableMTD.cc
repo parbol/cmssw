@@ -21,6 +21,7 @@
 #include "Alignment/MTDAlignment/interface/AlignableBTLTray.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLRU.h"
 #include "Alignment/MTDAlignment/interface/AlignableBTLModule.h"
+#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLEndcap.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
 
@@ -58,7 +59,7 @@ void AlignableMTD::update(const MTDGeometry* mtdGeometry) {
   buildBTLBarrel(mtdGeometry, /* update = */ true);
 
   // update the muon end caps
-  buildETLEndcap(mtdGeometry, /* update = */ true);
+  //buildETLEndcap(mtdGeometry, /* update = */ true);
   
   edm::LogInfo("Alignment") << "@SUB=AlignableMTD::update"
                             << "Updating alignable mtd objects DONE";
@@ -71,38 +72,45 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pMTD, bool update) {
 
   // Temporary container for modules
   std::vector<AlignableBTLModule*> tmpBTLModulesInRU;
+  std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModule;
   std::vector<AlignableBTLRU*> tmpBTLRUsInTrays;
   
   
   // Loop over sides ( 0, 1 )
   for (int iside = 0; iside < 1; iside++) {
-      // Loop over trays ( 0, 35 )
-      for (int itray = 0; itray < 35; itray++) {
-          // Loop over RU types ( 0, 2 )
-	  for (int irutype = 0; irutype < 2; irutype++) {
-              // Loop over RU ( 0, 1 )
-              for (int iru = 0; iru < 1; iru++) {
+      // Loop over trays ( 1, 36 )
+      for (int irod = 1; irod < 37; irod++) {
+          // Loop over RU types ( 1, 3 )
+	  for (int imodtype = 1; imodtype < 4; imodtype++) {
+              // Loop over RU ( 1, 2 )
+              for (int iru = 1; iru < 3; iru++) {
                   //Loop over modules
 		  int iModule = 0;
-		  for (int imod = 0; imod < 23; imod++) {
-			BTLDetId detid(iside, itray, iru, imod, irutype, 1);
-			const MTDGeomDet *det = pMTD->idToDet(detid); 
-                        if (update) {
-                            // Update the alignable BTL module
-                            theBTLBarrel.back()->tray(itray).ru(iru).mod(iModule).update(det);
-          		} else {
-            		    // Create the alignable BTL module
-                            AlignableBTLModule* tmpBTLModule = new AlignableBTLModule(det);
-                            // Store the BTL modules in a given BTL tray and RU
-                            tmpBTLModulesInRU.push_back(tmpBTLModule);
-                        }
-                        ++iModule;
+		  for (int imod = 1; imod < 25; imod++) {
+		      //Loop over sensor module
+		      for(int isensormod = 0; isensormod < 1; isensormod++) {
+			  BTLDetId detid(iside, irod, iru, imod, imodtype, 17);
+			  const MTDGeomDet *det = pMTD->idToDet(detid); 
+                          if (update) {
+                              // Update the alignable BTL module
+			      theBTLBarrel.back()->tray(irod).ru(iru).mod(iModule).sensormod(isensormod).update(det);
+          		  } else {
+            		      // Create the alignable BTL module
+                              AlignableBTLSensorModule* tmpBTLSensorModule = new AlignableBTLSensorModule(det);
+                              // Store the BTL modules in a given BTL tray and RU
+                              tmpBTLSensorModulesInModule.push_back(tmpBTLSensorModule);
+			      std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModuleAux;
+			      tmpBTLSensorModulesInModuleAux.push_back(tmpBTLSensorModule);
+                              AlignableBTLModule *tmpBTLModule = new AlignableBTLModule(tmpBTLSensorModulesInModuleAux);
+			      tmpBTLModulesInRU.push_back(tmpBTLModule);
+                          }
+                          ++iModule;
+		      }
 		  } 
 	 	  // End Module selection 
                   if (!update) {
-                      // Store the BTLmodules
-                      theBTLModules.insert(theBTLModules.end(), tmpBTLModulesInRU.begin(), tmpBTLModulesInRU.end());
-
+                      // Store the BTLSensorModules
+                      theBTLSensorModules.insert(theBTLSensorModules.end(), tmpBTLSensorModulesInModule.begin(), tmpBTLSensorModulesInModule.end());
                       // Create the alignable BTL RU with Modules in a given tray and RU
                       AlignableBTLRU* tmpBTLRU = new AlignableBTLRU(tmpBTLModulesInRU);
                       // Store the BTL RU in a given Tray
@@ -153,36 +161,41 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pMTD, bool update) {
 
   // Loop over endcaps ( 0..1 )
   for (int iec = 0; iec < 2; iec++) {
-      // Loop over disks ( 0..1 )
-      for(int idisk = 0; idisk < 2; idisk++) { 
-          //Loop over Rings ( 0..13 )
-	  for(int iring = 0; iring < 14; iring++) {
+      // Loop over disks ( 1..2 )
+      for(int idisk = 1; idisk < 2; idisk++) { 
+          //Loop over disk side ( 0..1 )
+	  for(int iside = 0; iside < 1; iside++) {
               //Loop over Sectors ( 0..1 )
-	      for(int isector = 0; isector < 2; isector++) {
+	      for(int isector = 2; isector < 5; isector += 2) {
                   //Loop over Modules (0..516)
 		  int iModule = 0;
-		  for(int imod = 0; imod < 517; imod++) {
-    		      ETLDetId detid(iec, idisk, iring, isector, imod);
-		      const MTDGeomDet *det = pMTD->idToDet(detid); 
-                      if (update) {
-                            // Update the alignable ETL module
-                            theETLEndcap[iec]->mod(iModule).update(det);
-          	      } else {
-            		    // Create the alignable ETL module
-                            AlignableETLModule* tmpETLModule = new AlignableETLModule(det);
-                            // Store the ETL modules in a given ETL endcap
-                            tmpETLModulesInEndcap.push_back(tmpETLModule);
-                      }
-                      ++iModule;
+		  for(int imod = 1; imod < 517; imod++) {
+    		      //Loop over Module Type 
+		      for(int imodtype = 1; imodtype < 3; imodtype++) { 
+	                  //Loop over sensors
+			  for(int isensor = 1; isensor < 3; isensor++) {
+			      ETLDetId detid(iec, idisk, iside, isector, imod, imodtype, isensor);
+			      const MTDGeomDet *det = pMTD->idToDet(detid); 
+			      if (det == NULL) continue;
+                              if (update) {
+                                  // Update the alignable ETL module
+                                  theETLEndcap[iec]->mod(iModule).update(det);
+          	              } else {
+            		          // Create the alignable ETL module
+                                  AlignableETLModule* tmpETLModule = new AlignableETLModule(det);
+                                  // Store the ETL modules in a given ETL endcap
+                                  tmpETLModulesInEndcap.push_back(tmpETLModule);
+                              }
+                              ++iModule;
+		          }
+		      }
                   }
 	      }
           }
       }
-
       if (!update) {
-      
-	  AlignableETLEndcap *tmpEndcap = new AlignableETLEndcap(theETLModules);    
           theETLModules.insert(theETLModules.end(), tmpETLModulesInEndcap.begin(), tmpETLModulesInEndcap.end());
+	  AlignableETLEndcap *tmpEndcap = new AlignableETLEndcap(theETLModules);    
           tmpETLModulesInEndcap.clear();
 	  theETLEndcap.push_back(tmpEndcap);
       }
@@ -197,10 +210,18 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pMTD, bool update) {
 
 
 //--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::BTLSensorModules() {
+  align::Alignables result;
+  copy(theBTLSensorModules.begin(), theBTLSensorModules.end(), back_inserter(result));
+  
+  return result;
+}
+
+//--------------------------------------------------------------------------------------------------
 align::Alignables AlignableMTD::BTLModules() {
   align::Alignables result;
   copy(theBTLModules.begin(), theBTLModules.end(), back_inserter(result));
-
+  
   return result;
 }
 

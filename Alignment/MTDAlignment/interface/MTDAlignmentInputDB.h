@@ -5,21 +5,7 @@
 // Package:     MTDAlignment
 // Class  :     MTDAlignmentInputDB
 //
-/**\class MTDAlignmentInputDB MTDAlignmentInputDB.h Alignment/MTDAlignment/interface/MTDAlignmentInputDB.h
 
- Description: <one line class summary>
-
- Usage:
-    <usage>
-
-*/
-//
-// Original Author:  Jim Pivarski
-//         Created:  Thu Mar  6 17:30:40 CST 2008
-// $Id: MTDAlignmentInputDB.h,v 1.1 2008/03/15 20:26:46 pivarski Exp $
-//
-
-// system include files
 
 // user include files
 #include "Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h"

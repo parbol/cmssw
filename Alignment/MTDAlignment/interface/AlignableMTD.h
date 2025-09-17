@@ -22,6 +22,7 @@ class AlignableBTL;
 class AlignableBTLTray;
 class AlignableBTLRU;
 class AlignableBTLModule;
+class AlignableBTLSensorModule;
 class AlignableETLEndcap;
 class AlignableETLModule;
 
@@ -46,6 +47,7 @@ public:
   virtual Alignable* mother() { return nullptr; }
 
   /// Methods to return specific of components
+  align::Alignables BTLSensorModules();
   align::Alignables BTLModules();
   align::Alignables BTLRUs();
   align::Alignables BTLTrays();
@@ -105,6 +107,7 @@ private:
   const AlignableObjectId alignableObjectId_;
 
   /// Containers of separate components
+  std::vector<AlignableBTLSensorModule*> theBTLSensorModules;
   std::vector<AlignableBTLModule*> theBTLModules;
   std::vector<AlignableBTLRU*> theBTLRUs;
   std::vector<AlignableBTLTray*> theBTLTrays;

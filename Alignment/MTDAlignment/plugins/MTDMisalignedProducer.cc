@@ -29,6 +29,7 @@
 #include "Alignment/CommonAlignment/interface/Alignable.h"
 #include "Geometry/GeometryAligner/interface/GeometryAligner.h"
 #include "Geometry/Records/interface/MTDGeometryRecord.h"
+#include "Geometry/Records/interface/MTDDigiGeometryRecord.h"
 
 #include <memory>
 
@@ -54,7 +55,7 @@ private:
 
   std::string theMTDAlignRecordName, theMTDErrorRecordName;
 
-  edm::ESGetToken<MTDGeometry, MTDGeometryRecord> esTokenMTD_;
+  edm::ESGetToken<MTDGeometry, MTDDigiGeometryRecord> esTokenMTD_;
 
   Alignments mtd_Alignments;
   AlignmentErrorsExtended mtd_AlignmentErrorsExtended;

@@ -35,6 +35,8 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/ForwardDetId/interface/MTDDetId.h"
+#include "DataFormats/ForwardDetId/interface/BTLDetId.h"
+#include "DataFormats/ForwardDetId/interface/ETLDetId.h"
 
 #include "DataFormats/Math/interface/Rounding.h"
 
@@ -142,6 +144,30 @@ void GeometricTimingDetAnalyzer::dumpGeometricTimingDet(const GeometricTimingDet
   res.GetComponents(x, y, z);
 
   MTDDetId thisDet(det->geographicalID());
+  if(thisDet.mtdSubDetector() == 1) {
+	 BTLDetId btl(det->geographicalID());
+	 std::cout << " BTL " << std::endl
+             << " Side        : " << btl.mtdSide() << std::endl
+             << " Rod         : " << btl.mtdRR() << std::endl
+             << " Crystal type: " << btl.modType() << std::endl
+             << " Readout unit: " << btl.runit() << std::endl
+             << " Global RU   : " << btl.globalRunit() << std::endl
+             << " Module      : " << btl.module() << std::endl
+             << " Crystal     : " << btl.crystal() << std::endl;
+  } 
+  if(thisDet.mtdSubDetector() != 1) {
+         ETLDetId etl(det->geographicalID());
+         std::cout << " ETL " << std::endl
+             << " Disc        : " << etl.nDisc() << std::endl
+             << " Disc Side   : " << etl.discSide() << std::endl
+             << " Sector      : " << etl.sector() << std::endl
+             << " Module      : " << etl.module() << std::endl
+             << " modtype     : " << etl.modType() << std::endl
+             << " Sensor      : " << etl.sensor() << std::endl;
+  }
+
+
+
 
   auto fround = [&](double in) {
     std::stringstream ss;

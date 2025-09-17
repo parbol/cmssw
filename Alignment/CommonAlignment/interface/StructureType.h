@@ -93,6 +93,7 @@ namespace align {
 
     AlignableETLModule,
     AlignableETLEndcap,
+    AlignableBTLSensorModule,
     AlignableBTLModule,
     AlignableBTLRU,
     AlignableBTLTray,

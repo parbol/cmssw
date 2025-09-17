@@ -215,6 +215,7 @@ namespace {
                                                        {align::AlignableGEMEtaPartition, "GEMEtaPartition"},
                                                        {align::AlignableMuon, "Muon"},
 
+                                                       {align::AlignableBTLSensorModule, "BTLSensorModule"},
                                                        {align::AlignableBTLModule, "BTLModule"},
                                                        {align::AlignableBTLRU, "BTLRU"},
                                                        {align::AlignableBTLTray, "BTLTray"},

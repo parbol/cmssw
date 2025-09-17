@@ -2,31 +2,49 @@
 #define Alignment_MuonAlignment_AlignableBTLModule_H
 
 /** \class AlignableBTLModule
- *  The alignable BTL module.
+ *  The alignable BTL RU.
  *
- *  $Date: 2024/12/14 09:39:20 $
+ *  $Date: 2024/12/15 16:05:53 $
  *  $Revision: 1.0 $
- *  \author Pablo Martínez Ruiz del Arbol - IFCA
+ *  \author Pablo Martinez Ruiz del Arbol - IFCA
  */
 
-#include <iosfwd>
-#include <iostream>
+#include "Alignment/CommonAlignment/interface/Utilities.h"
+#include "Alignment/CommonAlignment/interface/AlignableComposite.h"
+#include "Alignment/CommonAlignment/interface/AlignableSurface.h"
+
+#include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
+
 #include <vector>
 
-#include "Alignment/CommonAlignment/interface/StructureType.h"
-#include "Alignment/CommonAlignment/interface/AlignableDet.h"
+class GeomDet;
 
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
-#include "Alignment/CommonAlignment/interface/AlignableComposite.h"
+/// Concrete class for BTL RU alignable.
+///
+/// Misalignment can be de-/reactivated (forwarded to components).
+///
 
-/// A BTL Module ( an AlignableDet )
-
-class AlignableBTLModule : public AlignableDet {
+class AlignableBTLModule : public AlignableComposite {
 public:
-  friend std::ostream &operator<<(std::ostream &, const AlignableBTLModule &);
+  AlignableBTLModule(const std::vector<AlignableBTLSensorModule*>& btlSensorModules);
 
-  /// Constructor
-  AlignableBTLModule(const GeomDet *geomDet);
+  // gets the global position as the average over all positions of the layers
+  PositionType computePosition();
+  // get the global orientation
+  RotationType computeOrientation();  //see explanation for "theOrientation"
+  // get the Surface
+  AlignableSurface computeSurface();
+
+  AlignableBTLSensorModule& sensormod(int i);
+
+  /// Printout BTL Module information (not recursive)
+  friend std::ostream& operator<<(std::ostream&, const AlignableBTLModule&);
+
+  /// Recursive printout of the BTL RU structure
+  void dump(void) const override;
+
+private:
+  std::vector<AlignableBTLSensorModule*> theBTLSensorModules;
 };
 
-#endif  // ALIGNABLE_BTL_MODULE_H
+#endif

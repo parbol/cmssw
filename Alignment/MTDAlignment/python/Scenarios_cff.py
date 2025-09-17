@@ -26,7 +26,7 @@ MTDNoMovementsScenario = cms.PSet(
 # -----------------------------------------------------------------------
 #  "Misalignment" scenario for BTL Startup
 MTDBTLStartup = cms.PSet(
-    MuonMisalignmentScenarioSettings,
+    MTDMisalignmentScenarioSettings,
     BTLBarrel = cms.PSet(
         distribution = cms.string('gaussian'),
         BTL = cms.PSet(
@@ -37,14 +37,14 @@ MTDBTLStartup = cms.PSet(
             dY = cms.double(0.0),
             phiZ = cms.double(0.000),
             phiY = cms.double(0.000),
-            phiX = cms.double(0.000)
+            phiX = cms.double(0.000),
             BTLTrays = cms.PSet(
                  dZ = cms.double(0.1),
                  dX = cms.double(0.035),
                  dY = cms.double(0.0),
                  phiZ = cms.double(0.000),
                  phiY = cms.double(0.000),
-                 phiX = cms.double(0.000)
+                 phiX = cms.double(0.000),
                  BTLRU0 = cms.PSet(
                      dZ = cms.double(0.0),
                      dX = cms.double(0.0),
@@ -154,7 +154,7 @@ MTDBTLStartup = cms.PSet(
             dY = cms.double(0.0),
             phiZ = cms.double(0.000),
             phiY = cms.double(0.000),
-            phiX = cms.double(0.000)
+            phiX = cms.double(0.000),
             ETLModules = cms.PSet(
                 dZ = cms.double(0.0),
                 dX = cms.double(0.0),
