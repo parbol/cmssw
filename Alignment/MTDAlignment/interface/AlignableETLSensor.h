@@ -1,0 +1,32 @@
+#ifndef Alignment_MuonAlignment_AlignableETLSensor_H
+#define Alignment_MuonAlignment_AlignableETLSensor_H
+
+/** \class AlignableETLSensor
+ *  The alignable ETL module.
+ *
+ *  $Date: 2024/12/14 09:39:20 $
+ *  $Revision: 1.0 $
+ *  \author Pablo Martínez Ruiz del Arbol - IFCA
+ */
+
+#include <iosfwd>
+#include <iostream>
+#include <vector>
+
+#include "Alignment/CommonAlignment/interface/StructureType.h"
+#include "Alignment/CommonAlignment/interface/AlignableDet.h"
+
+#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+#include "Alignment/CommonAlignment/interface/AlignableComposite.h"
+
+/// An ETL Sensor ( an AlignableDet )
+
+class AlignableETLSensor : public AlignableDet {
+public:
+  friend std::ostream &operator<<(std::ostream &, const AlignableETLSensor &);
+
+  /// Constructor
+  AlignableETLSensor(const GeomDet *geomDet);
+};
+
+#endif  // ALIGNABLE_ETL_MODULE_H
