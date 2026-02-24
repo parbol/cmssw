@@ -93,6 +93,7 @@ namespace align {
 
     AlignableETLSensor,
     AlignableETLModule,
+    AlignableETLServiceHybrid,
     AlignableETLDee,
     AlignableETLDisk,
     AlignableETLEndcap,

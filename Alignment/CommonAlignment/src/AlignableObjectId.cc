@@ -222,6 +222,7 @@ namespace {
                                                        {align::AlignableBTL, "BTL"},
                                                        {align::AlignableETLSensor, "ETLSensor"},
                                                        {align::AlignableETLModule, "ETLModule"},
+                                                       {align::AlignableETLServiceHybrid, "ETLServiceHybrid"},
                                                        {align::AlignableETLModule, "ETLDee"},
                                                        {align::AlignableETLModule, "ETLDisk"},
                                                        {align::AlignableETLEndcap, "ETLEndcap"},
