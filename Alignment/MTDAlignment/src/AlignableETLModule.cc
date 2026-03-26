@@ -73,13 +73,16 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLModule& b) {
   return os;
 }
 
-/// Recursive printout of whole Half Barrel structure
+/// Recursive printout of whole structure
 void AlignableETLModule::dump(void) const {
+ 
+  std::cout << "This is an ETL Module" << std::endl;	
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLModules.begin();
+  /*for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLModules.begin();
        isensor != theETLModules.end();
        isensor++)
     (*isensor)->dump();
+  */
 }
 
 //__________________________________________________________________________________________________

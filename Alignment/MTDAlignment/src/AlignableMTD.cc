@@ -25,7 +25,9 @@
 #include "Alignment/MTDAlignment/interface/AlignableETLEndcap.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLDisk.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLDee.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLServiceHybrid.h"
 #include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLSensor.h"
 
 #include <iostream>
 
@@ -57,11 +59,11 @@ AlignableMTD::~AlignableMTD() {
 
 //------------------------------------------------------------------------------
 void AlignableMTD::update(const MTDGeometry* mtdGeometry) {
-  // update the muon barrel
+  // update the barrel
   buildBTLBarrel(mtdGeometry, /* update = */ true);
 
-  // update the muon end caps
-  //buildETLEndcap(mtdGeometry, /* update = */ true);
+  // update the end caps
+  buildETLEndcap(mtdGeometry, /* update = */ true);
   
   edm::LogInfo("Alignment") << "@SUB=AlignableMTD::update"
                             << "Updating alignable mtd objects DONE";
@@ -75,79 +77,79 @@ void AlignableMTD::buildBTLBarrel(const MTDGeometry* pMTD, bool update) {
   // Temporary container for modules
   std::vector<AlignableBTLModule*> tmpBTLModulesInRU;
   std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModule;
-  std::vector<AlignableBTLRU*> tmpBTLRUsInTrays;
-  
-  
+  std::vector<AlignableBTLRU*> tmpBTLRUsInTray;
+  std::vector<AlignableBTLTray*> tmpBTLTraysInBTL;
+ 
   // Loop over sides ( 0, 1 )
-  for (int iside = 0; iside < 1; iside++) {
-      // Loop over trays ( 1, 36 )
-      for (int irod = 1; irod < 37; irod++) {
-          // Loop over RU types ( 1, 3 )
-	  for (int imodtype = 1; imodtype < 4; imodtype++) {
-              // Loop over RU ( 1, 2 )
-              for (int iru = 1; iru < 3; iru++) {
-                  //Loop over modules
-		  int iModule = 0;
-		  for (int imod = 1; imod < 25; imod++) {
-		      //Loop over sensor module
-		      for(int isensormod = 0; isensormod < 1; isensormod++) {
-			  BTLDetId detid(iside, irod, iru, imod, imodtype, 17);
-			  const MTDGeomDet *det = pMTD->idToDet(detid); 
-                          if (update) {
-                              // Update the alignable BTL module
-			      theBTLBarrel.back()->tray(irod).ru(iru).mod(iModule).sensormod(isensormod).update(det);
-          		  } else {
-            		      // Create the alignable BTL module
-                              AlignableBTLSensorModule* tmpBTLSensorModule = new AlignableBTLSensorModule(det);
-                              // Store the BTL modules in a given BTL tray and RU
-                              tmpBTLSensorModulesInModule.push_back(tmpBTLSensorModule);
-			      std::vector<AlignableBTLSensorModule*> tmpBTLSensorModulesInModuleAux;
-			      tmpBTLSensorModulesInModuleAux.push_back(tmpBTLSensorModule);
-                              AlignableBTLModule *tmpBTLModule = new AlignableBTLModule(tmpBTLSensorModulesInModuleAux);
-			      tmpBTLModulesInRU.push_back(tmpBTLModule);
-                          }
-                          ++iModule;
-		      }
-		  } 
-	 	  // End Module selection 
+  int ntrays = 0;
+  for (int iside = 0; iside < 2; iside++) {
+      // Loop over trays ( 0, 35 )
+      for (int irod = 0; irod < 36; irod++) {
+          // Loop over RU ( 0, 5 )
+          for (int iru = 0; iru < 6; iru++) {
+              // Loop over Module ( 0, 11 )
+	      for (int imod = 0; imod < 12; imod++) {
+		  //Loop over sensor module
+		  for(int isensormod = 0; isensormod < 2; isensormod++) {
+		      BTLDetId detid(iside, irod, iru, imod, isensormod, 16);
+		      const MTDGeomDet *det = pMTD->idToDet(detid); 
+		      if (update) {
+                          // Update the alignable BTL module
+		          theBTLBarrel.back()->tray(ntrays).ru(iru).mod(imod).sensormod(isensormod).update(det);
+          	      } else {
+            		  // Create the alignable BTL module
+                          AlignableBTLSensorModule* tmpBTLSensorModule = new AlignableBTLSensorModule(det);
+                          tmpBTLSensorModulesInModule.push_back(tmpBTLSensorModule);
+                      }
+		  }
+		  // End Sensor Module selection 
                   if (!update) {
                       // Store the BTLSensorModules
                       theBTLSensorModules.insert(theBTLSensorModules.end(), tmpBTLSensorModulesInModule.begin(), tmpBTLSensorModulesInModule.end());
                       // Create the alignable BTL RU with Modules in a given tray and RU
-                      AlignableBTLRU* tmpBTLRU = new AlignableBTLRU(tmpBTLModulesInRU);
-                      // Store the BTL RU in a given Tray
-                      tmpBTLRUsInTrays.push_back(tmpBTLRU);
+                      AlignableBTLModule* tmpBTLModule = new AlignableBTLModule(tmpBTLSensorModulesInModule);
+                      // Store the BTL Module in a given RU
+                      tmpBTLModulesInRU.push_back(tmpBTLModule);
                       // Clear the temporary vector of modules in a ru
-                      tmpBTLModulesInRU.clear();
+                      tmpBTLSensorModulesInModule.clear();
                   }
  	      }
+	      // End Module selection
+              if (!update) {
+                  // Store The BTL Modules
+                  theBTLModules.insert(theBTLModules.end(), tmpBTLModulesInRU.begin(), tmpBTLModulesInRU.end());
+                  // Create the alignable BTL RUs
+                  AlignableBTLRU* tmpBTLRU = new AlignableBTLRU(tmpBTLModulesInRU);
+             	  // Store the BTL RUs
+	          tmpBTLRUsInTray.push_back(tmpBTLRU);
+		  // Clear temporary vector of Modules
+                  tmpBTLModulesInRU.clear();
+              }   
 	  }
-      	  // End loop over RU
-          if (!update) {
+	  ntrays++;
+	  //End RU selection
+	  if(!update) {
               // Store The BTL RUs
-              theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTrays.begin(), tmpBTLRUsInTrays.end());
+              theBTLRUs.insert(theBTLRUs.end(), tmpBTLRUsInTray.begin(), tmpBTLRUsInTray.end());
               // Create the alignable BTL Trays
-              AlignableBTLTray* tmpTray = new AlignableBTLTray(tmpBTLRUsInTrays);
-             // Store the BTL Trays
-             theBTLTrays.push_back(tmpTray);
-              //auto const btlcontainer = pDT->detsBTL();
-	     // Clear temporary vector of RUs in a tray
-             tmpBTLRUsInTrays.clear();
-          }
+              AlignableBTLTray* tmpBTLTray = new AlignableBTLTray(tmpBTLRUsInTray);
+              // Store the BTL Tray
+	      tmpBTLTraysInBTL.push_back(tmpBTLTray);
+	      // Clear temporary vector of Trays
+	      tmpBTLRUsInTray.clear();
+	  }
       }
   }
-  //End loop on trays and sides
+  //End Tray selection
   if (!update) {
-    // Create the alignable BTL Barrel
-    AlignableBTL* tmpBTLBarrel = new AlignableBTL(theBTLTrays);
-
-    // Store the barrel
-    theBTLBarrel.push_back(tmpBTLBarrel);
-
-    // Store the barrel in the MTD
-    theMTDComponents.push_back(tmpBTLBarrel);
+      theBTLTrays.insert(theBTLTrays.end(), tmpBTLTraysInBTL.begin(), tmpBTLTraysInBTL.end());
+      // Create the alignable BTL Barrel
+      AlignableBTL* tmpBTLBarrel = new AlignableBTL(theBTLTrays);
+      // Store the barrel
+      theBTLBarrel.push_back(tmpBTLBarrel);
+      // Store the barrel in the MTD
+      theMTDComponents.push_back(tmpBTLBarrel);
   }
-
 }
 
 
@@ -160,61 +162,94 @@ void AlignableMTD::buildETLEndcap(const MTDGeometry* pMTD, bool update) {
   LogDebug("Position") << "Constructing AlignableETLEndcap";
   // Temporary container for modules
   std::vector<AlignableETLSensor*> tmpETLSensorsInModule;
-  std::vector<AlignableETLModule*> tmpETLModulesInDee;
+  std::vector<AlignableETLModule*> tmpETLModulesInServiceHybrid;
+  std::vector<AlignableETLServiceHybrid*> tmpETLServiceHybridsInDee;
   std::vector<AlignableETLDee*> tmpETLDeesInDisk;
-  std::vector<AlignableETLDisk*> tmpETLDiskInEndcap;
-
+  std::vector<AlignableETLDisk*> tmpETLDisksInEndcap;
 
   // Loop over endcaps ( 0..1 )
   for (int iec = 0; iec < 2; iec++) {
       // Loop over disks ( 1..2 )
-      for(int idisk = 1; idisk < 2; idisk++) { 
-          //Loop over disk side ( 0..1 )
-	  for(int iside = 0; iside < 1; iside++) {
-              //Loop over Sectors ( 0..1 )
-	      for(int isector = 2; isector < 5; isector += 2) {
+      for(int idisk = 0; idisk < 2; idisk++) { 
+          //Loop over Sectors ( 0..1 )
+	  for(int isector = 1; isector < 3; isector += 1) {
+              int iService = 0;  
+	      //Loop over disk side ( 0..1 )
+	      for(int iside = 0; iside < 2; iside++) {
+	          int nSH3, nSH6, nSH7;
+		  if(idisk == 0 && iside == 0) { nSH3 = 12; nSH6 = 29; nSH7 = 30; }
+		  if(idisk == 0 && iside == 1) { nSH3 = 10; nSH6 = 32; nSH7 = 29; }
+		  if(idisk == 1 && iside == 0) { nSH3 = 10; nSH6 = 33; nSH7 = 28; }
+		  if(idisk == 1 && iside == 1) { nSH3 = 12; nSH6 = 10; nSH7 = 10; }
                   //Loop over Service Hybrid Type
-		  for(int iserviceType = 0; iserviceType < X; iserviceType +=1) {
+		  for(int iserviceType = 1; iserviceType < 4; iserviceType += 1) {
 		      //Loop over Service Hybrid number
-		      for(int iserviceNumber = 0; iserviceNumber < X; iserviceNumber += 1) {
+		      int nServiceNumbers, nMods;
+                      if (iserviceType == 1) { nServiceNumbers = nSH3; nMods = 3;}
+                      if (iserviceType == 2) { nServiceNumbers = nSH6; nMods = 6;}
+                      if (iserviceType == 3) { nServiceNumbers = nSH7; nMods = 7;}
+		      for(int iserviceNumber = 1; iserviceNumber < nServiceNumbers+1; iserviceNumber += 1) {
 		          //Loop over Module number
-		          int iModule = 0;
-		          for(int imod = 1; imod < 517; imod++) {
+		          for(int imod = 1; imod < nMods+1; imod++) {
     		              //Loop over Module Type 
 		              int iSensor = 0;
-			      for(int imodtype = 1; imodtype < 3; imodtype++) { 
+			      for(int imodtype = 0; imodtype < 2; imodtype++) { 
 	                          //Loop over sensors
-			          for(int isensor = 1; isensor < 3; isensor++) {
-			              ETLDetId detid(iec, idisk, iside, isector, version, iserviceType, iserviceNumber, imod, imodtype, isensor);
+			          for(int isensor = 0; isensor < 2; isensor++) {
+			              ETLDetId detid(iec, idisk, iside, isector, 1, iserviceType, iserviceNumber, imod, imodtype, iSensor);
 			              const MTDGeomDet *det = pMTD->idToDet(detid); 
 			              if (det == NULL) continue;
                                       if (update) {
                                           // Update the alignable ETL sensor
-                                          theETLEndcap[iec]->disk(idisk, iside)->dee(isector)->mod(iModule)->sensor(iSensor).update(det);
-          	              	      } else {
-            		                  // Create the alignable ETL sensor
-                                          AlignableETLSensor* tmpETLSensor = new AlignableETLSensor(det);
+                                          theETLEndcap[iec]->disk(idisk).dee(isector).serviceHybrid(iService).mod(imod).sensor(iSensor).update(det);
+          	              	          
+				      } else {
+					  // Create the alignable ETL sensor
+					  AlignableETLSensor* tmpETLSensor = new AlignableETLSensor(det);
                                           // Store the ETL sensors in a given ETL module
-                                          tmpETLSensorsInModule.push_back(tmpETLModule);
+                                          tmpETLSensorsInModule.push_back(tmpETLSensor);
                                       }
                                       ++iSensor;
                                   }
-			      }	  
-                              ++iModule;
+			      }
+		              if(!update) {
+			          theETLSensors.insert(theETLSensors.end(), tmpETLSensorsInModule.begin(), tmpETLSensorsInModule.end());
+				  AlignableETLModule *tmpETLModule = new AlignableETLModule(tmpETLSensorsInModule);
+				  tmpETLSensorsInModule.clear();
+				  tmpETLModulesInServiceHybrid.push_back(tmpETLModule);
+			      }
 		          }
+		          if(!update) {
+			      theETLModules.insert(theETLModules.begin(), tmpETLModulesInServiceHybrid.begin(), tmpETLModulesInServiceHybrid.end());
+			      AlignableETLServiceHybrid *tmpETLServiceHybrid = new AlignableETLServiceHybrid(tmpETLModulesInServiceHybrid);
+			      tmpETLModulesInServiceHybrid.clear();
+			      tmpETLServiceHybridsInDee.push_back(tmpETLServiceHybrid);
+			  }    
+		          iService++;
 		      }
                   }
 	      }
+	      if(!update) {
+	          theETLServiceHybrids.insert(theETLServiceHybrids.begin(), tmpETLServiceHybridsInDee.begin(), tmpETLServiceHybridsInDee.end());
+		  AlignableETLDee *tmpETLDee = new AlignableETLDee(tmpETLServiceHybridsInDee);
+		  tmpETLServiceHybridsInDee.clear();
+		  tmpETLDeesInDisk.push_back(tmpETLDee);
+	      }
           }
+	  if(!update) {
+              theETLDees.insert(theETLDees.begin(), tmpETLDeesInDisk.begin(), tmpETLDeesInDisk.end());
+	      AlignableETLDisk *tmpETLDisk = new AlignableETLDisk(tmpETLDeesInDisk);
+	      tmpETLDeesInDisk.clear();
+	      tmpETLDisksInEndcap.push_back(tmpETLDisk);
+	  }
       }
       if (!update) {
-          theETLModules.insert(theETLModules.end(), tmpETLModulesInEndcap.begin(), tmpETLModulesInEndcap.end());
-	  AlignableETLEndcap *tmpEndcap = new AlignableETLEndcap(theETLModules);    
-          tmpETLModulesInEndcap.clear();
+          theETLDisks.insert(theETLDisks.end(), tmpETLDisksInEndcap.begin(), tmpETLDisksInEndcap.end());
+	  AlignableETLEndcap *tmpEndcap = new AlignableETLEndcap(tmpETLDisksInEndcap);    
+          tmpETLDisksInEndcap.clear();
 	  theETLEndcap.push_back(tmpEndcap);
       }
   }
-
   if (!update) {
     // Store the encaps in the muon components
     theMTDComponents.insert(theMTDComponents.end(), theETLEndcap.begin(), theETLEndcap.end());
@@ -270,9 +305,37 @@ align::Alignables AlignableMTD::ETLEndcaps() {
 
 
 //--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLDisks() {
+  align::Alignables result;
+  copy(theETLDisks.begin(), theETLDisks.end(), back_inserter(result));
+  return result;
+}
+
+//--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLDees() {
+  align::Alignables result;
+  copy(theETLDees.begin(), theETLDees.end(), back_inserter(result));
+  return result;
+}
+
+//--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLServiceHybrids() {
+  align::Alignables result;
+  copy(theETLServiceHybrids.begin(), theETLServiceHybrids.end(), back_inserter(result));
+  return result;
+}
+
+//--------------------------------------------------------------------------------------------------
 align::Alignables AlignableMTD::ETLModules() {
   align::Alignables result;
   copy(theETLModules.begin(), theETLModules.end(), back_inserter(result));
+  return result;
+}
+
+//--------------------------------------------------------------------------------------------------
+align::Alignables AlignableMTD::ETLSensors() {
+  align::Alignables result;
+  copy(theETLSensors.begin(), theETLSensors.end(), back_inserter(result));
   return result;
 }
 

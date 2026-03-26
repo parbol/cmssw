@@ -6,6 +6,8 @@ process = cms.Process("TEST")
 # Message logger service
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
+process.load("Geometry.CMSCommonData.cmsIdealGeometryXML_cfi")
+
 # MTD Geometry and phase 2 configuration
 process.load("Configuration.Geometry.GeometryExtendedRun4DefaultReco_cff")
 

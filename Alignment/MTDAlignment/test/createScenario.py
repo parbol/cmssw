@@ -5,9 +5,10 @@ process = cms.Process("TEST")
 # -- Load default module/services configurations -- //
 # Message logger service
 process.load("FWCore.MessageService.MessageLogger_cfi")
+process.load("Geometry.CMSCommonData.cmsIdealGeometryXML_cfi")
 
 # MTD Geometry and phase 2 configuration
-process.load("Configuration.Geometry.GeometryExtendedRun4DefaultReco_cff")
+process.load("Configuration.Geometry.GeometryExtendedRun4D125Reco_cff")
 
 import Configuration.Geometry.defaultPhase2ConditionsEra_cff as _settings
 
@@ -30,8 +31,8 @@ process.maxEvents = cms.untracked.PSet(
 
 #Choose MTD misalignment scenario
 process.MisalignedMTD = cms.EDAnalyzer("MTDMisalignedProducer",
-                                        #scenario = _MTDScenarios.MTDBTLStartup,
-                                        scenario = _MTDScenarios.MTDNoMovementsScenario,
+                                        scenario = _MTDScenarios.MTDBTLStartup,
+                                        #scenario = _MTDScenarios.MTDNoMovementsScenario,
                                         saveToDbase = cms.untracked.bool(True)
                                       )
 

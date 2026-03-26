@@ -52,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLSensorModule& r) {
 
 
 void AlignableBTLSensorModule::dump(void) const {
-        std::cout << "BTLSensorModuleAlignable" << std::endl;
+        std::cout << "This is a BTLSensorModuleAlignable" << std::endl;
 }
 
 

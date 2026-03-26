@@ -12,7 +12,7 @@
 AlignableETLDisk::AlignableETLDisk(const std::vector<AlignableETLDee*>& etlDees)
     : AlignableComposite(etlDees[0]->id(), align::AlignableETLDisk) {
   theETLDees.insert(theETLDees.end(), etlDees.begin(), etlDees.end());
-
+  
   // maintain also list of components
   for (const auto& dee : etlDees) {
     const auto mother = dee->mother();
@@ -68,12 +68,10 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLDisk& b) {
   return os;
 }
 
-
-
 /// Recursive printout of whole Tray structure
 void AlignableETLDisk::dump(void) const {
-  edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "ETLDiskAlignable" << std::endl;
+  //edm::LogInfo("AlignableDump") << (*this);
+  std::cout << "This is a ETLDiskAlignable" << std::endl;
   //for (std::vector<AlignableETLDee*>::const_iterator iStation = theETLDees.begin();
   //     iStation != theETLDees.end();
   //     iStation++)

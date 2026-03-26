@@ -24,7 +24,11 @@ class AlignableBTLRU;
 class AlignableBTLModule;
 class AlignableBTLSensorModule;
 class AlignableETLEndcap;
+class AlignableETLDisk;
+class AlignableETLDee;
+class AlignableETLServiceHybrid;
 class AlignableETLModule;
+class AlignableETLSensor;
 
 /// Constructor of the full MTD geometry.
 
@@ -53,7 +57,11 @@ public:
   align::Alignables BTLTrays();
   align::Alignables BTLBarrel();
   align::Alignables ETLEndcaps();
+  align::Alignables ETLDisks();
+  align::Alignables ETLServiceHybrids();
+  align::Alignables ETLDees();
   align::Alignables ETLModules();
+  align::Alignables ETLSensors();
 
   /// Get MTD alignments sorted by DetId
   Alignments* mtdAlignments();
@@ -113,7 +121,11 @@ private:
   std::vector<AlignableBTLTray*> theBTLTrays;
   std::vector<AlignableBTL*> theBTLBarrel;
   std::vector<AlignableETLEndcap*> theETLEndcap;
+  std::vector<AlignableETLDisk*> theETLDisks;
+  std::vector<AlignableETLDee*> theETLDees;
+  std::vector<AlignableETLServiceHybrid*> theETLServiceHybrids;
   std::vector<AlignableETLModule*> theETLModules;
+  std::vector<AlignableETLSensor*> theETLSensors;
   align::Alignables theMTDComponents;
 };
 

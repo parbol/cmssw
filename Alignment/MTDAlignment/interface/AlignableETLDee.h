@@ -12,7 +12,7 @@
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
 #include "Alignment/CommonAlignment/interface/AlignableSurface.h"
 
-#include "Alignment/MTDAlignment/interface/AlignableETLModule.h"
+#include "Alignment/MTDAlignment/interface/AlignableETLServiceHybrid.h"
 
 #include <vector>
 
@@ -24,7 +24,7 @@ class GeomDet;
 
 class AlignableETLDee : public AlignableComposite {
 public:
-  AlignableETLDee(const std::vector<AlignableETLModule*>& etlModules);
+  AlignableETLDee(const std::vector<AlignableETLServiceHybrid*>& etlServiceHybrids);
 
   // gets the global position as the average over all positions of the layers
   PositionType computePosition();
@@ -33,7 +33,7 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableETLModule& mod(int i);
+  AlignableETLServiceHybrid& serviceHybrid(int i);
 
   /// Printout muon DT wheel information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableETLDee&);
@@ -48,7 +48,7 @@ public:
   AlignmentErrorsExtended* alignmentErrors() const override;
 
 private:
-  std::vector<AlignableETLModule*> theETLModules;
+  std::vector<AlignableETLServiceHybrid*> theETLServiceHybrids;
 };
 
 #endif

@@ -33,7 +33,7 @@ public:
   // get the Surface
   AlignableSurface computeSurface();
 
-  AlignableETLSensor& mod(int i);
+  AlignableETLSensor& sensor(int i);
 
   friend std::ostream& operator<<(std::ostream&, const AlignableETLModule&);
 

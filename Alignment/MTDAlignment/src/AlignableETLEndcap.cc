@@ -68,8 +68,8 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLEndcap& b) {
 
 /// Recursive printout of whole Tray structure
 void AlignableETLEndcap::dump(void) const {
-  edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "ETLEndcapAlignable" << std::endl;
+  //edm::LogInfo("AlignableDump") << (*this);
+  std::cout << "This is an ETLEndcapAlignable" << std::endl;
   //for (std::vector<AlignableETLDisk*>::const_iterator iStation = theETLDisks.begin();
   //     iStation != theETLDisks.end();
   //     iStation++)
