@@ -75,7 +75,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLModule& b) {
 /// Recursive printout of whole DT Station structure
 void AlignableBTLModule::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "BTLModuleAlignable" << std::endl;
+  std::cout << "This is a BTLModuleAlignable" << std::endl;
   //for (std::vector<AlignableBTLSensorModule*>::const_iterator iModule = theBTLSensorModules.begin();
   //     iModule != theBTLSensorModules.end();
   //     iModule++)

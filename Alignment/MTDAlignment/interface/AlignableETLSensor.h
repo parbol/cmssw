@@ -24,6 +24,8 @@
 class AlignableETLSensor : public AlignableDet {
 public:
   friend std::ostream &operator<<(std::ostream &, const AlignableETLSensor &);
+  
+  void dump(void) const;
 
   /// Constructor
   AlignableETLSensor(const GeomDet *geomDet);

@@ -50,12 +50,11 @@ void MTDScenarioBuilder::applyScenario(const edm::ParameterSet& scenario) {
   this->decodeMovements_(theScenario, etlEndcaps, "ETLEndcap");
   
   //this->moveMTD(theScenario);
-  edm::LogInfo("TrackerScenarioBuilder") << "Applied modifications to " << theModifierCounter << " alignables";
+  edm::LogInfo("MTDScenarioBuilder") << "Applied modifications to " << theModifierCounter << " alignables";
 }
 
 align::Scalars MTDScenarioBuilder::extractParameters(const edm::ParameterSet& pSet, const char* blockId) {
   
-  std::cout << "Reading block: " << blockId << std::endl;	
   double scale_ = 0, scaleError_ = 0, phiX_ = 0, phiY_ = 0, phiZ_ = 0;
   double dX_ = 0, dY_ = 0, dZ_ = 0;
   std::string distribution_;
@@ -63,7 +62,6 @@ align::Scalars MTDScenarioBuilder::extractParameters(const edm::ParameterSet& pS
   edm::ParameterSet Parameters = this->getParameterSet_((std::string)blockId, pSet);
   std::vector<std::string> parameterNames = Parameters.getParameterNames();
   for (std::vector<std::string>::iterator iParam = parameterNames.begin(); iParam != parameterNames.end(); iParam++) {
-    std::cout << "Parameter name " << (*iParam) << std::endl;
     if ((*iParam) == "scale")
       scale_ = Parameters.getParameter<double>(*iParam);
     else if ((*iParam) == "distribution")

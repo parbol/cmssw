@@ -70,7 +70,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTL& b) {
 /// Recursive printout of whole Half Barrel structure
 void AlignableBTL::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "AlignableBTL" << std::endl;
+  std::cout << "This is a AlignableBTL" << std::endl;
   //for (std::vector<AlignableBTLTray*>::const_iterator iTray = theBTLTrays.begin(); iTray != theBTLTrays.end();
   //     iTray++)
   //  (*iTray)->dump();

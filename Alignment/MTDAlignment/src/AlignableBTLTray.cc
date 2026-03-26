@@ -73,7 +73,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLTray& b) {
 /// Recursive printout of whole Tray structure
 void AlignableBTLTray::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "BTLTrayAlignable" << std::endl;
+  std::cout << "This ia BTLTrayAlignable" << std::endl;
   //for (std::vector<AlignableBTLRU*>::const_iterator iStation = theBTLRUs.begin();
   //     iStation != theBTLRUs.end();
   //     iStation++)

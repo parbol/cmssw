@@ -75,11 +75,13 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLServiceHybrid& b) {
 
 /// Recursive printout of whole Half Barrel structure
 void AlignableETLServiceHybrid::dump(void) const {
-  edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableETLModule*>::const_iterator imodule = theETLModules.begin();
-       imodule != theETLModules.end();
-       imodule++)
-    (*imodule)->dump();
+
+  std::cout << "This is a service hybrid" << std::endl;
+  //edm::LogInfo("AlignableDump") << (*this);
+  //for (std::vector<AlignableETLModule*>::const_iterator imodule = theETLModules.begin();
+  //     imodule != theETLModules.end();
+  //     imodule++)
+  //  (*imodule)->dump();
 }
 
 //__________________________________________________________________________________________________

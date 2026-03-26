@@ -91,17 +91,17 @@ namespace align {
 
     Detector,  // = 112 (what for?)
 
-    AlignableETLSensor,
-    AlignableETLModule,
-    AlignableETLServiceHybrid,
-    AlignableETLDee,
-    AlignableETLDisk,
-    AlignableETLEndcap,
-    AlignableBTLSensorModule,
-    AlignableBTLModule,
-    AlignableBTLRU,
-    AlignableBTLTray,
     AlignableBTL,
+    AlignableBTLTray,
+    AlignableBTLRU,
+    AlignableBTLModule,
+    AlignableBTLSensorModule,
+    AlignableETLEndcap,
+    AlignableETLDisk,
+    AlignableETLDee,
+    AlignableETLServiceHybrid,
+    AlignableETLModule,
+    AlignableETLSensor,
     AlignableMTD,
 
     Extras = 1000,
