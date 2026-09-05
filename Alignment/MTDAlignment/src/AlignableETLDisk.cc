@@ -70,8 +70,6 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLDisk& b) {
 /// Recursive printout of whole Tray structure
 void AlignableETLDisk::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableETLDee*>::const_iterator iDee = theETLDees.begin();
-       iDee != theETLDees.end();
-       iDee++)
+  for (std::vector<AlignableETLDee*>::const_iterator iDee = theETLDees.begin(); iDee != theETLDees.end(); iDee++)
     (*iDee)->dump();
 }

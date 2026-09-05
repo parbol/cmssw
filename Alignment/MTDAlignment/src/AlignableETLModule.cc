@@ -75,11 +75,9 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLModule& b) {
 /// Recursive printout of whole structure
 void AlignableETLModule::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLSensors.begin();
-       isensor != theETLSensors.end();
+  for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLSensors.begin(); isensor != theETLSensors.end();
        isensor++)
     (*isensor)->dump();
-  
 }
 
 //__________________________________________________________________________________________________

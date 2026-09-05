@@ -33,4 +33,4 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLSensor& r) {
 }
 
 /// Recursive printout of whole structure
-void AlignableETLSensor::dump(void) const {edm::LogInfo("AlignableDump") << (*this);}
+void AlignableETLSensor::dump(void) const { edm::LogInfo("AlignableDump") << (*this); }

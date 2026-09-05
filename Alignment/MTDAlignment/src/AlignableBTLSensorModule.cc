@@ -35,8 +35,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLSensorModule& r) {
   os << "    total displacement and rotation: " << r.displacement() << std::endl;
   os << r.rotation() << std::endl;
 
-
   return os;
 }
 
-void AlignableBTLSensorModule::dump(void) const {edm::LogInfo("AlignableDump") << (*this);}
+void AlignableBTLSensorModule::dump(void) const { edm::LogInfo("AlignableDump") << (*this); }

@@ -70,8 +70,7 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLRU& b) {
 /// Recursive printout of whole DT Station structure
 void AlignableBTLRU::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableBTLModule*>::const_iterator iModule = theBTLModules.begin();
-       iModule != theBTLModules.end();
+  for (std::vector<AlignableBTLModule*>::const_iterator iModule = theBTLModules.begin(); iModule != theBTLModules.end();
        iModule++)
     edm::LogInfo("AlignableDump") << (**iModule);
 }

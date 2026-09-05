@@ -41,8 +41,6 @@ AlignableSurface AlignableETLEndcap::computeSurface() {
 /// Compute average z position from all components (x and y forced to 0)
 AlignableETLEndcap::PositionType AlignableETLEndcap::computePosition() {
   float zz = 0.;
-  float xx = 0.;
-  float yy = 0.;
   for (std::vector<AlignableETLDisk*>::iterator ilayer = theETLDisks.begin(); ilayer != theETLDisks.end(); ilayer++) {
     zz += (*ilayer)->globalPosition().z();
   }
@@ -66,8 +64,6 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLEndcap& b) {
 /// Recursive printout of whole Tray structure
 void AlignableETLEndcap::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  for (std::vector<AlignableETLDisk*>::const_iterator iDisk = theETLDisks.begin();
-       iDisk != theETLDisks.end();
-       iDisk++)
+  for (std::vector<AlignableETLDisk*>::const_iterator iDisk = theETLDisks.begin(); iDisk != theETLDisks.end(); iDisk++)
     (*iDisk)->dump();
 }
