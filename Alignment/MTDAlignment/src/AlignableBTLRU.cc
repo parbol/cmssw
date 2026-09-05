@@ -34,9 +34,7 @@ AlignableBTLModule& AlignableBTLRU::mod(int i) {
 
 /// Returns surface corresponding to current position
 /// and orientation, as given by average on all components
-AlignableSurface AlignableBTLRU::computeSurface() {
-  return AlignableSurface(computePosition(), computeOrientation());
-}
+AlignableSurface AlignableBTLRU::computeSurface() { return AlignableSurface(computePosition(), computeOrientation()); }
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableBTLRU::PositionType AlignableBTLRU::computePosition() {
@@ -69,13 +67,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLRU& b) {
   return os;
 }
 
-
 /// Recursive printout of whole DT Station structure
 void AlignableBTLRU::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "This is a BTLRUAlignable" << std::endl;
-  //for (std::vector<AlignableBTLModule*>::const_iterator iModule = theBTLModules.begin();
-  //     iModule != theBTLModules.end();
-  //     iModule++)
-  //  edm::LogInfo("AlignableDump") << (**iModule);
+  for (std::vector<AlignableBTLModule*>::const_iterator iModule = theBTLModules.begin();
+       iModule != theBTLModules.end();
+       iModule++)
+    edm::LogInfo("AlignableDump") << (**iModule);
 }

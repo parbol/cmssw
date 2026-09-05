@@ -6,7 +6,6 @@
 // Class  :     MTDAlignmentInputDB
 //
 
-
 // user include files
 #include "Alignment/MTDAlignment/interface/MTDAlignmentInputMethod.h"
 
@@ -15,12 +14,12 @@
 class MTDAlignmentInputDB : public MTDAlignmentInputMethod {
 public:
   MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
-                       const Alignments* mtdAlignments,
-                       const Alignments* globalPositionRcd);
+                      const Alignments* mtdAlignments,
+                      const Alignments* globalPositionRcd);
   MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
-                       const Alignments* mtdAlignments,
-                       const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
-                       const Alignments* globalPositionRcd);
+                      const Alignments* mtdAlignments,
+                      const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
+                      const Alignments* globalPositionRcd);
   ~MTDAlignmentInputDB() override;
 
   // ---------- const member functions ---------------------

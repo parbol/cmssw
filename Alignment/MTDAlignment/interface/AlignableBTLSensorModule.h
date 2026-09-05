@@ -1,5 +1,5 @@
-#ifndef Alignment_MuonAlignment_AlignableBTLSensorModule_H
-#define Alignment_MuonAlignment_AlignableBTLSensorModule_H
+#ifndef Alignment_MTDAlignment_AlignableBTLSensorModule_H
+#define Alignment_MTDAlignment_AlignableBTLSensorModule_H
 
 /** \class AlignableBTLSensorModule
  *  The alignable BTL module.
@@ -16,7 +16,7 @@
 #include "Alignment/CommonAlignment/interface/StructureType.h"
 #include "Alignment/CommonAlignment/interface/AlignableDet.h"
 
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+#include "Geometry/CommonTopologies/interface/GeomDet.h"
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
 
 /// A BTL Module ( an AlignableDet )

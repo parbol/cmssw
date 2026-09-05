@@ -276,12 +276,9 @@ AlignableObjectId ::AlignableObjectId(const TrackerGeometry *tracker,
                                       const GEMGeometry *muonGem)
     : AlignableObjectId(commonGeometry(trackerGeometry(tracker), muonGeometry(muonDt, muonCsc, muonGem))) {}
 
-
 //_____________________________________________________________________________
-AlignableObjectId ::AlignableObjectId(const TrackerGeometry *tracker,
-                                      const MTDGeometry *mtd)
+AlignableObjectId ::AlignableObjectId(const TrackerGeometry *tracker, const MTDGeometry *mtd)
     : AlignableObjectId(commonGeometry(trackerGeometry(tracker), mtdGeometry(mtd))) {}
-
 
 //_____________________________________________________________________________
 align::StructureType AlignableObjectId::nameToType(const std::string &name) const { return stringToId(name.c_str()); }
@@ -340,13 +337,10 @@ AlignableObjectId::Geometry AlignableObjectId ::muonGeometry(const DTGeometry *,
   return Geometry::General;
 }
 
-
 AlignableObjectId::Geometry AlignableObjectId ::mtdGeometry(const MTDGeometry *) {
   // MTD alignment structure types are identical for all kinds of geometries
   return Geometry::PhaseII;
 }
-
-
 
 AlignableObjectId::Geometry AlignableObjectId ::commonGeometry(Geometry first, Geometry second) {
   if (first == Geometry::General)

@@ -43,8 +43,7 @@ AlignableBTLTray::PositionType AlignableBTLTray::computePosition() {
   float zz = 0.;
   float xx = 0.;
   float yy = 0.;
-  for (std::vector<AlignableBTLRU*>::iterator ilayer = theBTLRUs.begin(); ilayer != theBTLRUs.end();
-       ilayer++) {
+  for (std::vector<AlignableBTLRU*>::iterator ilayer = theBTLRUs.begin(); ilayer != theBTLRUs.end(); ilayer++) {
     xx += (*ilayer)->globalPosition().x();
     yy += (*ilayer)->globalPosition().y();
     zz += (*ilayer)->globalPosition().z();
@@ -68,14 +67,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLTray& b) {
   return os;
 }
 
-
-
 /// Recursive printout of whole Tray structure
 void AlignableBTLTray::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "This ia BTLTrayAlignable" << std::endl;
-  //for (std::vector<AlignableBTLRU*>::const_iterator iStation = theBTLRUs.begin();
-  //     iStation != theBTLRUs.end();
-  //     iStation++)
-  //  (*iStation)->dump();
+  for (std::vector<AlignableBTLRU*>::const_iterator iStation = theBTLRUs.begin();
+       iStation != theBTLRUs.end();
+       iStation++)
+    (*iStation)->dump();
 }

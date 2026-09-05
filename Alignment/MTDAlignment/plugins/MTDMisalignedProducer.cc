@@ -106,7 +106,6 @@ void MTDMisalignedProducer::saveToDB(void) {
   poolDbService->writeOneIOV<Alignments>(mtd_Alignments, poolDbService->beginOfTime(), theMTDAlignRecordName);
   poolDbService->writeOneIOV<AlignmentErrorsExtended>(
       mtd_AlignmentErrorsExtended, poolDbService->beginOfTime(), theMTDErrorRecordName);
-
 }
 //____________________________________________________________________________________________
 DEFINE_FWK_MODULE(MTDMisalignedProducer);

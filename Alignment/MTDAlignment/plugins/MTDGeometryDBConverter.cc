@@ -142,30 +142,25 @@ MTDGeometryDBConverter::~MTDGeometryDBConverter() {}
 void MTDGeometryDBConverter::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) {
   if (!m_done) {
     if (m_input == std::string("ideal")) {
-      MTDAlignmentInputMethod inputMethod(
-          &iSetup.getData(mtdGeomIdealToken_), &iSetup.getData(gemGeomIdealToken_));
+      MTDAlignmentInputMethod inputMethod(&iSetup.getData(mtdGeomIdealToken_), &iSetup.getData(gemGeomIdealToken_));
       MTDAlignment *mtdAlignment = new MTDAlignment(iSetup, inputMethod);
       mtdAlignment->saveToDB();
     } else if (m_input == std::string("db")) {
       MTDAlignmentInputDB inputMethod(&iSetup.getData(mtdGeomIdealToken_),
-                                       &iSetup.getData(mtdAliToken_),
-                                       &iSetup.getData(mtdAPEToken_),
-                                       &iSetup.getData(gprToken_));
+                                      &iSetup.getData(mtdAliToken_),
+                                      &iSetup.getData(mtdAPEToken_),
+                                      &iSetup.getData(gprToken_));
       MTDAlignment *mtdAlignment = new MTDAlignment(iSetup, inputMethod);
-      mtdAlignment->writeXML(
-          m_outputXML, &iSetup.getData(mtdGeomToken_));
+      mtdAlignment->writeXML(m_outputXML, &iSetup.getData(mtdGeomToken_));
     } else if (m_input == std::string("scenario")) {
-      MTDAlignmentInputMethod inputMethod(
-          &iSetup.getData(mtdGeomIdealToken_));
+      MTDAlignmentInputMethod inputMethod(&iSetup.getData(mtdGeomIdealToken_));
       MTDAlignment *mtdAlignment = new MTDAlignment(iSetup, inputMethod);
 
       MTDScenarioBuilder mtdScenarioBuilder(mtdAlignment->getAlignableMuon());
       mtdScenarioBuilder.applyScenario(m_misalignmentScenario);
       mtdAlignment->saveToDB();
     } else if (m_input == std::string("xml")) {
-      MTDAlignmentInputXML inputMethod(m_fileName,
-                                        &iSetup.getData(mtdGeomToken_),
-                                        &iSetup.getData(mtdGeomIdealToken_));
+      MTDAlignmentInputXML inputMethod(m_fileName, &iSetup.getData(mtdGeomToken_), &iSetup.getData(mtdGeomIdealToken_));
       MTDAlignment *mtdAlignment = new MTDAlignment(iSetup, inputMethod);
       mtdAlignment->saveToDB();
       mtdAlignment->fillGapsInSurvey(m_shiftErr, m_angleErr);

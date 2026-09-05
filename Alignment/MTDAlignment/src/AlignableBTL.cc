@@ -38,9 +38,7 @@ AlignableBTLTray& AlignableBTL::tray(int i) {
 
 /// Returns surface corresponding to current position
 /// and orientation, as given by average on all components
-AlignableSurface AlignableBTL::computeSurface() {
-  return AlignableSurface(computePosition(), computeOrientation());
-}
+AlignableSurface AlignableBTL::computeSurface() { return AlignableSurface(computePosition(), computeOrientation()); }
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableBTL::PositionType AlignableBTL::computePosition() {
@@ -66,14 +64,12 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTL& b) {
   return os;
 }
 
-
 /// Recursive printout of whole Half Barrel structure
 void AlignableBTL::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "This is a AlignableBTL" << std::endl;
-  //for (std::vector<AlignableBTLTray*>::const_iterator iTray = theBTLTrays.begin(); iTray != theBTLTrays.end();
-  //     iTray++)
-  //  (*iTray)->dump();
+  for (std::vector<AlignableBTLTray*>::const_iterator iTray = theBTLTrays.begin(); iTray != theBTLTrays.end();
+       iTray++)
+    (*iTray)->dump();
 }
 
 //__________________________________________________________________________________________________

@@ -35,10 +35,10 @@ public:
 
   AlignableETLModule& mod(int i);
 
-  /// Printout muon DT wheel information (not recursive)
+  /// Printout Hybrid Service information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableETLServiceHybrid&);
 
-  /// Recursive printout of the muon DT wheel structure
+  /// Recursive printout of the Service Hybrid structure
   void dump(void) const override;
 
   // Get alignments sorted by DetId

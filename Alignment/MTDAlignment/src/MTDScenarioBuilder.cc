@@ -27,7 +27,7 @@ MTDScenarioBuilder::MTDScenarioBuilder(Alignable* alignable)
   theAlignableMTD = dynamic_cast<AlignableMTD*>(alignable);
 
   if (!theAlignableMTD)
-    throw cms::Exception("TypeMismatch") << "Argument is not an AlignableMuon";
+    throw cms::Exception("TypeMismatch") << "Argument is not an AlignableMTD";
 }
 
 //__________________________________________________________________________________________________
@@ -48,13 +48,12 @@ void MTDScenarioBuilder::applyScenario(const edm::ParameterSet& scenario) {
   // Endcap
   const auto& etlEndcaps = theAlignableMTD->ETLEndcaps();
   this->decodeMovements_(theScenario, etlEndcaps, "ETLEndcap");
-  
+
   //this->moveMTD(theScenario);
   edm::LogInfo("MTDScenarioBuilder") << "Applied modifications to " << theModifierCounter << " alignables";
 }
 
 align::Scalars MTDScenarioBuilder::extractParameters(const edm::ParameterSet& pSet, const char* blockId) {
-  
   double scale_ = 0, scaleError_ = 0, phiX_ = 0, phiY_ = 0, phiZ_ = 0;
   double dX_ = 0, dY_ = 0, dZ_ = 0;
   std::string distribution_;
@@ -81,7 +80,7 @@ align::Scalars MTDScenarioBuilder::extractParameters(const edm::ParameterSet& pS
     else if ((*iParam) == "dZ")
       dZ_ = Parameters.getParameter<double>(*iParam);
     else if (Parameters.retrieve(*iParam).typeCode() != 'P') {  // Add unknown parameter to list
-      if (!error.str().length())
+      if (error.str().empty())
         error << "Unknown parameter name(s): ";
       error << " " << *iParam;
     }
@@ -106,7 +105,6 @@ align::Scalars MTDScenarioBuilder::extractParameters(const edm::ParameterSet& pS
 }
 
 void MTDScenarioBuilder::moveMTD(const edm::ParameterSet& pSet) {
-
   const auto& BTLbarrel = theAlignableMTD->BTLBarrel();
   const auto& ETLendcaps = theAlignableMTD->ETLEndcaps();
   //Take Parameters
@@ -174,4 +172,3 @@ void MTDScenarioBuilder::moveMTD(const edm::ParameterSet& pSet) {
     theMTDModifier.addAlignmentPositionErrorFromRotation(iter, errorphix, errorphiy, errorphiz);
   }
 }
-

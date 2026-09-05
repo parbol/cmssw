@@ -27,7 +27,7 @@ public:
   /// Apply misalignment scenario to the MTD
   void applyScenario(const edm::ParameterSet& scenario) override;
 
-  /// this special method allows to move the complete muon system by a same amount
+  /// this special method allows to move the complete MTD system by a same amount
   void moveMTD(const edm::ParameterSet& scenario);
 
   align::Scalars extractParameters(const edm::ParameterSet&, const char*);
@@ -36,7 +36,7 @@ public:
       Alignable*, const align::Scalars&, const align::Scalars&, const align::Scalars&, const align::Scalars&);
   */
 
-private:                            // Members
+private:                          // Members
   AlignableMTD* theAlignableMTD;  ///< Pointer to alignable MTD object
 
   AlignableModifier theMTDModifier;

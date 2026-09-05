@@ -43,8 +43,7 @@ AlignableETLEndcap::PositionType AlignableETLEndcap::computePosition() {
   float zz = 0.;
   float xx = 0.;
   float yy = 0.;
-  for (std::vector<AlignableETLDisk*>::iterator ilayer = theETLDisks.begin(); ilayer != theETLDisks.end();
-       ilayer++) {
+  for (std::vector<AlignableETLDisk*>::iterator ilayer = theETLDisks.begin(); ilayer != theETLDisks.end(); ilayer++) {
     zz += (*ilayer)->globalPosition().z();
   }
   zz /= static_cast<float>(theETLDisks.size());
@@ -64,14 +63,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLEndcap& b) {
   return os;
 }
 
-
-
 /// Recursive printout of whole Tray structure
 void AlignableETLEndcap::dump(void) const {
-  //edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "This is an ETLEndcapAlignable" << std::endl;
-  //for (std::vector<AlignableETLDisk*>::const_iterator iStation = theETLDisks.begin();
-  //     iStation != theETLDisks.end();
-  //     iStation++)
-  //  (*iStation)->dump();
+  edm::LogInfo("AlignableDump") << (*this);
+  for (std::vector<AlignableETLDisk*>::const_iterator iDisk = theETLDisks.begin();
+       iDisk != theETLDisks.end();
+       iDisk++)
+    (*iDisk)->dump();
 }

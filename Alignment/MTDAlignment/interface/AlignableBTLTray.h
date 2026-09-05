@@ -37,10 +37,10 @@ public:
 
   AlignableBTLRU& ru(int i);
 
-  /// Printout muon DT wheel information (not recursive)
+  /// Printout Tray information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableBTLTray&);
 
-  /// Recursive printout of the muon DT wheel structure
+  /// Recursive printout of the Tray structure
   void dump(void) const override;
 
 private:

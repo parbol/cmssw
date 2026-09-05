@@ -44,7 +44,8 @@ AlignableBTLModule::PositionType AlignableBTLModule::computePosition() {
   float yy = 0.;
   float zz = 0.;
 
-  for (std::vector<AlignableBTLSensorModule*>::iterator imodule = theBTLSensorModules.begin(); imodule != theBTLSensorModules.end();
+  for (std::vector<AlignableBTLSensorModule*>::iterator imodule = theBTLSensorModules.begin();
+       imodule != theBTLSensorModules.end();
        imodule++) {
     xx += (*imodule)->globalPosition().x();
     yy += (*imodule)->globalPosition().y();
@@ -60,7 +61,6 @@ AlignableBTLModule::PositionType AlignableBTLModule::computePosition() {
 /// Just initialize to default given by default constructor of a RotationType
 AlignableBTLModule::RotationType AlignableBTLModule::computeOrientation() { return RotationType(); }
 
-
 /// Output Station information
 std::ostream& operator<<(std::ostream& os, const AlignableBTLModule& b) {
   os << "This BTL module contains " << b.theBTLSensorModules.size() << " BTL sensor modules" << std::endl;
@@ -70,14 +70,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLModule& b) {
   return os;
 }
 
-
-
 /// Recursive printout of whole DT Station structure
 void AlignableBTLModule::dump(void) const {
   edm::LogInfo("AlignableDump") << (*this);
-  std::cout << "This is a BTLModuleAlignable" << std::endl;
-  //for (std::vector<AlignableBTLSensorModule*>::const_iterator iModule = theBTLSensorModules.begin();
-  //     iModule != theBTLSensorModules.end();
-  //     iModule++)
-  //  edm::LogInfo("AlignableDump") << (**iModule);
+  for (std::vector<AlignableBTLSensorModule*>::const_iterator iModule = theBTLSensorModules.begin();
+       iModule != theBTLSensorModules.end();
+       iModule++)
+    edm::LogInfo("AlignableDump") << (**iModule);
 }

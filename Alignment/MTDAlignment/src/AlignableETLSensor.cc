@@ -32,11 +32,5 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLSensor& r) {
   return os;
 }
 
-
 /// Recursive printout of whole structure
-void AlignableETLSensor::dump(void) const {
-  std::cout << "This is an ETL Sensor" << std::endl;
-}
-
-
-
+void AlignableETLSensor::dump(void) const {edm::LogInfo("AlignableDump") << (*this);}

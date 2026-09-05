@@ -13,7 +13,6 @@
 //#include "Geometry/Records/interface/MTDNumberingRecord.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
 
 //
 // constants, enums and typedefs
@@ -27,8 +26,7 @@
 // constructors and destructor
 //
 MTDAlignmentInputMethod::MTDAlignmentInputMethod() {}
-MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDGeometry* mtdGeometry)
-    : mtdGeometry_(mtdGeometry) {}
+MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDGeometry* mtdGeometry) : mtdGeometry_(mtdGeometry) {}
 
 // MTDAlignmentInputMethod::MTDAlignmentInputMethod(const MTDAlignmentInputMethod& rhs)
 // {
@@ -53,9 +51,7 @@ MTDAlignmentInputMethod::~MTDAlignmentInputMethod() {}
 // member functions
 //
 
-AlignableMTD* MTDAlignmentInputMethod::newAlignableMTD() const {
-  return new AlignableMTD(&*mtdGeometry_);
-}
+AlignableMTD* MTDAlignmentInputMethod::newAlignableMTD() const { return new AlignableMTD(&*mtdGeometry_); }
 
 //
 // const member functions

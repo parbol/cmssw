@@ -35,10 +35,10 @@ public:
 
   AlignableETLDee& dee(int i);
 
-  /// Printout muon DT wheel information (not recursive)
+  /// Printout Disk information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableETLDisk&);
 
-  /// Recursive printout of the muon DT wheel structure
+  /// Recursive printout of the Disk structure
   void dump(void) const override;
 
 private:

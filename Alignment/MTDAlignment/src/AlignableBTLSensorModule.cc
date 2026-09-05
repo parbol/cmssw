@@ -6,12 +6,13 @@
  */
 
 #include "Alignment/MTDAlignment/interface/AlignableBTLSensorModule.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 AlignableBTLSensorModule::AlignableBTLSensorModule(const GeomDet* geomDet) : AlignableDet(geomDet, false) {
   // even though we overload alignableObjectId(), it's dangerous to
   // have two different claims about the structure type
   theStructureType = align::AlignableBTLSensorModule;
- 
+
   //////// Probably we don't need this in the BTL, the crystals are unitDets
   //const std::vector<const GeomDet*>& geomDets = geomDet->components();
   //for (std::vector<const GeomDet*>::const_iterator idet = geomDets.begin(); idet != geomDets.end(); ++idet) {
@@ -34,26 +35,8 @@ std::ostream& operator<<(std::ostream& os, const AlignableBTLSensorModule& r) {
   os << "    total displacement and rotation: " << r.displacement() << std::endl;
   os << r.rotation() << std::endl;
 
-  /*for (const auto& idet : theDets) {
-    //Do I need components for the BTL????
-    const auto& comp = idet->components();
-
-    for (unsigned int i = 0; i < comp.size(); ++i) {
-      os << "     Det position, phi, r: " << comp[i]->globalPosition() << " , " << comp[i]->globalPosition().phi()
-         << " , " << comp[i]->globalPosition().perp() << std::endl;
-      os << "     local  position, phi, r: " << r.surface().toLocal(comp[i]->globalPosition()) << " , "
-         << r.surface().toLocal(comp[i]->globalPosition()).phi() << " , "
-         << r.surface().toLocal(comp[i]->globalPosition()).perp() << std::endl;
-    }
-  }*/
 
   return os;
 }
 
-
-void AlignableBTLSensorModule::dump(void) const {
-        std::cout << "This is a BTLSensorModuleAlignable" << std::endl;
-}
-
-
-
+void AlignableBTLSensorModule::dump(void) const {edm::LogInfo("AlignableDump") << (*this);}

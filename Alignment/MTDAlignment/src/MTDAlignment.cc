@@ -32,8 +32,7 @@ void MTDAlignment::init() {
   theAlignableNavigator = nullptr;
 }
 
-MTDAlignment::MTDAlignment(const MTDGeometry* mtdGeometry)
-    : mtdGeometry_(mtdGeometry) {
+MTDAlignment::MTDAlignment(const MTDGeometry* mtdGeometry) : mtdGeometry_(mtdGeometry) {
   init();
 
   theAlignableMTD = new AlignableMTD(&*mtdGeometry_);
@@ -69,7 +68,6 @@ void MTDAlignment::moveAlignableLocalCoord(DetId& detid, align::Scalars& displac
 //____________________________________________________________________________________
 //
 void MTDAlignment::moveAlignableGlobalCoord(DetId& detid, align::Scalars& displacements, align::Scalars& rotations) {
-
   // Displace and rotate Alignable associated to a GeomDet or GeomDetUnit
   Alignable* theAlignable = theAlignableNavigator->alignableFromDetId(detid);
 
@@ -109,7 +107,7 @@ void MTDAlignment::recursiveMap(const align::Alignables& alignables, std::map<al
 //____________________________________________________________________________________
 //
 void MTDAlignment::recursiveStructureMap(const align::Alignables& alignables,
-                                          std::map<std::pair<align::StructureType, align::ID>, Alignable*>& theMap) {
+                                         std::map<std::pair<align::StructureType, align::ID>, Alignable*>& theMap) {
   for (align::Alignables::const_iterator alignable = alignables.begin(); alignable != alignables.end(); ++alignable) {
     theMap[std::pair<align::StructureType, align::ID>((*alignable)->alignableObjectId(), (*alignable)->id())] =
         *alignable;
@@ -143,4 +141,3 @@ void MTDAlignment::savetoDB(void) {
   poolDbService->writeOneIOV<AlignmentErrorsExtended>(
       mtd_AlignmentErrorsExtended, poolDbService->currentTime(), theMTDErrorRecordName);
 }
-

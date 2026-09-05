@@ -102,10 +102,10 @@ private:
 
   // Sub-structure builders
 
-  /// Build muon barrel
+  /// Build BTL
   void buildBTLBarrel(const MTDGeometry*, bool update = false);
 
-  /// Build muon end caps
+  /// Build ETL
   void buildETLEndcap(const MTDGeometry*, bool update = false);
 
   /// Set mothers recursively

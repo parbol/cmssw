@@ -43,7 +43,6 @@ AlignableSurface AlignableETLServiceHybrid::computeSurface() {
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableETLServiceHybrid::PositionType AlignableETLServiceHybrid::computePosition() {
-
   float xx = 0.;
   float yy = 0.;
   float zz = 0.;
@@ -75,13 +74,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLServiceHybrid& b) {
 
 /// Recursive printout of whole Half Barrel structure
 void AlignableETLServiceHybrid::dump(void) const {
-
-  std::cout << "This is a service hybrid" << std::endl;
-  //edm::LogInfo("AlignableDump") << (*this);
-  //for (std::vector<AlignableETLModule*>::const_iterator imodule = theETLModules.begin();
-  //     imodule != theETLModules.end();
-  //     imodule++)
-  //  (*imodule)->dump();
+  edm::LogInfo("AlignableDump") << (*this);
+  for (std::vector<AlignableETLModule*>::const_iterator imodule = theETLModules.begin();
+       imodule != theETLModules.end();
+       imodule++)
+    (*imodule)->dump();
 }
 
 //__________________________________________________________________________________________________

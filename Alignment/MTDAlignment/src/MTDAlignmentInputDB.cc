@@ -27,34 +27,32 @@
 // constructors and destructor
 //
 MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
-                                           const Alignments* mtdAlignments,
-                                           const Alignments* globalPositionRcd)
+                                         const Alignments* mtdAlignments,
+                                         const Alignments* globalPositionRcd)
     : mtdGeometry_(mtdGeometry),
       mtdAlignments_(mtdAlignments),
       globalPositionRcd_(globalPositionRcd),
       m_getAPEs(false) {}
 
 MTDAlignmentInputDB::MTDAlignmentInputDB(const MTDGeometry* mtdGeometry,
-                                           const Alignments* mtdAlignments,
-                                           const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
-                                           const Alignments* globalPositionRcd)
+                                         const Alignments* mtdAlignments,
+                                         const AlignmentErrorsExtended* mtdAlignmentErrorsExtended,
+                                         const Alignments* globalPositionRcd)
     : mtdGeometry_(mtdGeometry),
       mtdAlignments_(mtdAlignments),
       mtdAlignmentErrorsExtended_(mtdAlignmentErrorsExtended),
       globalPositionRcd_(globalPositionRcd),
       m_getAPEs(true) {}
 
-
 MTDAlignmentInputDB::~MTDAlignmentInputDB() {}
-
 
 AlignableMTD* MTDAlignmentInputDB::newAlignableMTD() const {
   if (m_getAPEs) {
     GeometryAligner aligner;
     aligner.applyAlignments<MTDGeometry>(mtdGeometry_,
-                                        mtdAlignments_,
-                                        mtdAlignmentErrorsExtended_,
-                                        align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
+                                         mtdAlignments_,
+                                         mtdAlignmentErrorsExtended_,
+                                         align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
   } else {
     AlignmentErrorsExtended mtdAlignmentErrorsExtended2;
 
@@ -68,9 +66,9 @@ AlignableMTD* MTDAlignmentInputDB::newAlignableMTD() const {
 
     GeometryAligner aligner;
     aligner.applyAlignments<MTDGeometry>(mtdGeometry_,
-                                        mtdAlignments_,
-                                        &mtdAlignmentErrorsExtended2,
-                                        align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
+                                         mtdAlignments_,
+                                         &mtdAlignmentErrorsExtended2,
+                                         align::DetectorGlobalPosition(*globalPositionRcd_, DetId(DetId::Forward)));
   }
 
   return new AlignableMTD(mtdGeometry_);

@@ -35,10 +35,10 @@ public:
 
   AlignableETLDisk& disk(int i);
 
-  /// Printout muon DT wheel information (not recursive)
+  /// Printout Endcap information (not recursive)
   friend std::ostream& operator<<(std::ostream&, const AlignableETLEndcap&);
 
-  /// Recursive printout of the muon DT wheel structure
+  /// Recursive printout of the Endcap structure
   void dump(void) const override;
 
 private:

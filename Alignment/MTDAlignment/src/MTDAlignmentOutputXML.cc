@@ -29,8 +29,7 @@
 //
 // constructors and destructor
 //
-MTDAlignmentOutputXML::MTDAlignmentOutputXML(const edm::ParameterSet &iConfig,
-                                               const MTDGeometry *mtdGeometry) 
+MTDAlignmentOutputXML::MTDAlignmentOutputXML(const edm::ParameterSet &iConfig, const MTDGeometry *mtdGeometry)
     : m_fileName(iConfig.getParameter<std::string>("fileName")),
       m_rawIds(iConfig.getParameter<bool>("rawIds")),
       m_eulerAngles(iConfig.getParameter<bool>("eulerAngles")),
@@ -109,22 +108,18 @@ void MTDAlignmentOutputXML::write(AlignableMTD *alignableMTD) const {
 }
 
 void MTDAlignmentOutputXML::writeComponents(align::Alignables &alignables,
-                                             align::Alignables &ideals,
-                                             std::map<align::ID, CLHEP::HepSymMatrix> &errors,
-                                             std::ofstream &outputFile,
-                                             const int doDet,
-                                             const AlignableObjectId &objectIdProvider) const {
+                                            align::Alignables &ideals,
+                                            std::map<align::ID, CLHEP::HepSymMatrix> &errors,
+                                            std::ofstream &outputFile,
+                                            const int doDet,
+                                            const AlignableObjectId &objectIdProvider) const {
   align::Alignables::const_iterator ideal = ideals.begin();
   for (align::Alignables::const_iterator alignable = alignables.begin(); alignable != alignables.end(); ++alignable) {
-
     align::StructureType alignableObjectId = (*alignable)->alignableObjectId();
 
-    if ((alignableObjectId == align::AlignableMTD) ||
-        (alignableObjectId == align::AlignableBTL) ||
-        (alignableObjectId == align::AlignableBTLTray) ||
-        (alignableObjectId == align::AlignableBTLRU) ||
-        (alignableObjectId == align::AlignableBTLModule) ||
-        (alignableObjectId == align::AlignableETLEndcap) ||
+    if ((alignableObjectId == align::AlignableMTD) || (alignableObjectId == align::AlignableBTL) ||
+        (alignableObjectId == align::AlignableBTLTray) || (alignableObjectId == align::AlignableBTLRU) ||
+        (alignableObjectId == align::AlignableBTLModule) || (alignableObjectId == align::AlignableETLEndcap) ||
         (alignableObjectId == align::AlignableETLModule) ||
         (doDet != doBTL && doDet == doETL && alignableObjectId == align::AlignableDetUnit) ||
         (doDet == doBTL && doDet != doETL && alignableObjectId == align::AlignableDetUnit)) {
@@ -134,7 +129,8 @@ void MTDAlignmentOutputXML::writeComponents(align::Alignables &alignables,
       if (doDet == doBTL) {
         if (m_rawIds && rawId != 0) {
           std::string typeName = objectIdProvider.idToString(alignableObjectId);
-          if (alignableObjectId == align::AlignableBTLModule) typeName = std::string("BTLModule");
+          if (alignableObjectId == align::AlignableBTLModule)
+            typeName = std::string("BTLModule");
           outputFile << "  <" << typeName << " rawId=\"" << rawId << "\" />" << std::endl;
         } else {
           if (alignableObjectId == align::AlignableDetUnit) {
@@ -147,46 +143,46 @@ void MTDAlignmentOutputXML::writeComponents(align::Alignables &alignables,
             BTLDetId id(rawId);
             outputFile << "  <BTL side=\"" << id.zside() << "\" tray=\"" << id.zside() << "\" />" << std::endl;
           } else
-              throw cms::Exception("Alignment") << "Unknown BTL Alignable StructureType" << std::endl;
-          }
-        }  // end if not rawId
+            throw cms::Exception("Alignment") << "Unknown BTL Alignable StructureType" << std::endl;
+        }
+      }  // end if not rawId
 
       if (doDet == doETL) {  // ETL
         if (m_rawIds && rawId != 0) {
           std::string typeName = objectIdProvider.idToString(alignableObjectId);
-          if (alignableObjectId == align::AlignableDetUnit) typeName = std::string("ETLModule");
+          if (alignableObjectId == align::AlignableDetUnit)
+            typeName = std::string("ETLModule");
           outputFile << "  <" << typeName << " rawId=\"" << rawId << "\" />" << std::endl;
         } else {
           if (alignableObjectId == align::AlignableDetUnit) {
             ETLDetId id(rawId);
-            outputFile << "  <CSCLayer endcap=\"" << "\" station=" << id.module() << "\" />"  << std::endl;
+            outputFile << "  <CSCLayer endcap=\"" << "\" station=" << id.module() << "\" />" << std::endl;
           } else if (alignableObjectId == align::AlignableETLEndcap) {
             ETLDetId id(rawId);
-            outputFile << "  <CSCLayer endcap=\"" << "\" station=" << id.module() << "\" />"  << std::endl;
+            outputFile << "  <CSCLayer endcap=\"" << "\" station=" << id.module() << "\" />" << std::endl;
           } else {
-              throw cms::Exception("Alignment") << "Unknown ETL Alignable StructureType" << std::endl;
+            throw cms::Exception("Alignment") << "Unknown ETL Alignable StructureType" << std::endl;
           }
 
         }  // end if not rawId
-      }  // end if 
-    
+      }  // end if
+
       align::PositionType pos = (*alignable)->globalPosition();
       align::RotationType rot = (*alignable)->globalRotation();
 
-
       std::string str_relativeto;
       if (m_relativeto == 0) {
-          str_relativeto = std::string("none");
+        str_relativeto = std::string("none");
       } else if (m_relativeto == 1) {
-          if (ideal == ideals.end() || (*ideal)->alignableObjectId() != alignableObjectId ||
-             (*ideal)->id() != (*alignable)->id()) {
+        if (ideal == ideals.end() || (*ideal)->alignableObjectId() != alignableObjectId ||
+            (*ideal)->id() != (*alignable)->id()) {
           throw cms::Exception("Alignment") << "AlignableMTD and ideal_AlignableMTD are out of sync!" << std::endl;
-          }
-      align::PositionType idealPosition = (*ideal)->globalPosition();
-      align::RotationType idealRotation = (*ideal)->globalRotation();
-      pos = align::PositionType(idealRotation * (pos.basicVector() - idealPosition.basicVector()));
-      rot = rot * idealRotation.transposed();
-      str_relativeto = std::string("ideal");
+        }
+        align::PositionType idealPosition = (*ideal)->globalPosition();
+        align::RotationType idealRotation = (*ideal)->globalRotation();
+        pos = align::PositionType(idealRotation * (pos.basicVector() - idealPosition.basicVector()));
+        rot = rot * idealRotation.transposed();
+        str_relativeto = std::string("ideal");
       } else if (m_relativeto == 2 && (*alignable)->mother() != nullptr) {
         align::PositionType globalPosition = (*alignable)->mother()->globalPosition();
         align::RotationType globalRotation = (*alignable)->mother()->globalRotation();
@@ -195,7 +191,8 @@ void MTDAlignmentOutputXML::writeComponents(align::Alignables &alignables,
         rot = rot * globalRotation.transposed();
 
         str_relativeto = std::string("container");
-      } else assert(false);  // can't happen: see constructor
+      } else
+        assert(false);  // can't happen: see constructor
 
       outputFile << "  <setposition relativeto=\"" << str_relativeto << "\" "
                  << "x=\"" << pos.x() << "\" y=\"" << pos.y() << "\" z=\"" << pos.z() << "\" ";

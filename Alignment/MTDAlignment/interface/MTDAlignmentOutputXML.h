@@ -22,8 +22,7 @@ class AlignableObjectId;
 
 class MTDAlignmentOutputXML {
 public:
-  MTDAlignmentOutputXML(const edm::ParameterSet &iConfig,
-                         const MTDGeometry *mtdGeometry);
+  MTDAlignmentOutputXML(const edm::ParameterSet &iConfig, const MTDGeometry *mtdGeometry);
   virtual ~MTDAlignmentOutputXML();
 
   // ---------- const member functions ---------------------
@@ -32,14 +31,14 @@ public:
 
   // ---------- member functions ---------------------------
 
-  void write(AlignableMTD *alignableMuon) const;
+  void write(AlignableMTD *alignableMTD) const;
 
   MTDAlignmentOutputXML(const MTDAlignmentOutputXML &) = delete;  // stop default
 
   const MTDAlignmentOutputXML &operator=(const MTDAlignmentOutputXML &) = delete;  // stop default
 
 private:
-  enum { doBTL, doETL};
+  enum { doBTL, doETL };
   void writeComponents(align::Alignables &alignables,
                        align::Alignables &ideals,
                        std::map<align::ID, CLHEP::HepSymMatrix> &errors,

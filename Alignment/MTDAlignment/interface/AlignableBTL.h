@@ -1,5 +1,5 @@
-#ifndef Alignment_MuonAlignment_AlignableBTL_H
-#define Alignment_MuonAlignment_AlignableBTL_H
+#ifndef Alignment_MTDAlignment_AlignableBTL_H
+#define Alignment_MTDAlignment_AlignableBTL_H
 
 /** \class AlignableBTL
  *  The alignable BTL 
@@ -26,15 +26,14 @@ class GeomDet;
 
 class AlignableBTL : public AlignableComposite {
 public:
- 
   AlignableBTL(const std::vector<AlignableBTLTray*>& btlTrays);
 
   // gets the global position as the average over all positions of the layers
   PositionType computePosition();
-  
+
   // get the global orientation
   RotationType computeOrientation();  //see explanation for "theOrientation"
-  
+
   // get the Surface
   AlignableSurface computeSurface();
 

@@ -1,5 +1,5 @@
-#ifndef Alignment_MuonAlignment_AlignableBTLModule_H
-#define Alignment_MuonAlignment_AlignableBTLModule_H
+#ifndef Alignment_MTDAlignment_AlignableBTLModule_H
+#define Alignment_MTDAlignment_AlignableBTLModule_H
 
 /** \class AlignableBTLModule
  *  The alignable BTL RU.

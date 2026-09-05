@@ -1,5 +1,5 @@
-#ifndef Alignment_MuonAlignment_AlignableETLSensor_H
-#define Alignment_MuonAlignment_AlignableETLSensor_H
+#ifndef Alignment_MTDAlignment_AlignableETLSensor_H
+#define Alignment_MTDAlignment_AlignableETLSensor_H
 
 /** \class AlignableETLSensor
  *  The alignable ETL module.
@@ -16,16 +16,17 @@
 #include "Alignment/CommonAlignment/interface/StructureType.h"
 #include "Alignment/CommonAlignment/interface/AlignableDet.h"
 
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+#include "Geometry/CommonTopologies/interface/GeomDet.h"
 #include "Alignment/CommonAlignment/interface/AlignableComposite.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 /// An ETL Sensor ( an AlignableDet )
 
 class AlignableETLSensor : public AlignableDet {
 public:
   friend std::ostream &operator<<(std::ostream &, const AlignableETLSensor &);
-  
-  void dump(void) const;
+
+  void dump(void) const override;
 
   /// Constructor
   AlignableETLSensor(const GeomDet *geomDet);

@@ -16,7 +16,7 @@
 AlignableETLDee::AlignableETLDee(const std::vector<AlignableETLServiceHybrid*>& etlServiceHybrids)
     : AlignableComposite(etlServiceHybrids[0]->id(), align::AlignableETLDee) {
   theETLServiceHybrids.insert(theETLServiceHybrids.end(), etlServiceHybrids.begin(), etlServiceHybrids.end());
-  
+
   // maintain also list of components
   for (const auto& sh : etlServiceHybrids) {
     const auto mother = sh->mother();
@@ -37,18 +37,16 @@ AlignableETLServiceHybrid& AlignableETLDee::serviceHybrid(int i) {
 
 /// Returns surface corresponding to current position
 /// and orientation, as given by average on all components
-AlignableSurface AlignableETLDee::computeSurface() {
-  return AlignableSurface(computePosition(), computeOrientation());
-}
+AlignableSurface AlignableETLDee::computeSurface() { return AlignableSurface(computePosition(), computeOrientation()); }
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableETLDee::PositionType AlignableETLDee::computePosition() {
-
   float xx = 0.;
   float yy = 0.;
   float zz = 0.;
 
-  for (std::vector<AlignableETLServiceHybrid*>::iterator imodule = theETLServiceHybrids.begin(); imodule != theETLServiceHybrids.end();
+  for (std::vector<AlignableETLServiceHybrid*>::iterator imodule = theETLServiceHybrids.begin();
+       imodule != theETLServiceHybrids.end();
        imodule++) {
     xx += (*imodule)->globalPosition().x();
     yy += (*imodule)->globalPosition().y();
@@ -75,12 +73,11 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLDee& b) {
 
 /// Recursive printout of whole Half Barrel structure
 void AlignableETLDee::dump(void) const {
-  std::cout << "This is a dee" << std::endl;
-  //edm::LogInfo("AlignableDump") << (*this);
-  //for (std::vector<AlignableETLServiceHybrid*>::const_iterator ish = theETLServiceHybrids.begin();
-  //     ish != theETLServiceHybrids.end();
-  //     ish++)
-  //  (*ish)->dump();
+  edm::LogInfo("AlignableDump") << (*this);
+  for (std::vector<AlignableETLServiceHybrid*>::const_iterator ish = theETLServiceHybrids.begin();
+       ish != theETLServiceHybrids.end();
+       ish++)
+    (*ish)->dump();
 }
 
 //__________________________________________________________________________________________________

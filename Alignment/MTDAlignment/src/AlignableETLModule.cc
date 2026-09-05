@@ -43,7 +43,6 @@ AlignableSurface AlignableETLModule::computeSurface() {
 
 /// Compute average z position from all components (x and y forced to 0)
 AlignableETLModule::PositionType AlignableETLModule::computePosition() {
-
   float xx = 0.;
   float yy = 0.;
   float zz = 0.;
@@ -75,14 +74,12 @@ std::ostream& operator<<(std::ostream& os, const AlignableETLModule& b) {
 
 /// Recursive printout of whole structure
 void AlignableETLModule::dump(void) const {
- 
-  std::cout << "This is an ETL Module" << std::endl;	
   edm::LogInfo("AlignableDump") << (*this);
-  /*for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLModules.begin();
-       isensor != theETLModules.end();
+  for (std::vector<AlignableETLSensor*>::const_iterator isensor = theETLSensors.begin();
+       isensor != theETLSensors.end();
        isensor++)
     (*isensor)->dump();
-  */
+  
 }
 
 //__________________________________________________________________________________________________
